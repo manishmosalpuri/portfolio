@@ -1,0 +1,1424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>WILDCAST — Book the Wild</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --forest:#0d3320;--green:#1a6b3c;--green-mid:#2d8a52;--green-glow:#3daa6a;
+  --sage:#e6f2ea;--mint:#f0faf3;--amber:#c97c0a;--amber-w:#e8920f;--amber-lt:#fff8ec;
+  --cream:#faf8f4;--paper:#f4f2ed;--ink:#141410;--ink2:#3a3a34;--ink3:#7a7a70;
+  --ink4:#b8b8b0;--line:#e8e6e0;--white:#fff;
+  --r:14px;--rl:22px;--rx:28px;--rp:999px;
+  --st:env(safe-area-inset-top,44px);--sb:env(safe-area-inset-bottom,20px)
+}
+html,body{height:100%;background:var(--forest);overflow:hidden;font-family:'Plus Jakarta Sans',sans-serif}
+#app{position:fixed;inset:0;overflow:hidden;background:var(--cream)}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--cream);display:none;flex-direction:column}
+.screen.active{display:flex}
+.screen::-webkit-scrollbar{display:none}
+.serif{font-family:'Playfair Display',serif}
+
+/* STATUS */
+.sb-dark{height:calc(var(--st) + 2px);min-height:46px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 8px;font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.sb-light{height:calc(var(--st) + 2px);min-height:46px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 8px;font-size:12px;font-weight:700;color:var(--ink);flex-shrink:0;background:var(--white);border-bottom:1px solid var(--line)}
+.sb-abs{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 8px;font-size:12px;font-weight:700;color:#fff;height:calc(var(--st) + 2px);min-height:46px}
+.si{display:flex;gap:5px;align-items:center;font-size:13px}
+
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-weight:700;transition:transform .12s ease,opacity .12s;-webkit-user-select:none;user-select:none}
+.btn:active{transform:scale(.95);opacity:.88}
+.b-forest{background:var(--forest);color:#fff;border-radius:var(--rp);padding:16px 24px;font-size:15px}
+.b-green{background:var(--green);color:#fff;border-radius:var(--rp);padding:16px 24px;font-size:15px}
+.b-amber{background:var(--amber-w);color:#fff;border-radius:var(--rp);padding:16px 24px;font-size:15px}
+.b-white{background:#fff;color:var(--forest);border-radius:var(--rp);padding:16px 24px;font-size:15px}
+.b-outline{background:transparent;color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.3);border-radius:var(--rp);padding:14px 24px;font-size:14px}
+.b-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2);border-radius:var(--rp);padding:14px 24px;font-size:14px}
+.b-full{width:100%}
+.b-icon{width:42px;height:42px;border-radius:50%;padding:0;font-size:18px;flex-shrink:0}
+.b-icon-sm{width:36px;height:36px;border-radius:50%;padding:0;font-size:15px;flex-shrink:0}
+.b-dark-glass{background:rgba(0,0,0,.35);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.b-light-glass{background:rgba(255,255,255,.92);color:var(--ink);border:1px solid var(--line)}
+.b-forest-icon{background:var(--forest);color:#fff}
+.b-wa{background:#25D366;color:#fff;border-radius:var(--rp);width:48px;height:48px;padding:0;font-size:22px;flex-shrink:0}
+
+/* BACK BAR */
+.back-bar{display:flex;align-items:center;gap:10px;padding:10px 16px 0;flex-shrink:0;background:var(--white);border-bottom:1px solid var(--line);padding-bottom:12px}
+.back-circle{width:36px;height:36px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;flex-shrink:0;transition:background .15s}
+.back-circle:active{background:var(--sage)}
+.back-page-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink)}
+
+/* TOAST */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;border-radius:var(--rp);padding:11px 22px;font-size:13px;font-weight:600;opacity:0;transition:all .25s ease;z-index:9999;white-space:nowrap;pointer-events:none;max-width:90vw;font-family:'Plus Jakarta Sans',sans-serif}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* SAFE SPACERS */
+.safe-lg{height:calc(var(--sb) + 80px);flex-shrink:0}
+.safe-md{height:calc(var(--sb) + 20px);flex-shrink:0}
+
+/* ═══════════ S1 SPLASH ═══════════ */
+#s1{background:var(--forest);overflow:hidden;justify-content:space-between}
+.sp-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 10%,rgba(61,170,106,.2) 0%,transparent 70%),radial-gradient(ellipse 50% 40% at 20% 80%,rgba(26,107,60,.3) 0%,transparent 60%),var(--forest)}
+.sp-grain{position:absolute;inset:0;opacity:.04;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.sp-content{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:0 28px;padding-top:calc(var(--st) + 48px)}
+.sp-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--rp);padding:7px 14px;font-size:11px;color:rgba(255,255,255,.7);font-weight:500;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:28px;align-self:flex-start}
+.sp-dot{width:6px;height:6px;border-radius:50%;background:var(--green-glow)}
+.sp-h{font-family:'Playfair Display',serif;font-size:clamp(52px,14vw,68px);color:#fff;line-height:.95;letter-spacing:-1px;margin-bottom:8px}
+.sp-h em{color:var(--green-glow);font-style:italic}
+.sp-sub{font-size:15px;color:rgba(255,255,255,.55);font-weight:300;letter-spacing:3px;text-transform:uppercase;margin-bottom:40px}
+.sp-pills{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:48px}
+.sp-pill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:var(--rp);padding:8px 16px;font-size:13px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:7px}
+.sp-foot{position:relative;z-index:2;padding:0 28px;padding-bottom:calc(var(--sb) + 32px);display:flex;flex-direction:column;gap:10px}
+.sp-divline{flex:1;height:1px;background:rgba(255,255,255,.12)}
+.sp-divtxt{font-size:11px;color:rgba(255,255,255,.35)}
+
+/* ═══════════ S2 HOME ═══════════ */
+#s2{background:var(--cream)}
+.home-hero{background:var(--forest);padding:0 20px 20px;flex-shrink:0;position:relative;overflow:hidden}
+.home-hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:24px;background:var(--cream);border-radius:24px 24px 0 0}
+.hh-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 100% 0%,rgba(61,170,106,.15) 0%,transparent 60%)}
+.hh-top{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding-top:calc(var(--st) + 6px);margin-bottom:18px}
+.hh-greet{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:2px}
+.hh-title{font-family:'Playfair Display',serif;font-size:26px;color:#fff;line-height:1.1}
+.hh-av{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.12);border:1.5px solid rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;flex-shrink:0}
+.hh-search{position:relative;z-index:2;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:var(--rp);padding:13px 16px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.hh-search-txt{font-size:13px;color:rgba(255,255,255,.5);flex:1}
+.hh-filter{background:var(--green);color:#fff;border-radius:var(--rp);padding:5px 12px;font-size:11px;font-weight:700}
+
+.act-strip{display:flex;gap:0;overflow-x:auto;padding:14px 20px 0;flex-shrink:0;border-bottom:1px solid var(--line)}
+.act-strip::-webkit-scrollbar{display:none}
+.at{flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:7px;padding:0 12px 12px;cursor:pointer;border-bottom:2.5px solid transparent;transition:border-color .2s}
+.at.on{border-bottom-color:var(--green)}
+.at-ic{width:52px;height:52px;border-radius:16px;background:var(--paper);border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:22px;transition:all .2s}
+.at.on .at-ic{background:var(--forest);border-color:var(--forest)}
+.at-lb{font-size:11px;font-weight:600;color:var(--ink3)}
+.at.on .at-lb{color:var(--green)}
+
+.feed{flex:1;overflow-y:auto;padding:4px 0 0}
+.feed::-webkit-scrollbar{display:none}
+
+.sec-row{display:flex;align-items:baseline;justify-content:space-between;padding:16px 20px 10px}
+.sec-h{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink)}
+.sec-lnk{font-size:13px;color:var(--green);font-weight:700;cursor:pointer}
+
+/* TRIP CARD */
+.trip-card{margin:0 20px 16px;border-radius:var(--rx);overflow:hidden;background:var(--white);border:1px solid var(--line);cursor:pointer;box-shadow:0 4px 24px rgba(0,0,0,.07);transition:transform .18s}
+.trip-card:active{transform:scale(.98)}
+.tc-img{height:200px;position:relative;display:flex;align-items:flex-end;overflow:hidden}
+.tc-emoji{position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);font-size:80px;opacity:.2;filter:saturate(0)}
+.tc-veil{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 25%,rgba(0,0,0,.6) 100%)}
+.tc-bottom{position:relative;z-index:2;padding:14px 16px;width:100%}
+.tc-tags{display:flex;gap:6px;margin-bottom:8px}
+.tg{border-radius:var(--rp);padding:4px 11px;font-size:11px;font-weight:700}
+.tg-w{background:rgba(255,255,255,.92);color:var(--ink)}
+.tg-g{background:var(--green);color:#fff}
+.tg-a{background:var(--amber-w);color:#fff}
+.tg-d{background:rgba(0,0,0,.5);backdrop-filter:blur(6px);color:#fff}
+.tc-title{font-family:'Playfair Display',serif;font-size:20px;color:#fff;line-height:1.15;margin-bottom:6px}
+.tc-meta{display:flex;align-items:center;gap:12px}
+.tc-mi{font-size:12px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:4px}
+.tc-body{padding:14px 16px}
+.tc-foot{display:flex;align-items:center;justify-content:space-between}
+.tc-price{font-family:'Playfair Display',serif;font-size:22px;color:var(--green)}
+.tc-price-lb{font-size:11px;color:var(--ink3)}
+.tc-rating{display:flex;align-items:center;gap:5px}
+.tc-star{color:var(--amber-w);font-size:14px}
+.tc-rn{font-size:14px;font-weight:800;color:var(--ink)}
+.tc-rc{font-size:12px;color:var(--ink3)}
+
+/* MINI CARD */
+.h-scroll{display:flex;gap:12px;padding:0 20px 4px;overflow-x:auto}
+.h-scroll::-webkit-scrollbar{display:none}
+.mc{flex-shrink:0;width:160px;border-radius:var(--rl);background:var(--white);border:1px solid var(--line);overflow:hidden;cursor:pointer;transition:transform .18s;box-shadow:0 2px 12px rgba(0,0,0,.05)}
+.mc:active{transform:scale(.96)}
+.mc-img{height:105px;display:flex;align-items:center;justify-content:center;font-size:42px;position:relative;overflow:hidden}
+.mc-body{padding:10px 12px 13px}
+.mc-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;line-height:1.3}
+.mc-sub{font-size:11px;color:var(--ink3);margin-bottom:5px}
+.mc-price{font-size:13px;font-weight:800;color:var(--green)}
+.mc-star{font-size:11px;color:var(--amber-w)}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(250,248,244,.97);backdrop-filter:blur(16px) saturate(1.5);border-top:1px solid var(--line);display:flex;padding-bottom:var(--sb);z-index:100}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;cursor:pointer;background:none;border:none;font-family:'Plus Jakarta Sans',sans-serif}
+.nv-ic{font-size:22px;line-height:1}
+.nv-lb{font-size:10px;font-weight:600;color:var(--ink3)}
+.nv.on .nv-lb{color:var(--green)}
+.nv-dot{width:4px;height:4px;border-radius:50%;background:var(--green);margin-top:1px}
+
+/* ═══════════ S-SEARCH ═══════════ */
+#s-search{background:var(--cream)}
+.search-header{background:var(--white);border-bottom:1px solid var(--line);flex-shrink:0;padding-bottom:0;padding-top:calc(var(--st) + 4px)}
+.search-input-row{display:flex;align-items:center;gap:10px;padding:10px 16px 12px}
+.search-input-wrap{flex:1;position:relative;display:flex;align-items:center}
+.search-icon{position:absolute;left:14px;font-size:16px;color:var(--ink3);pointer-events:none}
+.search-input{width:100%;background:var(--paper);border:1.5px solid var(--line);border-radius:var(--rp);padding:11px 14px 11px 40px;font-size:15px;font-family:'Plus Jakarta Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .2s}
+.search-input:focus{border-color:var(--green)}
+.search-cancel{font-size:14px;font-weight:700;color:var(--green);cursor:pointer;white-space:nowrap;flex-shrink:0}
+.filter-chips-row{display:flex;gap:8px;padding:0 16px 14px;overflow-x:auto}
+.filter-chips-row::-webkit-scrollbar{display:none}
+.fchip{flex-shrink:0;border-radius:var(--rp);padding:7px 14px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--line);background:var(--white);color:var(--ink2);transition:all .15s;display:flex;align-items:center;gap:5px}
+.fchip.on{background:var(--forest);border-color:var(--forest);color:#fff}
+.search-results{flex:1;overflow-y:auto;padding:8px 0}
+.search-results::-webkit-scrollbar{display:none}
+.no-results{text-align:center;padding:48px 24px;color:var(--ink3)}
+.no-results-icon{font-size:48px;margin-bottom:12px}
+.no-results-title{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);margin-bottom:6px}
+.search-result-row{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s;background:var(--white)}
+.search-result-row:active{background:var(--mint)}
+.srr-img{width:72px;height:72px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:30px;flex-shrink:0;overflow:hidden}
+.srr-info{flex:1;min-width:0}
+.srr-title{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.srr-sub{font-size:12px;color:var(--ink3);margin-bottom:5px}
+.srr-tags{display:flex;gap:5px}
+.srr-tag{background:var(--sage);color:var(--green);border-radius:var(--rp);padding:2px 8px;font-size:10px;font-weight:700}
+.srr-price{font-family:'Playfair Display',serif;font-size:16px;color:var(--green);flex-shrink:0;text-align:right}
+.srr-price-lb{font-size:10px;color:var(--ink3);text-align:right}
+
+/* ═══════════ S3 LISTING ═══════════ */
+#s3{background:var(--cream)}
+.l-hero{height:300px;flex-shrink:0;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.l-emoji{font-size:100px;opacity:.18;filter:saturate(0);position:relative;z-index:1}
+.l-veil{position:absolute;inset:0;z-index:2;background:linear-gradient(to bottom,rgba(0,0,0,.25) 0%,transparent 30%,transparent 50%,rgba(0,0,0,.6) 100%)}
+.l-topbar{position:absolute;top:calc(var(--st) + 6px);left:0;right:0;padding:0 16px;display:flex;justify-content:space-between;align-items:center;z-index:10}
+.l-info{position:absolute;bottom:0;left:0;right:0;padding:14px 20px;z-index:10}
+.l-tags{display:flex;gap:6px;margin-bottom:8px}
+.l-title{font-family:'Playfair Display',serif;font-size:22px;color:#fff;line-height:1.2;margin-bottom:6px}
+.l-loc{font-size:13px;color:rgba(255,255,255,.75);display:flex;align-items:center;gap:5px}
+.img-dots{display:flex;gap:5px;margin-top:8px}
+.img-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4)}
+.img-dot.on{background:#fff;width:16px;border-radius:3px}
+
+.l-body{flex:1;overflow-y:auto}
+.l-body::-webkit-scrollbar{display:none}
+.l-section{padding:16px 20px;border-bottom:1px solid var(--line)}
+.l-section:last-child{border-bottom:none}
+.l-sec-title{font-family:'Playfair Display',serif;font-size:18px;color:var(--ink);margin-bottom:12px}
+.pill-row{display:flex;flex-wrap:wrap;gap:8px}
+.info-pill{display:flex;align-items:center;gap:6px;background:var(--white);border:1px solid var(--line);border-radius:var(--rp);padding:8px 14px;font-size:12px;font-weight:500;color:var(--ink2)}
+.guide-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rl);padding:16px;display:flex;align-items:center;gap:14px}
+.g-av{width:54px;height:54px;border-radius:50%;background:var(--sage);border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:var(--green);flex-shrink:0}
+.g-name{font-size:16px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.g-meta{font-size:12px;color:var(--ink3);margin-bottom:7px}
+.g-chips{display:flex;gap:6px;flex-wrap:wrap}
+.g-chip{background:var(--sage);color:var(--green);border-radius:var(--rp);padding:3px 10px;font-size:10px;font-weight:700}
+.incl-item{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);font-size:14px;color:var(--ink2)}
+.incl-item:last-child{border-bottom:none}
+.incl-ck{width:24px;height:24px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;color:var(--green)}
+.rev-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rl);padding:16px;margin-bottom:10px}
+.rev-card:last-child{margin-bottom:0}
+.rev-hd{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.rev-av{width:36px;height:36px;border-radius:50%;background:var(--amber-lt);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--amber);flex-shrink:0}
+.rev-name{font-size:14px;font-weight:700;color:var(--ink)}
+.rev-date{font-size:11px;color:var(--ink3)}
+.rev-stars{color:var(--amber-w);font-size:13px;margin-bottom:5px}
+.rev-txt{font-size:13px;color:var(--ink2);line-height:1.6}
+.similar-card{flex-shrink:0;width:200px;border-radius:var(--rl);background:var(--white);border:1px solid var(--line);overflow:hidden;cursor:pointer}
+.sim-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:48px;overflow:hidden}
+.sim-body{padding:10px 12px 12px}
+.sim-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:3px;line-height:1.3}
+.sim-price{font-size:13px;font-weight:800;color:var(--green)}
+.l-cta{flex-shrink:0;background:rgba(250,248,244,.97);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 20px;padding-bottom:calc(var(--sb) + 12px);display:flex;align-items:center;gap:12px}
+.price-block{flex:1}
+.price-big{font-family:'Playfair Display',serif;font-size:26px;color:var(--green);line-height:1}
+.price-sm{font-size:11px;color:var(--ink3);margin-top:1px}
+
+/* ═══════════ S4 DATE ═══════════ */
+#s4{background:var(--cream)}
+.s4-body{flex:1;overflow-y:auto}
+.s4-body::-webkit-scrollbar{display:none}
+.cal-wrap{padding:20px}
+.cal-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.cal-m{font-family:'Playfair Display',serif;font-size:20px;color:var(--ink)}
+.cal-arr{width:38px;height:38px;border-radius:50%;background:var(--white);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .15s}
+.cal-arr:active{background:var(--sage)}
+.cal-dn{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:6px}
+.cdn{text-align:center;font-size:12px;font-weight:700;color:var(--ink3);padding:6px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cd{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:14px;font-weight:500;cursor:pointer;color:var(--ink);transition:all .15s;position:relative}
+.cd.empty,.cd.past{cursor:default;color:var(--ink4)}
+.cd.unavail{color:var(--ink4);cursor:not-allowed}
+.cd.today{font-weight:800;color:var(--green)}
+.cd.today::after{content:'';position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--green)}
+.cd.sel{background:var(--forest);color:#fff!important}
+.cd.sel::after{display:none}
+.cd:not(.unavail):not(.empty):not(.past):not(.sel):active{background:var(--sage)}
+.cal-leg{display:flex;gap:16px;margin-top:12px}
+.leg{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3)}
+.leg-s{width:12px;height:12px;border-radius:50%}
+.guest-section{padding:0 20px 20px}
+.guest-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);overflow:hidden;margin-bottom:14px}
+.guest-row{display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--line)}
+.guest-row:last-child{border-bottom:none}
+.gt{font-size:15px;font-weight:700;color:var(--ink)}
+.gd{font-size:12px;color:var(--ink3);margin-top:1px}
+.stepper{display:flex;align-items:center;gap:16px}
+.st-btn{width:34px;height:34px;border-radius:50%;border:1.5px solid var(--line);background:none;font-size:20px;color:var(--ink2);cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Plus Jakarta Sans',sans-serif;font-weight:300;transition:all .15s;line-height:1}
+.st-btn.on{border-color:var(--green);color:var(--green)}
+.st-btn:active{background:var(--sage)}
+.st-n{font-size:18px;font-weight:800;color:var(--ink);min-width:22px;text-align:center}
+.book-pill{background:var(--forest);border-radius:var(--rp);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;margin:0 20px 20px}
+.bp-l{font-size:13px;color:rgba(255,255,255,.7)}
+.bp-p{font-family:'Playfair Display',serif;font-size:22px;color:#fff}
+.fixed-cta{position:sticky;bottom:0;background:rgba(250,248,244,.97);backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:12px 20px;padding-bottom:calc(var(--sb) + 12px)}
+
+/* ═══════════ S5 CHECKOUT ═══════════ */
+#s5{background:var(--cream)}
+.s5-scroll{flex:1;overflow-y:auto}
+.s5-scroll::-webkit-scrollbar{display:none}
+.co-block{padding:16px 20px;border-bottom:1px solid var(--line)}
+.co-block:last-child{border-bottom:none}
+.co-label{font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+.sum-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);overflow:hidden}
+.sum-row{display:flex;justify-content:space-between;align-items:center;padding:13px 18px;border-bottom:1px solid var(--line)}
+.sum-row:last-child{border-bottom:none}
+.sl{font-size:14px;color:var(--ink2)}
+.sv{font-size:14px;font-weight:700;color:var(--ink)}
+.sv-g{color:var(--green)}
+.sum-total{background:var(--mint)}
+.sum-total .sl{font-size:15px;font-weight:700;color:var(--ink)}
+.sum-total .sv{font-family:'Playfair Display',serif;font-size:22px;color:var(--green)}
+.pay-opt{background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);padding:15px 16px;display:flex;align-items:center;gap:13px;cursor:pointer;margin-bottom:10px;transition:border-color .2s,background .2s}
+.pay-opt:last-child{margin-bottom:0}
+.pay-opt.on{border-color:var(--green);background:var(--mint)}
+.pay-radio{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+.pay-opt.on .pay-radio{border-color:var(--green)}
+.pay-inner{width:10px;height:10px;border-radius:50%;background:var(--green);display:none}
+.pay-opt.on .pay-inner{display:block}
+.pay-icon{font-size:22px;width:38px;text-align:center;flex-shrink:0}
+.pay-txt{flex:1}
+.pay-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px}
+.pay-desc{font-size:12px;color:var(--ink3)}
+.pay-badge-g{background:var(--green);color:#fff;border-radius:var(--rp);padding:3px 9px;font-size:10px;font-weight:700}
+.trust{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--ink3);margin-top:12px}
+
+/* ═══════════ S6 CONFIRMED ═══════════ */
+#s6{background:var(--forest);overflow-y:auto}
+#s6::-webkit-scrollbar{display:none}
+.conf-top{padding:0 28px;padding-top:calc(var(--st) + 40px);text-align:center}
+.conf-ring{width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:40px;margin:0 auto 24px}
+.conf-h{font-family:'Playfair Display',serif;font-size:32px;color:#fff;margin-bottom:8px}
+.conf-sub{font-size:14px;color:rgba(255,255,255,.6);line-height:1.6;margin-bottom:24px}
+.ref-box{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:var(--rl);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.ref-lbl{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:4px;font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.ref-code{font-size:20px;font-weight:800;color:#fff;letter-spacing:2px;font-family:monospace}
+.ref-copy{font-size:22px;cursor:pointer;opacity:.6}
+.trip-box{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:var(--rl);overflow:hidden;margin-bottom:28px}
+.tb-row{display:flex;justify-content:space-between;padding:11px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.tb-row:last-child{border-bottom:none}
+.tb-l{font-size:12px;color:rgba(255,255,255,.5)}
+.tb-v{font-size:13px;font-weight:700;color:rgba(255,255,255,.9)}
+.conf-acts{display:flex;flex-direction:column;gap:10px}
+.conf-bot{padding:0 28px;padding-bottom:calc(var(--sb) + 28px)}
+
+/* ═══════════ S7 PRE-TRIP ═══════════ */
+#s7{background:var(--cream)}
+.pt-hero{background:var(--forest);flex-shrink:0;padding:0 20px 20px;overflow:hidden;position:relative}
+.pt-hbg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 110% 50%,rgba(61,170,106,.2) 0%,transparent 60%)}
+.pt-topbar{position:relative;z-index:2;display:flex;align-items:center;gap:12px;padding-top:calc(var(--st) + 6px);margin-bottom:20px}
+.pt-tb-title{font-size:13px;font-weight:600;color:rgba(255,255,255,.6);flex:1}
+.cd-block{position:relative;z-index:2;display:flex;align-items:flex-end;gap:16px;margin-bottom:16px}
+.cd-big{font-family:'Playfair Display',serif;font-size:64px;color:#fff;line-height:1}
+.cd-txt{}
+.cd-days{font-size:13px;color:rgba(255,255,255,.5)}
+.cd-trip{font-size:16px;font-weight:700;color:#fff}
+.wx-card{position:relative;z-index:2;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--rl);padding:13px 16px;display:flex;align-items:center;justify-content:space-between}
+.wx-l{display:flex;align-items:center;gap:10px}
+.wx-ic{font-size:28px}
+.wx-f{font-size:13px;font-weight:600;color:#fff}
+.wx-s{font-size:11px;color:rgba(255,255,255,.55);margin-top:1px}
+.wx-t{font-family:'Playfair Display',serif;font-size:32px;color:#fff}
+.pt-content{flex:1;overflow-y:auto;padding:16px 20px}
+.pt-content::-webkit-scrollbar{display:none}
+.guide-msg-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;margin-bottom:16px;transition:background .15s}
+.guide-msg-card:active{background:var(--sage)}
+.gmc-av{width:48px;height:48px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--green);flex-shrink:0}
+.unread{width:22px;height:22px;border-radius:50%;background:var(--green);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+.cl-container{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);overflow:hidden;margin-bottom:16px}
+.cl-hd{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.cl-hd-t{font-size:15px;font-weight:700;color:var(--ink)}
+.cl-hd-p{font-size:13px;font-weight:700;color:var(--green)}
+.cl-pbar{height:3px;background:var(--line);margin:0 18px;border-radius:3px;overflow:hidden}
+.cl-pfill{height:100%;background:var(--green);border-radius:3px;transition:width .4s ease}
+.cl-row{display:flex;align-items:flex-start;gap:14px;padding:14px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.cl-row:last-child{border-bottom:none}
+.cl-row:active{background:var(--mint)}
+.cl-box{width:22px;height:22px;border-radius:7px;border:2px solid var(--line);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:transparent;transition:all .2s;margin-top:1px}
+.cl-box.done{background:var(--green);border-color:var(--green);color:#fff}
+.cl-tm{font-size:14px;color:var(--ink);font-weight:500}
+.cl-tm.done{text-decoration:line-through;color:var(--ink3);font-weight:400}
+.cl-th{font-size:11px;color:var(--ink3);margin-top:2px}
+
+/* ═══════════ S8 REVIEW ═══════════ */
+#s8{background:var(--cream)}
+.rv-hero{background:var(--amber-w);flex-shrink:0;padding:0 24px 24px;text-align:center;position:relative;overflow:hidden}
+.rv-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 100%,rgba(0,0,0,.15) 0%,transparent 70%)}
+.rv-htop{padding-top:calc(var(--st) + 16px);position:relative;z-index:1}
+.rv-trophy{font-size:60px;margin-bottom:10px;display:block}
+.rv-h{font-family:'Playfair Display',serif;font-size:28px;color:#fff;margin-bottom:6px}
+.rv-sub{font-size:13px;color:rgba(255,255,255,.75)}
+.rv-scroll{flex:1;overflow-y:auto}
+.rv-scroll::-webkit-scrollbar{display:none}
+.rv-section{padding:16px 20px;border-bottom:1px solid var(--line)}
+.rv-section:last-child{border-bottom:none}
+.rv-blabel{font-size:11px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.badges-row{display:flex;gap:8px;flex-wrap:wrap}
+.bdg{display:flex;align-items:center;gap:8px;background:var(--white);border:1px solid var(--line);border-radius:var(--rp);padding:9px 14px;font-size:13px;font-weight:700;color:var(--green)}
+.bdg-ic{font-size:20px}
+.stars-row{display:flex;justify-content:center;gap:10px;padding:4px 0}
+.star-b{font-size:42px;cursor:pointer;color:var(--line);transition:all .15s;-webkit-user-select:none;user-select:none}
+.star-b.on{color:var(--amber-w)}
+.star-b:active{transform:scale(1.25)}
+.asp-block{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);overflow:hidden}
+.asp-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--line)}
+.asp-row:last-child{border-bottom:none}
+.asp-n{font-size:14px;color:var(--ink2)}
+.asp-s{color:var(--amber-w);font-size:15px}
+.rv-ta{width:100%;background:var(--white);border:1.5px solid var(--line);border-radius:var(--rl);padding:14px 16px;font-size:14px;color:var(--ink);font-family:'Plus Jakarta Sans',sans-serif;resize:none;min-height:96px;outline:none;transition:border-color .2s;line-height:1.6}
+.rv-ta:focus{border-color:var(--green)}
+.pts-card{display:flex;align-items:center;gap:12px;background:var(--amber-lt);border:1px solid rgba(201,124,10,.2);border-radius:var(--rl);padding:14px 16px;margin-bottom:14px}
+.pts-ic{font-size:22px}
+.pts-t{font-size:13px;color:var(--amber);font-weight:700}
+
+/* ═══════════ S-TRIPS ═══════════ */
+#s-trips{background:var(--cream)}
+.trips-body{flex:1;overflow-y:auto}
+.trips-body::-webkit-scrollbar{display:none}
+.trip-status-section{padding:12px 20px 0}
+.tss-title{font-size:12px;font-weight:800;color:var(--ink3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.booked-trip-card{background:var(--white);border:1px solid var(--line);border-radius:var(--rx);padding:0;overflow:hidden;margin-bottom:12px;cursor:pointer;transition:transform .15s}
+.booked-trip-card:active{transform:scale(.98)}
+.btc-img{height:120px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+.btc-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.5))}
+.btc-status{position:absolute;top:10px;right:10px;border-radius:var(--rp);padding:4px 10px;font-size:11px;font-weight:700}
+.btc-s-confirmed{background:var(--green);color:#fff}
+.btc-s-upcoming{background:var(--amber-w);color:#fff}
+.btc-s-completed{background:var(--ink2);color:#fff}
+.btc-body{padding:14px 16px}
+.btc-title{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.btc-meta{font-size:13px;color:var(--ink3);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.btc-foot{display:flex;align-items:center;justify-content:space-between}
+.btc-ref{font-size:11px;color:var(--ink4);font-family:monospace;font-weight:700}
+.btc-action{font-size:12px;font-weight:700;color:var(--green)}
+
+/* ═══════════ S-PROFILE ═══════════ */
+#s-profile{background:var(--cream)}
+.prof-body{flex:1;overflow-y:auto}
+.prof-body::-webkit-scrollbar{display:none}
+.prof-hero{background:var(--forest);padding:0 20px 24px;text-align:center;position:relative;overflow:hidden}
+.ph-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(61,170,106,.2) 0%,transparent 70%)}
+.ph-top{position:relative;z-index:2;padding-top:calc(var(--st) + 16px)}
+.ph-av{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:800;color:#fff;margin:0 auto 12px}
+.ph-name{font-family:'Playfair Display',serif;font-size:24px;color:#fff;margin-bottom:3px}
+.ph-sub{font-size:13px;color:rgba(255,255,255,.55)}
+.ph-stats{display:flex;justify-content:center;gap:32px;margin-top:20px;position:relative;z-index:2}
+.ph-stat{text-align:center}
+.ph-stat-n{font-family:'Playfair Display',serif;font-size:24px;color:#fff}
+.ph-stat-l{font-size:11px;color:rgba(255,255,255,.55);font-weight:500}
+.prof-section{padding:16px 20px;border-bottom:1px solid var(--line)}
+.prof-row{display:flex;align-items:center;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.prof-row:last-child{border-bottom:none}
+.prof-row:active{background:var(--mint);margin:0 -20px;padding-left:20px;padding-right:20px}
+.pr-icon{width:40px;height:40px;border-radius:12px;background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:1px solid var(--line)}
+.pr-text{flex:1}
+.pr-title{font-size:14px;font-weight:700;color:var(--ink)}
+.pr-sub{font-size:12px;color:var(--ink3);margin-top:1px}
+.pr-arrow{font-size:16px;color:var(--ink4)}
+.points-banner{background:linear-gradient(135deg,var(--forest),var(--green-mid));border-radius:var(--rl);padding:16px 18px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.pb-left{}
+.pb-label{font-size:12px;color:rgba(255,255,255,.6);margin-bottom:2px}
+.pb-points{font-family:'Playfair Display',serif;font-size:28px;color:#fff}
+.pb-right{font-size:40px;opacity:.5}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ════ S1 SPLASH ════ -->
+<div class="screen active" id="s1">
+  <div class="sp-bg"></div><div class="sp-grain"></div>
+  <div class="sp-content">
+    <div class="sp-badge"><div class="sp-dot"></div>India's outdoor marketplace</div>
+    <div class="sp-h serif">Book<br>the <em>Wild</em></div>
+    <div class="sp-sub">Wildcast</div>
+    <div class="sp-pills">
+      <div class="sp-pill">🏔️ Trekking</div><div class="sp-pill">🏕️ Camping</div>
+      <div class="sp-pill">🦁 Safaris</div><div class="sp-pill">🏂 Snow Sports</div>
+      <div class="sp-pill">🌊 Watersports</div><div class="sp-pill">🦅 Birdwatching</div>
+      <div class="sp-pill">🧗 Rock Climbing</div><div class="sp-pill">🚵 Cycling</div>
+    </div>
+  </div>
+  <div class="sp-foot">
+    <button class="btn b-white b-full" onclick="GO('s2')" style="padding:17px;font-size:15px">Start exploring →</button>
+    <div style="display:flex;align-items:center;gap:12px;margin:4px 0">
+      <div class="sp-divline"></div><div class="sp-divtxt">already have an account</div><div class="sp-divline"></div>
+    </div>
+    <button class="btn b-ghost b-full" onclick="GO('s2')">Sign in</button>
+  </div>
+</div>
+
+<!-- ════ S2 HOME ════ -->
+<div class="screen" id="s2">
+  <div class="home-hero">
+    <div class="hh-bg"></div>
+    <div class="hh-top">
+      <div><div class="hh-greet">Good morning, Manish 👋</div><div class="hh-title serif">Book the Wild</div></div>
+      <div class="hh-av">MS</div>
+    </div>
+    <div class="hh-search" onclick="GO('s-search')">
+      <span style="font-size:16px">🔍</span>
+      <span class="hh-search-txt">Trek, camp, safari, snow...</span>
+      <span class="hh-filter">Filter</span>
+    </div>
+  </div>
+  <div class="act-strip" id="act-strip"></div>
+  <div class="feed" id="home-feed"></div>
+  <div class="bnav">
+    <button class="nv on" onclick="GO('s2')"><div class="nv-ic">🏠</div><div class="nv-dot"></div><div class="nv-lb">Explore</div></button>
+    <button class="nv" onclick="GO('s-search')"><div class="nv-ic">🔍</div><div class="nv-lb">Search</div></button>
+    <button class="nv" onclick="GO('s-trips')"><div class="nv-ic">🎒</div><div class="nv-lb">Trips</div></button>
+    <button class="nv" onclick="TOAST('❤️ Saved experiences coming soon')"><div class="nv-ic">❤️</div><div class="nv-lb">Saved</div></button>
+    <button class="nv" onclick="GO('s-profile')"><div class="nv-ic">👤</div><div class="nv-lb">Profile</div></button>
+  </div>
+</div>
+
+<!-- ════ S-SEARCH ════ -->
+<div class="screen" id="s-search">
+  <div class="search-header">
+    <div class="search-input-row">
+      <div class="search-input-wrap">
+        <span class="search-icon">🔍</span>
+        <input class="search-input" id="search-inp" placeholder="Search experiences..." oninput="doSearch()" autofocus>
+      </div>
+      <div class="search-cancel" onclick="BACK()">Cancel</div>
+    </div>
+    <div class="filter-chips-row" id="filter-chips"></div>
+  </div>
+  <div class="search-results" id="search-results"></div>
+</div>
+
+<!-- ════ S3 LISTING ════ -->
+<div class="screen" id="s3">
+  <div class="l-hero" id="l-hero">
+    <div class="l-emoji" id="l-emoji">🏔️</div>
+    <div class="l-veil"></div>
+    <div class="l-topbar">
+      <button class="btn b-icon b-dark-glass" onclick="BACK()">←</button>
+      <div style="display:flex;gap:8px">
+        <button class="btn b-icon b-dark-glass" id="l-save-btn" onclick="toggleSave()">♡</button>
+        <button class="btn b-icon b-dark-glass" onclick="TOAST('🔗 Link copied!')">↗</button>
+      </div>
+    </div>
+    <div class="l-info">
+      <div class="l-tags" id="l-tags"></div>
+      <div class="l-title serif" id="l-title"></div>
+      <div class="l-loc" id="l-loc"></div>
+      <div class="img-dots" id="img-dots"></div>
+    </div>
+  </div>
+  <div class="l-body" id="l-body"></div>
+  <div class="l-cta">
+    <div class="price-block"><div class="price-big serif" id="l-price"></div><div class="price-sm">per person · all inclusive</div></div>
+    <button class="btn b-wa" onclick="TOAST('💬 Opening WhatsApp with guide...')">💬</button>
+    <button class="btn b-forest" onclick="GO('s4')" style="padding:14px 22px;font-size:14px">Book now →</button>
+  </div>
+</div>
+
+<!-- ════ S4 DATES ════ -->
+<div class="screen" id="s4">
+  <div class="back-bar">
+    <div class="back-circle" onclick="BACK()">←</div>
+    <div class="back-page-title serif">Select dates</div>
+  </div>
+  <div class="s4-body">
+    <div class="cal-wrap">
+      <div class="cal-hd">
+        <div class="cal-arr" onclick="shiftMonth(-1)">‹</div>
+        <div class="cal-m serif" id="cal-month-lbl">January 2026</div>
+        <div class="cal-arr" onclick="shiftMonth(1)">›</div>
+      </div>
+      <div class="cal-dn"><div class="cdn">Mo</div><div class="cdn">Tu</div><div class="cdn">We</div><div class="cdn">Th</div><div class="cdn">Fr</div><div class="cdn">Sa</div><div class="cdn">Su</div></div>
+      <div class="cal-grid" id="cal-grid"></div>
+      <div class="cal-leg">
+        <div class="leg"><div class="leg-s" style="background:var(--forest)"></div>Selected</div>
+        <div class="leg"><div class="leg-s" style="background:var(--line)"></div>Unavailable</div>
+        <div class="leg"><div class="leg-s" style="border:2px solid var(--green);background:transparent"></div>Today</div>
+      </div>
+    </div>
+    <div class="guest-section">
+      <div style="font-size:14px;font-weight:700;color:var(--ink);margin-bottom:10px">Guests</div>
+      <div class="guest-card">
+        <div class="guest-row">
+          <div><div class="gt">Adults</div><div class="gd">Age 18+</div></div>
+          <div class="stepper"><button class="st-btn" id="a-minus" onclick="changeG(-1,'a')">−</button><div class="st-n" id="a-n">2</div><button class="st-btn on" onclick="changeG(1,'a')">+</button></div>
+        </div>
+        <div class="guest-row">
+          <div><div class="gt">Teens</div><div class="gd">Age 14–17</div></div>
+          <div class="stepper"><button class="st-btn" id="t-minus" onclick="changeG(-1,'t')">−</button><div class="st-n" id="t-n">0</div><button class="st-btn on" onclick="changeG(1,'t')">+</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="book-pill"><div class="bp-l" id="bp-lbl">Select a date</div><div class="bp-p serif" id="bp-price">—</div></div>
+    <div class="safe-md"></div>
+  </div>
+  <div class="fixed-cta">
+    <button class="btn b-forest b-full" id="s4-continue" onclick="goCheckout()" style="padding:16px;font-size:15px;opacity:.5" disabled>Select a date to continue</button>
+  </div>
+</div>
+
+<!-- ════ S5 CHECKOUT ════ -->
+<div class="screen" id="s5">
+  <div class="back-bar">
+    <div class="back-circle" onclick="BACK()">←</div>
+    <div class="back-page-title serif">Checkout</div>
+  </div>
+  <div class="s5-scroll" id="s5-scroll"></div>
+</div>
+
+<!-- ════ S6 CONFIRMED ════ -->
+<div class="screen" id="s6">
+  <div class="conf-top">
+    <div class="conf-ring">✓</div>
+    <div class="conf-h serif" id="conf-h">You're booked!</div>
+    <div class="conf-sub" id="conf-sub"></div>
+    <div class="ref-box"><div><div class="ref-lbl">Booking reference</div><div class="ref-code" id="conf-ref"></div></div><div class="ref-copy" onclick="TOAST('📋 Booking ID copied!')">⎘</div></div>
+    <div class="trip-box" id="conf-tripbox"></div>
+  </div>
+  <div class="conf-bot">
+    <div class="conf-acts">
+      <button class="btn b-white b-full" onclick="TOAST('💬 Confirmation sent to WhatsApp!')" style="padding:16px;font-size:14px">💬 Get details on WhatsApp</button>
+      <button class="btn b-white b-full" onclick="GO('s7')" style="padding:16px;font-size:14px">📋 Pre-trip checklist</button>
+      <button class="btn b-outline b-full" onclick="GO('s2')" style="padding:14px">← Back to explore</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ S7 PRE-TRIP ════ -->
+<div class="screen" id="s7">
+  <div class="pt-hero">
+    <div class="pt-hbg"></div>
+    <div class="pt-topbar">
+      <div class="back-circle" onclick="BACK()" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff">←</div>
+      <div class="pt-tb-title" id="pt-trip-label">Your trip</div>
+      <button class="btn b-icon-sm b-dark-glass" onclick="TOAST('💬 Opening guide chat...')">💬</button>
+    </div>
+    <div class="cd-block"><div class="cd-big serif" id="pt-days">4</div><div class="cd-txt"><div class="cd-days">days until your adventure</div><div class="cd-trip" id="pt-trip-name">—</div></div></div>
+    <div class="wx-card"><div class="wx-l"><div class="wx-ic">☀️</div><div><div class="wx-f" id="pt-wx-f">Clear skies forecast</div><div class="wx-s" id="pt-wx-l">—</div></div></div><div class="wx-t serif" id="pt-temp">—</div></div>
+  </div>
+  <div class="pt-content">
+    <div class="guide-msg-card" onclick="TOAST('💬 Opening guide chat...')">
+      <div class="gmc-av" id="pt-guide-av">AK</div>
+      <div style="flex:1"><div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:2px" id="pt-guide-msg-name">Message your guide</div><div style="font-size:12px;color:var(--ink3)" id="pt-guide-msg">"Excited for your trip! Any questions?"</div></div>
+      <div class="unread">1</div>
+    </div>
+    <div class="cl-container">
+      <div class="cl-hd"><div class="cl-hd-t">Pre-trip checklist</div><div class="cl-hd-p" id="cl-prog-t">3 / 6</div></div>
+      <div class="cl-pbar"><div class="cl-pfill" id="cl-pfill" style="width:50%"></div></div>
+      <div class="cl-row" onclick="toggleCL(this)"><div class="cl-box done">✓</div><div><div class="cl-tm done">Booking confirmed</div></div></div>
+      <div class="cl-row" onclick="toggleCL(this)"><div class="cl-box done">✓</div><div><div class="cl-tm done">Insurance active</div></div></div>
+      <div class="cl-row" onclick="toggleCL(this)"><div class="cl-box done">✓</div><div><div class="cl-tm done">Safety waiver signed</div></div></div>
+      <div class="cl-row" onclick="toggleCL(this)"><div class="cl-box"></div><div><div class="cl-tm">Pack thermal layers (3 sets min)</div><div class="cl-th">Guide recommends Decathlon Forclaz range</div></div></div>
+      <div class="cl-row" onclick="toggleCL(this)"><div class="cl-box"></div><div><div class="cl-tm">Bring photo ID + 2 copies</div><div class="cl-th">Required for forest permit at entry</div></div></div>
+      <div class="cl-row" onclick="toggleCL(this)"><div class="cl-box"></div><div><div class="cl-tm">Share itinerary with emergency contact</div><div class="cl-th">Tap to send via WILDCAST safety link</div></div></div>
+    </div>
+    <button class="btn b-forest b-full" onclick="GO('s8')" style="padding:16px;font-size:14px">Trip complete? Leave a review →</button>
+    <div class="safe-lg"></div>
+  </div>
+</div>
+
+<!-- ════ S8 REVIEW ════ -->
+<div class="screen" id="s8">
+  <div class="rv-hero">
+    <div class="rv-htop">
+      <span class="rv-trophy">🏆</span>
+      <div class="rv-h serif" id="rv-title">Adventure complete!</div>
+      <div class="rv-sub" id="rv-sub"></div>
+    </div>
+  </div>
+  <div class="rv-scroll">
+    <div class="rv-section">
+      <div class="rv-blabel">Badges earned</div>
+      <div class="badges-row" id="rv-badges"></div>
+    </div>
+    <div class="rv-section">
+      <div class="rv-blabel">Overall rating</div>
+      <div class="stars-row" id="star-row">
+        <div class="star-b" onclick="rateStar(1)">★</div><div class="star-b" onclick="rateStar(2)">★</div>
+        <div class="star-b" onclick="rateStar(3)">★</div><div class="star-b on" onclick="rateStar(4)">★</div>
+        <div class="star-b on" onclick="rateStar(5)">★</div>
+      </div>
+    </div>
+    <div class="rv-section">
+      <div class="rv-blabel">Rate each aspect</div>
+      <div class="asp-block">
+        <div class="asp-row"><div class="asp-n">Guide expertise</div><div class="asp-s">★★★★★</div></div>
+        <div class="asp-row"><div class="asp-n">Safety & equipment</div><div class="asp-s">★★★★★</div></div>
+        <div class="asp-row"><div class="asp-n">Value for money</div><div class="asp-s">★★★★☆</div></div>
+        <div class="asp-row"><div class="asp-n">Food & accommodation</div><div class="asp-s">★★★★★</div></div>
+      </div>
+    </div>
+    <div class="rv-section">
+      <div class="rv-blabel">Write a review</div>
+      <textarea class="rv-ta" placeholder="Tell the community...">Summit morning at 4am was surreal. Arjun was outstanding the entire way. Life-changing experience.</textarea>
+    </div>
+    <div class="rv-section">
+      <div class="pts-card" style="margin-bottom:14px"><div class="pts-ic">🎁</div><div class="pts-t">Leave a review → earn 200 WILDCAST points</div></div>
+      <button class="btn b-amber b-full" onclick="GO('s2');TOAST('✅ Review submitted! +200 points 🎉')" style="padding:16px;font-size:15px">Submit review →</button>
+    </div>
+    <div class="safe-lg"></div>
+  </div>
+</div>
+
+<!-- ════ S-TRIPS ════ -->
+<div class="screen" id="s-trips">
+  <div class="back-bar" style="background:var(--white)">
+    <div class="back-circle" onclick="GO('s2')">←</div>
+    <div class="back-page-title serif">My Trips</div>
+  </div>
+  <div class="trips-body" id="trips-body"></div>
+</div>
+
+<!-- ════ S-PROFILE ════ -->
+<div class="screen" id="s-profile">
+  <div class="prof-hero">
+    <div class="ph-bg"></div>
+    <div class="ph-top">
+      <div class="ph-av">MS</div>
+      <div class="ph-name serif">Manish Sharma</div>
+      <div class="ph-sub">Member since 2024 · Mumbai</div>
+    </div>
+    <div class="ph-stats">
+      <div class="ph-stat"><div class="ph-stat-n serif">3</div><div class="ph-stat-l">Trips</div></div>
+      <div class="ph-stat"><div class="ph-stat-n serif">700</div><div class="ph-stat-l">Points</div></div>
+      <div class="ph-stat"><div class="ph-stat-n serif">4.9</div><div class="ph-stat-l">Avg rating</div></div>
+    </div>
+  </div>
+  <div class="prof-body">
+    <div class="prof-section">
+      <div class="points-banner">
+        <div class="pb-left"><div class="pb-label">WILDCAST Points</div><div class="pb-points serif">700</div></div>
+        <div class="pb-right">🏔️</div>
+      </div>
+    </div>
+    <div class="prof-section">
+      <div class="prof-row" onclick="GO('s-trips')"><div class="pr-icon">🎒</div><div class="pr-text"><div class="pr-title">My Trips</div><div class="pr-sub">3 trips · 1 upcoming</div></div><div class="pr-arrow">›</div></div>
+      <div class="prof-row" onclick="TOAST('❤️ Saved experiences')"><div class="pr-icon">❤️</div><div class="pr-text"><div class="pr-title">Saved Experiences</div><div class="pr-sub">7 saved</div></div><div class="pr-arrow">›</div></div>
+      <div class="prof-row" onclick="TOAST('🏆 Badges & achievements')"><div class="pr-icon">🏆</div><div class="pr-text"><div class="pr-title">Badges & Achievements</div><div class="pr-sub">5 earned</div></div><div class="pr-arrow">›</div></div>
+    </div>
+    <div class="prof-section">
+      <div class="prof-row" onclick="TOAST('💳 Payment methods')"><div class="pr-icon">💳</div><div class="pr-text"><div class="pr-title">Payment Methods</div><div class="pr-sub">GPay · HDFC card</div></div><div class="pr-arrow">›</div></div>
+      <div class="prof-row" onclick="TOAST('🔔 Notification settings')"><div class="pr-icon">🔔</div><div class="pr-text"><div class="pr-title">Notifications</div><div class="pr-sub">WhatsApp · Email</div></div><div class="pr-arrow">›</div></div>
+      <div class="prof-row" onclick="TOAST('🌐 Language: English')"><div class="pr-icon">🌐</div><div class="pr-text"><div class="pr-title">Language</div><div class="pr-sub">English · हिंदी available</div></div><div class="pr-arrow">›</div></div>
+    </div>
+    <div class="safe-lg"></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+<div id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════
+   DATA LAYER
+══════════════════════════════════════════ */
+const TRIPS = [
+  {
+    id:'t1', title:'Kedarkantha Winter Trek', shortTitle:'Kedarkantha Trek',
+    category:'trek', emoji:'🏔️',
+    gradient:'linear-gradient(135deg,#0d3320 0%,#1a6b3c 50%,#2d8a52 100%)',
+    location:'Uttarkashi, Uttarakhand', days:'6 days · 5 nights', maxGuests:12,
+    difficulty:'Moderate', altitude:'3,800m', price:7500, rating:4.9, reviews:342,
+    tags:['⭐ Top Rated','🔥 3 spots left'],
+    tagClasses:['tg-w','tg-a'],
+    guide:{initials:'AK',name:'Arjun Kapoor',years:9,trips:284,certifications:['✅ Verified','🏥 First Aid','🏔️ ATOAI']},
+    pills:['⏱ 6 days · 5 nights','👥 Max 12 guests','📊 Moderate','🏔️ 3,800m','🎒 Gear incl.','🍽️ All meals'],
+    includes:['Return transport from Dehradun','All accommodation — tents & guesthouses','All meals from Day 1 dinner to Day 6 lunch','Trekking poles, gaiters & crampons','Forest permits & all entry fees','Medical kit & emergency oxygen','Summit day professional photographer'],
+    reviews_data:[
+      {initials:'RV',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Rahul Verma',date:'December 2024',stars:5,text:'Arjun knows every inch of that mountain. The summit at 4am with torches snaking up the slope — I will never forget it.'},
+      {initials:'PM',bgColor:'var(--sage)',txColor:'var(--green)',name:'Priya Mehta',date:'January 2025',stars:5,text:'First-time trekker and I made it to 3,800m. The team was incredibly supportive. Book this immediately.'},
+    ],
+    similar:['t2','t3','t5'],
+    weather:{forecast:'Clear skies · Light snow above 3,000m',location:'Uttarkashi valley',temp:'-2°'},
+    badges:['🏔️ First 3,800m summit','❄️ Winter warrior','⭐ +500 points'],
+  },
+  {
+    id:'t2', title:'Hampta Pass Trek — 5 Days', shortTitle:'Hampta Pass Trek',
+    category:'trek', emoji:'🏔️',
+    gradient:'linear-gradient(135deg,#1a2a0d,#3a5c1a,#5a8a2d)',
+    location:'Kullu, Himachal Pradesh', days:'5 days · 4 nights', maxGuests:14,
+    difficulty:'Moderate', altitude:'4,270m', price:6200, rating:4.8, reviews:218,
+    tags:['🌟 Best Seller'],tagClasses:['tg-w'],
+    guide:{initials:'VK',name:'Vikram Kumar',years:7,trips:196,certifications:['✅ Verified','🏥 First Aid']},
+    pills:['⏱ 5 days','👥 Max 14','📊 Moderate','🏔️ 4,270m','🎒 Gear incl.','🍽️ All meals'],
+    includes:['Volvo bus from Manali','Camping tents & sleeping bags','All meals including packed lunches','Complete trekking gear kit','Mules for luggage carrying','Emergency medical support'],
+    reviews_data:[
+      {initials:'AS',bgColor:'var(--sage)',txColor:'var(--green)',name:'Aryan Singh',date:'Oct 2024',stars:5,text:'The Hampta Pass crossing was breathtaking. Vikram made sure everyone felt safe throughout the entire trek.'},
+      {initials:'NK',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Neha K.',date:'Sept 2024',stars:5,text:'The Spiti side view from the pass blew my mind. Perfect balance of challenge and support.'},
+    ],
+    similar:['t1','t3','t6'],
+    weather:{forecast:'Partly cloudy · Mild winds',location:'Kullu valley',temp:'8°'},
+    badges:['🏔️ High altitude pass','🌄 Sunrise chaser','⭐ +450 points'],
+  },
+  {
+    id:'t3', title:'Skiing in Auli — 3 Days', shortTitle:'Auli Ski Package',
+    category:'snow', emoji:'🏂',
+    gradient:'linear-gradient(135deg,#0d1a3a,#1a3d6b,#2d608a)',
+    location:'Auli, Uttarakhand', days:'3 days · 2 nights', maxGuests:8,
+    difficulty:'Beginner–Advanced', altitude:'2,519m', price:5500, rating:4.7, reviews:156,
+    tags:['❄️ Winter Special'],tagClasses:['tg-g'],
+    guide:{initials:'RS',name:'Ravi Sharma',years:6,trips:320,certifications:['✅ Verified','🎿 Ski Instructor']},
+    pills:['⏱ 3 days','👥 Max 8','📊 All levels','🏔️ 2,519m','🎿 Ski gear incl.','🏨 Hotel stay'],
+    includes:['Ropeway access — full 3 days','Ski equipment rental (skis, boots, poles)','Certified ski instructor','Hotel accommodation (double sharing)','All breakfasts & dinners','Après-ski hot drinks'],
+    reviews_data:[
+      {initials:'TG',bgColor:'#e3f2fd',txColor:'#1565c0',name:'Tanya G.',date:'Jan 2025',stars:5,text:'Never skied before and Ravi had me going down intermediate slopes by Day 2. Incredible instructor!'},
+      {initials:'KM',bgColor:'var(--sage)',txColor:'var(--green)',name:'Karan M.',date:'Feb 2025',stars:4,text:'Auli is genuinely world-class. The Nanda Devi view from the slopes is unreal. Highly recommend.'},
+    ],
+    similar:['t7','t4','t1'],
+    weather:{forecast:'Snowfall expected · Perfect ski conditions',location:'Auli ski resort',temp:'-8°'},
+    badges:['🎿 First ski run','❄️ Snow chaser','⭐ +400 points'],
+  },
+  {
+    id:'t4', title:'Jim Corbett Tiger Safari', shortTitle:'Corbett Safari',
+    category:'safari', emoji:'🦁',
+    gradient:'linear-gradient(135deg,#3a1a0d,#6b3d1a,#8a5a2d)',
+    location:'Jim Corbett NP, Uttarakhand', days:'2 days · 1 night', maxGuests:6,
+    difficulty:'Easy', altitude:'400m', price:4200, rating:4.9, reviews:412,
+    tags:['🐯 Tiger Zone','⭐ Top Rated'],tagClasses:['tg-a','tg-w'],
+    guide:{initials:'DN',name:'Dinesh Negi',years:14,trips:890,certifications:['✅ Verified','🌿 Naturalist','🏞️ Forest Dept.']},
+    pills:['⏱ 2 days','👥 Max 6 per jeep','📊 Easy','🌅 2 safaris incl.','🎥 Photography tips','🏨 Forest lodge'],
+    includes:['Jeep safari × 2 (morning & evening)','Forest lodge accommodation','All meals at lodge','Expert naturalist guide','Park entry & camera fees','Tiger tracking & wildlife briefing'],
+    reviews_data:[
+      {initials:'SP',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Suresh P.',date:'Nov 2024',stars:5,text:'We spotted a tiger on the very first safari! Dinesh knew exactly where to look. Absolutely magical.'},
+      {initials:'RD',bgColor:'var(--sage)',txColor:'var(--green)',name:'Ritu D.',date:'Dec 2024',stars:5,text:'The forest lodge was gorgeous. Waking up to jungle sounds every morning — pure bliss.'},
+    ],
+    similar:['t8','t1','t6'],
+    weather:{forecast:'Clear · Low humidity · Great safari conditions',location:'Corbett buffer zone',temp:'22°'},
+    badges:['🐯 Tiger spotter','🌿 Wildlife explorer','⭐ +350 points'],
+  },
+  {
+    id:'t5', title:'Rishikesh River Rafting', shortTitle:'Rishikesh Rafting',
+    category:'water', emoji:'🌊',
+    gradient:'linear-gradient(135deg,#0d2a3a,#1a5a6b,#2d808a)',
+    location:'Rishikesh, Uttarakhand', days:'1 day', maxGuests:8,
+    difficulty:'Beginner–Intermediate', altitude:'375m', price:1800, rating:4.8, reviews:891,
+    tags:['🌊 River Adventure','🔥 Most Booked'],tagClasses:['tg-d','tg-g'],
+    guide:{initials:'MR',name:'Manoj Rawat',years:11,trips:1420,certifications:['✅ Verified','🚤 River Guide','🏥 First Aid']},
+    pills:['⏱ 1 full day','👥 Max 8 per raft','📊 Beginner OK','⬆️ Grade III–IV rapids','🏊 Safety gear incl.','🍱 Riverside lunch'],
+    includes:['26km Shivpuri to Rishikesh run','All safety equipment — helmet, lifejacket','Experienced certified river guide','Riverside lunch at camp','Bonfire & beach time','Drop at Laxman Jhula'],
+    reviews_data:[
+      {initials:'AG',bgColor:'#e3f2fd',txColor:'#1565c0',name:'Ayesha G.',date:'Oct 2024',stars:5,text:'Pure adrenaline. We hit some genuinely scary rapids and came out screaming with joy. Manoj is a legend.'},
+      {initials:'VB',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Vijay B.',date:'Nov 2024',stars:5,text:'Our group of 8 friends had the best day of our lives. Booking for the second time next month!'},
+    ],
+    similar:['t1','t6','t9'],
+    weather:{forecast:'Sunny · River flow: Excellent',location:'Rishikesh, Ganges',temp:'28°'},
+    badges:['🌊 River runner','🏄 Rapids survivor','⭐ +250 points'],
+  },
+  {
+    id:'t6', title:'Bharatpur Bird Sanctuary Day Trip', shortTitle:'Bharatpur Birding',
+    category:'bird', emoji:'🦅',
+    gradient:'linear-gradient(135deg,#0d3a2a,#1a6b52,#2d8a70)',
+    location:'Bharatpur, Rajasthan', days:'Full day', maxGuests:6,
+    difficulty:'Easy', altitude:'174m', price:2800, rating:4.7, reviews:124,
+    tags:['🆕 New listing'],tagClasses:['tg-w'],
+    guide:{initials:'SM',name:'Sunil Mehra',years:8,trips:440,certifications:['✅ Verified','🦅 Ornithologist','🌿 Naturalist']},
+    pills:['⏱ Full day','👥 Max 6','📊 Easy','🦅 150+ species','🔭 Binoculars incl.','🚲 Cycle rickshaw'],
+    includes:['Cycle rickshaw through the sanctuary','High-quality binoculars & spotting scope','Expert ornithologist guide','eBird checklist for your sightings','Park entry fees','Packed lunch & beverages'],
+    reviews_data:[
+      {initials:'PR',bgColor:'var(--sage)',txColor:'var(--green)',name:'Priti R.',date:'Dec 2024',stars:5,text:'Saw over 80 species including Siberian cranes! Sunil was incredibly knowledgeable. A must for any nature lover.'},
+      {initials:'HC',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Harsh C.',date:'Jan 2025',stars:4,text:'Peaceful and stunning. Even non-birders in our group came away converted. Brilliant guide.'},
+    ],
+    similar:['t4','t8','t5'],
+    weather:{forecast:'Clear · Ideal for birdwatching',location:'Keoladeo NP',temp:'18°'},
+    badges:['🦅 First 100 species','🌿 Nature explorer','⭐ +300 points'],
+  },
+  {
+    id:'t7', title:'Rohtang Pass Snow Experience', shortTitle:'Rohtang Snow Day',
+    category:'snow', emoji:'❄️',
+    gradient:'linear-gradient(135deg,#1a1a3a,#3a3a6b,#5a5a8a)',
+    location:'Manali, Himachal Pradesh', days:'1 day', maxGuests:10,
+    difficulty:'Easy', altitude:'3,978m', price:2200, rating:4.6, reviews:234,
+    tags:['❄️ Snow Guaranteed'],tagClasses:['tg-g'],
+    guide:{initials:'PD',name:'Pradeep Dhiman',years:5,trips:560,certifications:['✅ Verified','🏔️ Mountain Guide']},
+    pills:['⏱ 1 day','👥 Max 10','📊 Easy','🏔️ 3,978m','⛄ Snow activities','🚐 Transport incl.'],
+    includes:['Round trip transport from Manali','Snow gear rental — jacket, boots, gloves','Snowmobile & sledging sessions','Photoshoot coordination','Hot tea & snacks at snow point','Local guide throughout'],
+    reviews_data:[
+      {initials:'KS',bgColor:'#e3f2fd',txColor:'#1565c0',name:'Komal S.',date:'Feb 2025',stars:5,text:'We built snowmen and had snowball fights like kids again. Absolutely joyful experience!'},
+      {initials:'AK2',bgColor:'var(--sage)',txColor:'var(--green)',name:'Ankit K.',date:'Jan 2025',stars:4,text:'Great value. The snowmobile ride was the highlight. Perfect for families.'},
+    ],
+    similar:['t3','t1','t2'],
+    weather:{forecast:'Heavy snow · Visibility good',location:'Rohtang Pass',temp:'-12°'},
+    badges:['❄️ Snowball champion','🏔️ High altitude badge','⭐ +200 points'],
+  },
+  {
+    id:'t8', title:'Ranthambore Tiger Safari', shortTitle:'Ranthambore Safari',
+    category:'safari', emoji:'🐯',
+    gradient:'linear-gradient(135deg,#3a2a0d,#7a5a1a,#a07a2d)',
+    location:'Sawai Madhopur, Rajasthan', days:'2 days · 1 night', maxGuests:6,
+    difficulty:'Easy', altitude:'250m', price:5800, rating:4.9, reviews:387,
+    tags:['🐯 Famous Tiger Zone','⭐ #1 Safari'],tagClasses:['tg-a','tg-w'],
+    guide:{initials:'BL',name:'Bablu Lal',years:18,trips:1200,certifications:['✅ Verified','🌿 Naturalist Expert','🏞️ Forest Dept.']},
+    pills:['⏱ 2 days','👥 Max 6 per jeep','📊 Easy','🌅 2 safaris','🎥 Photography focus','🏨 Heritage hotel'],
+    includes:['Canter / jeep safari × 2','Heritage hotel stay near park','Full board meals','Expert wildlife naturalist','Park permits & photography fees','Visit to Ranthambore Fort'],
+    reviews_data:[
+      {initials:'GS',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Gaurav S.',date:'Dec 2024',stars:5,text:'Ranthambore T-58 posed for us for a full 20 minutes. Bablu knew exactly where she would appear. Unforgettable.'},
+      {initials:'MM',bgColor:'var(--sage)',txColor:'var(--green)',name:'Maya M.',date:'Nov 2024',stars:5,text:'The fort inside the tiger reserve is absolutely stunning. Two amazing experiences in one trip.'},
+    ],
+    similar:['t4','t6','t9'],
+    weather:{forecast:'Clear skies · Prime tiger activity',location:'Ranthambore NP',temp:'25°'},
+    badges:['🐯 Tiger encounter','🏛️ Fort explorer','⭐ +500 points'],
+  },
+  {
+    id:'t9', title:'Bir Billing Paragliding & Camping', shortTitle:'Bir Billing Camp',
+    category:'camp', emoji:'🏕️',
+    gradient:'linear-gradient(135deg,#1a0d3a,#3d2d6b,#5a4d8a)',
+    location:'Bir Billing, Himachal Pradesh', days:'2 nights · 3 days', maxGuests:12,
+    difficulty:'Easy–Intermediate', altitude:'1,525m', price:4800, rating:4.8, reviews:276,
+    tags:['🪂 Paragliding incl.','🌟 Best Experience'],tagClasses:['tg-g','tg-w'],
+    guide:{initials:'HB',name:'Harpreet Bains',years:10,trips:650,certifications:['✅ Verified','🪂 Paragliding Instructor','🏕️ Camp Leader']},
+    pills:['⏱ 3 days','👥 Max 12','📊 Easy','🪂 Tandem paragliding','🏕️ Luxury camping','🍽️ All meals'],
+    includes:['Tandem paragliding from Billing — 25 min flight','Luxury safari tents with real beds','Campfire evenings with music','All meals — local Himachali cuisine','Nature walks & village tour','Yoga & meditation session at sunrise'],
+    reviews_data:[
+      {initials:'IK',bgColor:'#f3e5f5',txColor:'#7b1fa2',name:'Ishaan K.',date:'Oct 2024',stars:5,text:'Flying over the Kangra valley was the most free I have ever felt. The camping was glamping level luxury.'},
+      {initials:'SA',bgColor:'var(--sage)',txColor:'var(--green)',name:'Shruti A.',date:'Sept 2024',stars:5,text:'The paragliding was scary and magical at the same time. The campfire dinners were the best food I had in HP.'},
+    ],
+    similar:['t5','t1','t2'],
+    weather:{forecast:'Light breeze · Ideal paragliding conditions',location:'Billing launch site',temp:'14°'},
+    badges:['🪂 First flight','🏕️ Wilderness camper','⭐ +400 points'],
+  },
+  {
+    id:'t10', title:'Kabini Wildlife Retreat', shortTitle:'Kabini Safari',
+    category:'safari', emoji:'🐘',
+    gradient:'linear-gradient(135deg,#1a3a0d,#3d7a1a,#5a9a2d)',
+    location:'Kabini, Karnataka', days:'2 days · 1 night', maxGuests:6,
+    difficulty:'Easy', altitude:'780m', price:6500, rating:4.9, reviews:298,
+    tags:['🐘 Big Five Zone','⭐ Premium'],tagClasses:['tg-a','tg-w'],
+    guide:{initials:'KR',name:'Kumar Rajan',years:12,trips:780,certifications:['✅ Verified','🌿 Naturalist Expert','🏞️ Wildlife Warden']},
+    pills:['⏱ 2 days','👥 Max 6','📊 Easy','🌅 Boat & jeep safaris','🏨 Jungle lodge','🍽️ All meals'],
+    includes:['Boat safari on Kabini backwaters','Jeep safari in Nagarhole NP','Luxury jungle lodge stay','Full board — local Karnataka cuisine','Wildlife photography workshop','Sunset on Kabini river'],
+    reviews_data:[
+      {initials:'LP',bgColor:'var(--amber-lt)',txColor:'var(--amber)',name:'Leena P.',date:'Jan 2025',stars:5,text:'Watching elephants bathe at sunset from a boat — there are no words. Kabini is India\'s best kept secret.'},
+      {initials:'RM',bgColor:'var(--sage)',txColor:'var(--green)',name:'Rohan M.',date:'Dec 2024',stars:5,text:'The leopard sighting on the first evening was extraordinary. Kumar is a phenomenal guide.'},
+    ],
+    similar:['t4','t8','t6'],
+    weather:{forecast:'Overcast · Excellent wildlife movement',location:'Kabini river',temp:'26°'},
+    badges:['🐘 Elephant encounter','🚤 River safari','⭐ +500 points'],
+  },
+];
+
+const CATEGORIES = [
+  {key:'all',   label:'All',     emoji:'🌍'},
+  {key:'trek',  label:'Trekking',emoji:'🏔️'},
+  {key:'camp',  label:'Camping', emoji:'🏕️'},
+  {key:'safari',label:'Safaris', emoji:'🦁'},
+  {key:'snow',  label:'Snow',    emoji:'🏂'},
+  {key:'water', label:'Water',   emoji:'🌊'},
+  {key:'bird',  label:'Birding', emoji:'🦅'},
+];
+
+const MY_TRIPS = [
+  {tripId:'t4', status:'completed', date:'Nov 14–15, 2024', ref:'WC-623541', guests:2},
+  {tripId:'t1', status:'upcoming',  date:'Jan 14–19, 2026', ref:'WC-847291', guests:2},
+  {tripId:'t9', status:'upcoming',  date:'Mar 8–10, 2026',  ref:'WC-912043', guests:3},
+];
+
+/* ══════════════════════════════════════════
+   APP STATE
+══════════════════════════════════════════ */
+let curScreen = 's1';
+const navStack = [];
+let activeCat = 'all';
+let activeTrip = null;
+let selDay = null, selMonth = 0, selYear = 2026;
+let adults = 2, teens = 0;
+let paySelected = 0;
+let savedTrips = new Set();
+let clDone = 3;
+const CL_TOTAL = 6;
+
+/* ══════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════ */
+function GO(id) {
+  if(id === curScreen) return;
+  navStack.push(curScreen);
+  document.getElementById(curScreen).classList.remove('active');
+  const next = document.getElementById(id);
+  next.classList.add('active');
+  next.scrollTop = 0;
+  curScreen = id;
+}
+function BACK() {
+  if(!navStack.length) return;
+  const prev = navStack.pop();
+  document.getElementById(curScreen).classList.remove('active');
+  document.getElementById(prev).classList.add('active');
+  curScreen = prev;
+}
+let _toastT;
+function TOAST(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_toastT);
+  _toastT = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+/* ══════════════════════════════════════════
+   HOME FEED RENDERING
+══════════════════════════════════════════ */
+function renderStrip() {
+  const strip = document.getElementById('act-strip');
+  strip.innerHTML = CATEGORIES.map(c =>
+    `<div class="at ${c.key===activeCat?'on':''}" onclick="setCat('${c.key}')">
+      <div class="at-ic">${c.emoji}</div>
+      <div class="at-lb">${c.label}</div>
+    </div>`
+  ).join('');
+}
+
+function setCat(key) {
+  activeCat = key;
+  renderStrip();
+  renderFeed();
+}
+
+function getFilteredTrips() {
+  if(activeCat === 'all') return TRIPS;
+  return TRIPS.filter(t => t.category === activeCat);
+}
+
+function renderFeed() {
+  const feed = document.getElementById('home-feed');
+  const trips = getFilteredTrips();
+  if(!trips.length) {
+    feed.innerHTML = `<div style="text-align:center;padding:48px 24px;color:var(--ink3)">
+      <div style="font-size:48px;margin-bottom:12px">🌿</div>
+      <div style="font-family:'Playfair Display',serif;font-size:20px;color:var(--ink);margin-bottom:6px">Coming soon</div>
+      <div style="font-size:14px">More ${activeCat} experiences launching soon!</div>
+    </div><div class="safe-lg"></div>`;
+    return;
+  }
+  const featured = trips[0];
+  const rest = trips.slice(1,6);
+  let html = `<div class="sec-row"><div class="sec-h serif">Featured</div><div class="sec-lnk" onclick="setCat('all')">See all</div></div>`;
+  html += tripCard(featured, true);
+  if(rest.length) {
+    html += `<div class="sec-row"><div class="sec-h serif">More to explore</div></div>`;
+    html += `<div class="h-scroll">`;
+    rest.forEach(t => { html += miniCard(t); });
+    html += `</div>`;
+  }
+  const nearby = TRIPS.filter(t => t.id !== featured.id && t.category !== featured.category).slice(0,2);
+  if(nearby.length) {
+    html += `<div class="sec-row" style="margin-top:8px"><div class="sec-h serif">You might also like</div></div>`;
+    nearby.forEach(t => { html += tripCard(t, false); });
+  }
+  html += `<div class="safe-lg"></div>`;
+  feed.innerHTML = html;
+}
+
+function tripCard(t, featured) {
+  const tags = t.tags.map((tag,i) => `<div class="tg ${t.tagClasses[i]||'tg-w'}">${tag}</div>`).join('');
+  return `<div class="trip-card" onclick="openTrip('${t.id}')">
+    <div class="tc-img" style="background:${t.gradient}">
+      <div class="tc-emoji">${t.emoji}</div>
+      <div class="tc-veil"></div>
+      <div class="tc-bottom">
+        <div class="tc-tags">${tags}</div>
+        <div class="tc-title serif">${t.title}</div>
+        <div class="tc-meta">
+          <div class="tc-mi">📍 ${t.location.split(',')[0]}</div>
+          <div class="tc-mi">⏱ ${t.days}</div>
+          <div class="tc-mi">👥 Max ${t.maxGuests}</div>
+        </div>
+      </div>
+    </div>
+    <div class="tc-body">
+      <div class="tc-foot">
+        <div><div class="tc-price serif">₹${t.price.toLocaleString('en-IN')}</div><div class="tc-price-lb">per person · all inclusive</div></div>
+        <div class="tc-rating"><div class="tc-star">★</div><div class="tc-rn">${t.rating}</div><div class="tc-rc">(${t.reviews})</div></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function miniCard(t) {
+  return `<div class="mc" onclick="openTrip('${t.id}')">
+    <div class="mc-img" style="background:${t.gradient}">${t.emoji}</div>
+    <div class="mc-body">
+      <div class="mc-title">${t.shortTitle}</div>
+      <div class="mc-sub">${t.location.split(',')[0]}</div>
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div class="mc-price">₹${t.price.toLocaleString('en-IN')}</div>
+        <div class="mc-star">★ ${t.rating}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   SEARCH
+══════════════════════════════════════════ */
+let searchCat = 'all';
+function renderSearchFilters() {
+  document.getElementById('filter-chips').innerHTML = CATEGORIES.map(c =>
+    `<div class="fchip ${c.key===searchCat?'on':''}" onclick="setSearchCat('${c.key}')">${c.emoji} ${c.label}</div>`
+  ).join('');
+}
+function setSearchCat(key) {
+  searchCat = key;
+  renderSearchFilters();
+  doSearch();
+}
+function doSearch() {
+  const q = document.getElementById('search-inp').value.toLowerCase().trim();
+  let pool = searchCat === 'all' ? TRIPS : TRIPS.filter(t => t.category === searchCat);
+  if(q) pool = pool.filter(t =>
+    t.title.toLowerCase().includes(q) ||
+    t.location.toLowerCase().includes(q) ||
+    t.category.toLowerCase().includes(q) ||
+    (t.guide && t.guide.name.toLowerCase().includes(q))
+  );
+  const res = document.getElementById('search-results');
+  if(!pool.length) {
+    res.innerHTML = `<div class="no-results"><div class="no-results-icon">🔍</div><div class="no-results-title">No results found</div><div>Try a different search or category</div></div>`;
+    return;
+  }
+  res.innerHTML = pool.map(t => `
+    <div class="search-result-row" onclick="openTrip('${t.id}')">
+      <div class="srr-img" style="background:${t.gradient}">${t.emoji}</div>
+      <div class="srr-info">
+        <div class="srr-title">${t.title}</div>
+        <div class="srr-sub">📍 ${t.location} · ${t.days}</div>
+        <div class="srr-tags">
+          <div class="srr-tag">★ ${t.rating}</div>
+          <div class="srr-tag">${t.difficulty}</div>
+        </div>
+      </div>
+      <div>
+        <div class="srr-price">₹${t.price.toLocaleString('en-IN')}</div>
+        <div class="srr-price-lb">/ person</div>
+      </div>
+    </div>
+  `).join('') + '<div class="safe-lg"></div>';
+}
+
+/* ══════════════════════════════════════════
+   LISTING DETAIL
+══════════════════════════════════════════ */
+function openTrip(id) {
+  activeTrip = TRIPS.find(t => t.id === id);
+  if(!activeTrip) return;
+  const t = activeTrip;
+  // Hero
+  document.getElementById('l-hero').style.background = t.gradient;
+  document.getElementById('l-emoji').textContent = t.emoji;
+  document.getElementById('l-tags').innerHTML = t.tags.map((tag,i) =>
+    `<div class="tg ${t.tagClasses[i]||'tg-w'}">${tag}</div>`).join('');
+  document.getElementById('l-title').textContent = t.title;
+  document.getElementById('l-loc').innerHTML = `📍 ${t.location}`;
+  document.getElementById('img-dots').innerHTML = `<div class="img-dot on"></div><div class="img-dot"></div><div class="img-dot"></div>`;
+  document.getElementById('l-price').textContent = '₹' + t.price.toLocaleString('en-IN');
+  document.getElementById('l-save-btn').textContent = savedTrips.has(id) ? '♥' : '♡';
+  // Body
+  const guide = t.guide;
+  const pills = t.pills.map(p => `<div class="info-pill">${p}</div>`).join('');
+  const includes = t.includes.map(i => `<div class="incl-item"><div class="incl-ck">✓</div>${i}</div>`).join('');
+  const reviews = t.reviews_data.map(r => `
+    <div class="rev-card">
+      <div class="rev-hd">
+        <div class="rev-av" style="background:${r.bgColor};color:${r.txColor}">${r.initials}</div>
+        <div><div class="rev-name">${r.name}</div><div class="rev-date">${r.date}</div></div>
+      </div>
+      <div class="rev-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <div class="rev-txt">${r.text}</div>
+    </div>`).join('');
+  const similar = t.similar.map(sid => {
+    const s = TRIPS.find(x => x.id === sid);
+    if(!s) return '';
+    return `<div class="similar-card" onclick="openTrip('${s.id}')">
+      <div class="sim-img" style="background:${s.gradient}">${s.emoji}</div>
+      <div class="sim-body">
+        <div class="sim-title">${s.shortTitle}</div>
+        <div class="sim-price">₹${s.price.toLocaleString('en-IN')}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('l-body').innerHTML = `
+    <div class="l-section">
+      <div class="pill-row">${pills}</div>
+      <div class="guide-card">
+        <div class="g-av">${guide.initials}</div>
+        <div style="flex:1">
+          <div class="g-name">${guide.name}</div>
+          <div class="g-meta">${guide.years} years · ${guide.trips} trips led</div>
+          <div class="g-chips">${guide.certifications.map(c=>`<div class="g-chip">${c}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+    <div class="l-section">
+      <div class="l-sec-title serif">What's included</div>
+      ${includes}
+    </div>
+    <div class="l-section">
+      <div class="l-sec-title serif">Guest reviews</div>
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+        <div style="font-family:'Playfair Display',serif;font-size:32px;color:var(--ink)">${t.rating}</div>
+        <div><div style="color:var(--amber-w);font-size:16px">${'★'.repeat(5)}</div><div style="font-size:12px;color:var(--ink3)">${t.reviews} reviews · ${Math.round(t.rating/5*100)}% recommend</div></div>
+      </div>
+      ${reviews}
+    </div>
+    <div class="l-section">
+      <div class="l-sec-title serif">You might also like</div>
+      <div class="h-scroll">${similar}</div>
+    </div>
+    <div style="height:24px"></div>
+  `;
+  // Reset booking state
+  selDay = null; adults = 2; teens = 0;
+  document.getElementById('a-n').textContent = '2';
+  document.getElementById('t-n').textContent = '0';
+  updateBookingPill();
+  const btn = document.getElementById('s4-continue');
+  btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = 'Select a date to continue';
+  // Pre-trip context
+  document.getElementById('pt-trip-name').textContent = t.shortTitle;
+  document.getElementById('pt-trip-label').textContent = 'Your trip · ' + t.shortTitle;
+  document.getElementById('pt-guide-av').textContent = guide.initials;
+  document.getElementById('pt-guide-msg-name').textContent = 'Message ' + guide.name.split(' ')[0];
+  const wx = t.weather;
+  document.getElementById('pt-wx-f').textContent = wx.forecast;
+  document.getElementById('pt-wx-l').textContent = wx.location;
+  document.getElementById('pt-temp').textContent = wx.temp;
+  // Review
+  document.getElementById('rv-title').textContent = t.shortTitle + ' complete!';
+  document.getElementById('rv-sub').textContent = t.location + ' · ' + t.days;
+  document.getElementById('rv-badges').innerHTML = t.badges.map(b =>
+    `<div class="bdg"><div class="bdg-ic">${b.split(' ')[0]}</div>${b.split(' ').slice(1).join(' ')}</div>`).join('');
+  GO('s3');
+}
+
+function toggleSave() {
+  if(!activeTrip) return;
+  const id = activeTrip.id;
+  if(savedTrips.has(id)) { savedTrips.delete(id); document.getElementById('l-save-btn').textContent = '♡'; TOAST('Removed from saved'); }
+  else { savedTrips.add(id); document.getElementById('l-save-btn').textContent = '♥'; TOAST('❤️ Saved!'); }
+}
+
+/* ══════════════════════════════════════════
+   CALENDAR
+══════════════════════════════════════════ */
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MONTH_DAYS = [31,28,31,30,31,30,31,31,30,31,30,31];
+const UNAVAIL_DAYS = {0:[1,2,7,8,18,19,25,26,31], 1:[3,4,14,15,22,23], 2:[5,6,12,13,19,20,27,28]};
+
+function shiftMonth(delta) {
+  selMonth += delta;
+  if(selMonth > 11) { selMonth = 0; selYear++; }
+  if(selMonth < 0)  { selMonth = 11; selYear--; }
+  selDay = null;
+  buildCal();
+  updateBookingPill();
+  const btn = document.getElementById('s4-continue');
+  btn.disabled = true; btn.style.opacity = '.5'; btn.textContent = 'Select a date to continue';
+}
+
+function buildCal() {
+  document.getElementById('cal-month-lbl').textContent = MONTH_NAMES[selMonth] + ' ' + selYear;
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+  const days = MONTH_DAYS[selMonth] + (selMonth === 1 && selYear % 4 === 0 ? 1 : 0);
+  const firstDow = (new Date(selYear, selMonth, 1).getDay() + 6) % 7;
+  const unavail = UNAVAIL_DAYS[selMonth] || [];
+  for(let i = 0; i < firstDow; i++) { const e = document.createElement('div'); e.className = 'cd empty'; grid.appendChild(e); }
+  for(let d = 1; d <= days; d++) {
+    const el = document.createElement('div');
+    el.textContent = d;
+    if(unavail.includes(d)) { el.className = 'cd unavail'; }
+    else if(d === selDay) { el.className = 'cd sel'; }
+    else if(d === 10 && selMonth === 0) { el.className = 'cd today'; el.onclick = () => pickDay(d); }
+    else { el.className = 'cd'; el.onclick = () => pickDay(d); }
+    grid.appendChild(el);
+  }
+}
+
+function pickDay(d) {
+  selDay = d;
+  buildCal();
+  updateBookingPill();
+  const btn = document.getElementById('s4-continue');
+  btn.disabled = false;
+  btn.style.opacity = '1';
+  btn.textContent = 'Continue to checkout →';
+}
+
+function changeG(delta, type) {
+  if(type === 'a') { adults = Math.max(1, Math.min(12, adults + delta)); document.getElementById('a-n').textContent = adults; }
+  else { teens = Math.max(0, Math.min(8, teens + delta)); document.getElementById('t-n').textContent = teens; }
+  updateBookingPill();
+}
+
+function updateBookingPill() {
+  const total = activeTrip ? (adults + teens) * activeTrip.price : 0;
+  const lbl = selDay
+    ? `${MONTH_NAMES[selMonth].slice(0,3)} ${selDay}, ${selYear} · ${adults + teens} guest${adults+teens>1?'s':''}`
+    : 'Select a date';
+  document.getElementById('bp-lbl').textContent = lbl;
+  document.getElementById('bp-price').textContent = selDay ? '₹' + total.toLocaleString('en-IN') : '—';
+}
+
+/* ══════════════════════════════════════════
+   CHECKOUT
+══════════════════════════════════════════ */
+function goCheckout() {
+  if(!selDay || !activeTrip) return;
+  const t = activeTrip;
+  const base = (adults + teens) * t.price;
+  const ins = 199 * (adults + teens);
+  const disc = 750;
+  const total = base + ins - disc;
+  const dateStr = `${MONTH_NAMES[selMonth].slice(0,3)} ${selDay}–${selDay+5}, ${selYear}`;
+  document.getElementById('s5-scroll').innerHTML = `
+    <div class="co-block">
+      <div class="co-label">Booking summary</div>
+      <div class="sum-card">
+        <div class="sum-row"><div class="sl">${t.title}</div></div>
+        <div class="sum-row"><div class="sl">${dateStr} · ${adults+teens} guest${adults+teens>1?'s':''}</div><div class="sv">₹${base.toLocaleString('en-IN')}</div></div>
+        <div class="sum-row"><div class="sl">Activity insurance (rec.)</div><div class="sv">₹${ins.toLocaleString('en-IN')}</div></div>
+        <div class="sum-row"><div class="sl sv-g">🎉 First booking discount</div><div class="sv sv-g">−₹${disc.toLocaleString('en-IN')}</div></div>
+        <div class="sum-row sum-total"><div class="sl">Total payable</div><div class="sv">₹${total.toLocaleString('en-IN')}</div></div>
+      </div>
+    </div>
+    <div class="co-block">
+      <div class="co-label">Payment method</div>
+      <div class="pay-opt on" onclick="pickPay(this)"><div class="pay-radio"><div class="pay-inner"></div></div><div class="pay-icon">📱</div><div class="pay-txt"><div class="pay-name">UPI — GPay / PhonePe / Paytm</div><div class="pay-desc">Instant · Zero charges</div></div><div class="pay-badge-g">Popular</div></div>
+      <div class="pay-opt" onclick="pickPay(this)"><div class="pay-radio"><div class="pay-inner"></div></div><div class="pay-icon">💳</div><div class="pay-txt"><div class="pay-name">Debit / Credit card</div><div class="pay-desc">Visa, Mastercard, RuPay, Amex</div></div></div>
+      <div class="pay-opt" onclick="pickPay(this)"><div class="pay-radio"><div class="pay-inner"></div></div><div class="pay-icon">🏦</div><div class="pay-txt"><div class="pay-name">Pay 20% now, rest on arrival</div><div class="pay-desc">Pay ₹${Math.round(total*0.2).toLocaleString('en-IN')} now · Balance Day 1</div></div></div>
+      <div class="pay-opt" onclick="pickPay(this)"><div class="pay-radio"><div class="pay-inner"></div></div><div class="pay-icon">📦</div><div class="pay-txt"><div class="pay-name">EMI — 0% interest</div><div class="pay-desc">₹${Math.round(total/3).toLocaleString('en-IN')} × 3 months</div></div></div>
+      <div class="trust"><span style="font-size:16px;color:var(--green)">🔒</span> Secured by Razorpay · GST invoice auto-generated</div>
+    </div>
+    <div class="co-block">
+      <button class="btn b-forest b-full" onclick="confirmBooking()" style="padding:16px;font-size:15px;margin-bottom:8px">Pay ₹${total.toLocaleString('en-IN')} →</button>
+      <div style="text-align:center;font-size:12px;color:var(--ink3)">Free cancellation up to 7 days before trip</div>
+    </div>
+    <div class="safe-md"></div>
+  `;
+  GO('s5');
+}
+
+function pickPay(el) {
+  document.querySelectorAll('.pay-opt').forEach(o => o.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function confirmBooking() {
+  if(!activeTrip || !selDay) return;
+  const t = activeTrip;
+  const dateStr = `${MONTH_NAMES[selMonth]} ${selDay}–${selDay+5}, ${selYear}`;
+  const ref = 'WC-' + Math.floor(100000 + Math.random()*900000);
+  document.getElementById('conf-sub').textContent = `${t.title}\n${dateStr} · ${adults+teens} guests`;
+  document.getElementById('conf-ref').textContent = ref;
+  document.getElementById('conf-tripbox').innerHTML = `
+    <div class="tb-row"><div class="tb-l">Experience</div><div class="tb-v">${t.shortTitle}</div></div>
+    <div class="tb-row"><div class="tb-l">Dates</div><div class="tb-v">${dateStr}</div></div>
+    <div class="tb-row"><div class="tb-l">Guests</div><div class="tb-v">${adults+teens} person${adults+teens>1?'s':''}</div></div>
+    <div class="tb-row"><div class="tb-l">Guide</div><div class="tb-v">${t.guide.name}</div></div>
+    <div class="tb-row"><div class="tb-l">Meeting point</div><div class="tb-v">${t.location.split(',')[0]} · 6:00 AM</div></div>
+  `;
+  document.getElementById('pt-days').textContent = Math.max(1, selDay - 10);
+  GO('s6');
+}
+
+/* ══════════════════════════════════════════
+   MY TRIPS
+══════════════════════════════════════════ */
+function renderTrips() {
+  const body = document.getElementById('trips-body');
+  const upcoming = MY_TRIPS.filter(m => m.status !== 'completed');
+  const past = MY_TRIPS.filter(m => m.status === 'completed');
+  let html = '';
+  if(upcoming.length) {
+    html += `<div class="trip-status-section"><div class="tss-title">Upcoming trips</div>`;
+    upcoming.forEach(m => { html += bookedCard(m); });
+    html += '</div>';
+  }
+  if(past.length) {
+    html += `<div class="trip-status-section" style="margin-top:8px"><div class="tss-title">Past trips</div>`;
+    past.forEach(m => { html += bookedCard(m); });
+    html += '</div>';
+  }
+  html += '<div class="safe-lg"></div>';
+  body.innerHTML = html;
+}
+
+function bookedCard(m) {
+  const t = TRIPS.find(x => x.id === m.tripId);
+  if(!t) return '';
+  const statusClass = `btc-s-${m.status}`;
+  const statusLabel = m.status === 'completed' ? '✓ Completed' : m.status === 'upcoming' ? '📅 Upcoming' : 'Confirmed';
+  const action = m.status === 'completed' ? 'Leave review' : 'View details';
+  const actionFn = m.status === 'completed'
+    ? `openTrip('${t.id}');setTimeout(()=>GO('s8'),300)`
+    : `openTrip('${t.id}')`;
+  return `<div class="booked-trip-card" onclick="${actionFn}">
+    <div class="btc-img" style="background:${t.gradient}">
+      <div style="font-size:52px;opacity:.25;filter:saturate(0)">${t.emoji}</div>
+      <div class="btc-overlay"></div>
+      <div class="btc-status ${statusClass}">${statusLabel}</div>
+    </div>
+    <div class="btc-body">
+      <div class="btc-title">${t.shortTitle}</div>
+      <div class="btc-meta"><span>📍 ${t.location.split(',')[0]}</span><span>📅 ${m.date}</span></div>
+      <div class="btc-foot">
+        <div class="btc-ref">${m.ref}</div>
+        <div class="btc-action">${action} →</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════
+   CHECKLIST
+══════════════════════════════════════════ */
+function toggleCL(row) {
+  const box = row.querySelector('.cl-box');
+  const txt = row.querySelector('.cl-tm');
+  if(box.classList.contains('done')) {
+    box.classList.remove('done'); box.textContent = '';
+    txt.classList.remove('done'); clDone--;
+  } else {
+    box.classList.add('done'); box.textContent = '✓';
+    txt.classList.add('done'); clDone++;
+    if(clDone === CL_TOTAL) TOAST('🎉 All done! Ready for your adventure!');
+  }
+  document.getElementById('cl-prog-t').textContent = clDone + ' / ' + CL_TOTAL;
+  document.getElementById('cl-pfill').style.width = (clDone / CL_TOTAL * 100) + '%';
+}
+
+/* ══════════════════════════════════════════
+   REVIEW
+══════════════════════════════════════════ */
+function rateStar(n) {
+  document.querySelectorAll('#star-row .star-b').forEach((s,i) => s.classList.toggle('on', i < n));
+  const labels = ['','Needs improvement','Below average','Good trip','Really good','Outstanding!'];
+  TOAST('⭐ ' + labels[n]);
+}
+
+/* ══════════════════════════════════════════
+   INIT
+══════════════════════════════════════════ */
+renderStrip();
+renderFeed();
+buildCal();
+renderTrips();
+doSearch();
+renderSearchFilters();
+</script>
+</body>
+</html>

@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,maximum-scale=1.0,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>WILDCAST Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#0e0e0c;--ink2:#2e2e2a;--ink3:#6a6a62;--ink4:#b0b0a4;--line:#e4e2d8;
+  --paper:#f7f5ef;--cream:#faf9f4;--w:#fff;
+  --f:#0d3320;--g:#1a6b3c;--gl:#3daa6a;--sage:#e6f2ea;--mint:#f0faf3;
+  --am:#c47a0a;--amw:#e08c12;--alt:#fef5e4;
+  --red:#c0392b;--rlt:#fdecea;--blu:#1a4d8a;--blt:#e8f0fb;
+  --r:12px;--rl:18px;--rx:24px;--rp:999px;
+  --st:env(safe-area-inset-top,44px);--sb:env(safe-area-inset-bottom,20px)
+}
+html,body{height:100%;overflow:hidden;background:#0d3320;font-family:'DM Sans',sans-serif}
+#app{position:fixed;inset:0;overflow:hidden;background:var(--paper)}
+.sc{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--paper);display:none;flex-direction:column}
+.sc.on{display:flex}
+.sc::-webkit-scrollbar,.sc *::-webkit-scrollbar{display:none}
+.sy{font-family:'Syne',sans-serif}
+
+/* STATUS BAR */
+.sb0{height:var(--st);min-height:44px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 20px 6px;font-size:12px;font-weight:700;flex-shrink:0}
+.sb-dk{background:var(--f);color:rgba(255,255,255,.9)}
+.sb-lt{background:var(--w);color:var(--ink);border-bottom:1px solid var(--line)}
+.sb-pp{background:var(--paper);color:var(--ink)}
+.sbi{display:flex;gap:4px;align-items:center}
+
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);border-top:1px solid var(--line);display:flex;padding-bottom:var(--sb);z-index:200}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;cursor:pointer;background:none;border:none;font-family:'DM Sans',sans-serif}
+.nvi{font-size:22px;line-height:1}
+.nvl{font-size:10px;font-weight:600;color:var(--ink3);font-family:'DM Sans',sans-serif}
+.nv.on .nvl{color:var(--g)}
+.nvd{width:4px;height:4px;border-radius:50%;background:var(--g)}
+
+/* BUTTONS */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;transition:transform .12s,opacity .12s;-webkit-user-select:none;user-select:none}
+.btn:active{transform:scale(.95);opacity:.87}
+.bf{background:var(--f);color:#fff;border-radius:var(--rp);padding:15px 24px;font-size:14px}
+.bg{background:var(--g);color:#fff;border-radius:var(--rp);padding:15px 24px;font-size:14px}
+.bam{background:var(--amw);color:#fff;border-radius:var(--rp);padding:15px 24px;font-size:14px}
+.bw{background:var(--w);color:var(--f);border-radius:var(--rp);padding:15px 24px;font-size:14px;border:1.5px solid var(--line)}
+.bred{background:var(--red);color:#fff;border-radius:var(--rp);padding:15px 24px;font-size:14px}
+.bsage{background:var(--sage);color:var(--g);border-radius:var(--rp);padding:15px 24px;font-size:14px;font-weight:700}
+.bfull{width:100%}
+.bic{width:40px;height:40px;border-radius:50%;padding:0;font-size:17px;flex-shrink:0}
+.bics{width:34px;height:34px;border-radius:50%;padding:0;font-size:14px;flex-shrink:0}
+.bdk{background:rgba(0,0,0,.3);backdrop-filter:blur(8px);color:#fff;border:1px solid rgba(255,255,255,.15)}
+.blt{background:rgba(255,255,255,.92);color:var(--ink);border:1px solid var(--line)}
+.bpp{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+
+/* PAGE HEADER */
+.ph{background:var(--w);border-bottom:1px solid var(--line);padding:10px 20px 14px;flex-shrink:0}
+.phrow{display:flex;align-items:center;gap:10px;padding-top:2px}
+.pbk{width:36px;height:36px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;flex-shrink:0;transition:background .15s}
+.pbk:active{background:var(--sage)}
+.ptitle{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--ink)}
+.psub{font-size:13px;color:var(--ink3);margin-top:2px;padding-left:46px}
+
+/* TOAST */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(12px);background:var(--ink);color:#fff;border-radius:var(--rp);padding:11px 22px;font-size:13px;font-weight:600;opacity:0;transition:all .25s;z-index:9999;white-space:nowrap;pointer-events:none;max-width:90vw;font-family:'DM Sans',sans-serif}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* SPACERS */
+.slg{height:calc(var(--sb) + 80px);flex-shrink:0}
+.smd{height:calc(var(--sb) + 20px);flex-shrink:0}
+
+/* FORMS */
+.fld{margin-bottom:16px}
+.flbl{font-size:12px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between}
+.fin{width:100%;background:var(--w);border:1.5px solid var(--line);border-radius:var(--rl);padding:13px 16px;font-size:15px;font-family:'DM Sans',sans-serif;color:var(--ink);outline:none;transition:border-color .2s;appearance:none}
+.fin:focus{border-color:var(--g)}
+.fin.ok{border-color:var(--g);background:var(--mint)}
+select.fin{cursor:pointer}
+textarea.fin{resize:none;min-height:88px;line-height:1.5}
+.finpfx{position:relative;display:flex;align-items:center}
+.finpfx-t{position:absolute;left:14px;font-size:15px;color:var(--ink3);font-weight:600;pointer-events:none}
+.finpfx .fin{padding-left:36px}
+
+/* SWITCH */
+.swrow{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line)}
+.swrow:last-child{border-bottom:none}
+.swtitle{font-size:14px;font-weight:600;color:var(--ink)}
+.swsub{font-size:12px;color:var(--ink3);margin-top:2px}
+.tog{width:48px;height:28px;border-radius:var(--rp);background:var(--line);position:relative;cursor:pointer;transition:background .2s;flex-shrink:0}
+.tog.on{background:var(--g)}
+.tog::after{content:'';position:absolute;top:3px;left:3px;width:22px;height:22px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.tog.on::after{transform:translateX(20px)}
+
+/* BADGE */
+.bdg{display:inline-flex;align-items:center;gap:4px;border-radius:var(--rp);padding:4px 10px;font-size:11px;font-weight:700}
+.bg-g{background:var(--sage);color:var(--g)}
+.bg-am{background:var(--alt);color:var(--am)}
+.bg-r{background:var(--rlt);color:var(--red)}
+.bg-b{background:var(--blt);color:var(--blu)}
+.bg-k{background:var(--paper);color:var(--ink2)}
+
+/* SEC */
+.sec{padding:16px 20px;border-bottom:1px solid var(--line)}
+.sec:last-child{border-bottom:none}
+.sec-h{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;color:var(--ink);margin-bottom:12px}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.srow:last-child{border-bottom:none}
+.srow:active{opacity:.7}
+.srl{display:flex;align-items:center;gap:12px}
+.sric{width:38px;height:38px;border-radius:12px;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.srt{font-size:14px;font-weight:600;color:var(--ink)}
+.srs{font-size:12px;color:var(--ink3);margin-top:1px}
+.sra{font-size:16px;color:var(--ink4)}
+
+/* PBAR */
+.pbar{height:6px;background:var(--line);border-radius:var(--rp);overflow:hidden}
+.pbf{height:100%;background:var(--g);border-radius:var(--rp);transition:width .4s ease}
+
+/* MODAL */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:500;display:none;align-items:flex-end;justify-content:center}
+.modal.show{display:flex}
+.msheet{background:var(--w);border-radius:24px 24px 0 0;width:100%;max-height:92vh;overflow-y:auto;padding:0 20px;padding-bottom:calc(var(--sb) + 20px)}
+.msheet::-webkit-scrollbar{display:none}
+.mhandle{width:36px;height:4px;border-radius:var(--rp);background:var(--line);margin:12px auto 16px}
+.mtitle{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--ink);margin-bottom:16px}
+
+/* ═══════ SPLASH ═══════ */
+#s-splash{background:var(--f);justify-content:space-between;overflow:hidden}
+.sp-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 0%,rgba(61,170,106,.25),transparent 65%),radial-gradient(ellipse 50% 40% at 0% 80%,rgba(26,107,60,.3),transparent 60%),var(--f)}
+.sp-grain{position:absolute;inset:0;opacity:.035;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.sp-c{position:relative;z-index:2;flex:1;display:flex;flex-direction:column;padding:0 28px;padding-top:calc(var(--st) + 52px)}
+.sp-f{position:relative;z-index:2;padding:0 28px;padding-bottom:calc(var(--sb) + 32px);display:flex;flex-direction:column;gap:10px}
+
+/* ═══════ DASHBOARD ═══════ */
+#s-dash{background:var(--paper)}
+.dh{background:var(--f);padding:0 20px 20px;flex-shrink:0;position:relative;overflow:hidden}
+.dhbg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 100% 0%,rgba(61,170,106,.18),transparent 60%)}
+.dhtop{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding-top:calc(var(--st) + 6px);margin-bottom:16px}
+.dhstats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.dhscard{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--rl);padding:12px 10px;text-align:center}
+.dhsn{font-family:'Syne',sans-serif;font-size:20px;color:#fff;font-weight:700;line-height:1}
+.dhsl{font-size:10px;color:rgba(255,255,255,.5);margin-top:3px}
+.dhsd{font-size:10px;font-weight:700;margin-top:2px}
+.dhsu{color:var(--gl)}
+.dhsd2{color:#ff6b6b}
+.dfeed{flex:1;overflow-y:auto}
+.dfeed::-webkit-scrollbar{display:none}
+.alrt{margin:14px 20px 0;background:var(--alt);border:1.5px solid rgba(196,122,10,.25);border-radius:var(--rl);padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer}
+.alrt.ag{background:var(--sage);border-color:rgba(26,107,60,.2)}
+.alrt.ar{background:var(--rlt);border-color:rgba(192,57,43,.2)}
+.bkitem{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.bkitem:last-child{border-bottom:none}
+.bkitem:active{background:var(--mint);margin:0 -20px;padding:13px 20px}
+.bkav{width:40px;height:40px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:var(--g);flex-shrink:0}
+.bknm{font-size:14px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkmt{font-size:12px;color:var(--ink3);margin-top:1px;display:flex;align-items:center;gap:6px}
+.bkam{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ink)}
+.rvmini{background:var(--w);border:1px solid var(--line);border-radius:var(--rl);padding:12px 14px;margin-bottom:10px}
+.rvmh{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.rvmav{width:30px;height:30px;border-radius:50%;background:var(--alt);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--am);flex-shrink:0}
+.rvmn{font-size:13px;font-weight:600;color:var(--ink)}
+.rvmd{font-size:11px;color:var(--ink3);margin-left:auto}
+
+/* ═══════ BOOKINGS ═══════ */
+#s-bk{background:var(--paper)}
+.btabs{display:flex;border-bottom:1px solid var(--line);background:var(--w);flex-shrink:0;padding:0 20px}
+.btab{flex:1;text-align:center;padding:12px 8px;font-size:13px;font-weight:600;color:var(--ink3);border-bottom:2.5px solid transparent;cursor:pointer;transition:all .2s}
+.btab.on{color:var(--g);border-bottom-color:var(--g)}
+.bklist{flex:1;overflow-y:auto}
+.bklist::-webkit-scrollbar{display:none}
+.bkcard{background:var(--w);margin:10px 16px 0;border-radius:var(--rl);border:1px solid var(--line);overflow:hidden;cursor:pointer;transition:transform .15s}
+.bkcard:active{transform:scale(.98)}
+.bkch{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px}
+.bkci{flex:1;min-width:0}
+.bkcg{font-size:15px;font-weight:700;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bkct{font-size:12px;color:var(--ink3);margin-top:2px;display:flex;align-items:center;gap:5px}
+.bkcb{padding:12px 16px}
+.bkgrd{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.bkgf{background:var(--paper);border-radius:var(--r);padding:9px 12px}
+.bkgfl{font-size:10px;color:var(--ink3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.bkgfv{font-size:13px;font-weight:700;color:var(--ink)}
+.bkacts{display:flex;gap:8px}
+.bbtn{flex:1;padding:10px;border-radius:var(--rl);font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:transform .12s,opacity .12s}
+.bbtn:active{transform:scale(.96)}
+.bacc{background:var(--g);color:#fff}
+.bdec{background:var(--paper);color:var(--ink2);border:1.5px solid var(--line)}
+.bmsg{background:var(--blt);color:var(--blu)}
+.bview{background:var(--paper);color:var(--ink2);border:1.5px solid var(--line)}
+
+/* ═══════ LISTINGS ═══════ */
+#s-lst{background:var(--paper)}
+.mlc{background:var(--w);margin:0 16px 12px;border-radius:var(--rl);border:1px solid var(--line);overflow:hidden;cursor:pointer;transition:transform .15s}
+.mlc:active{transform:scale(.98)}
+.mlci{height:130px;display:flex;align-items:center;justify-content:center;font-size:52px;position:relative}
+.mlcst{position:absolute;top:10px;right:10px}
+.mlcvw{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);color:#fff;border-radius:var(--rp);padding:3px 10px;font-size:11px;font-weight:600}
+.mlcb{padding:13px 14px}
+.mlctt{font-size:15px;font-weight:700;color:var(--ink);margin-bottom:4px}
+.mlcmt{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.mlcft{display:flex;align-items:center;justify-content:space-between}
+.mlcpr{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--g)}
+.mlcst2{display:flex;gap:14px}
+.mlcsi{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--ink3)}
+.addlbtn{margin:0 16px 16px;background:var(--f);border:none;border-radius:var(--rl);padding:16px;color:#fff;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;width:calc(100% - 32px);transition:transform .12s}
+.addlbtn:active{transform:scale(.98)}
+
+/* ═══════ EDIT LISTING ═══════ */
+#s-edit{background:var(--paper)}
+.edit-body{flex:1;overflow-y:auto;padding:16px 20px}
+.edit-body::-webkit-scrollbar{display:none}
+.edit-section{background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px}
+.edit-sec-hd{padding:14px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+.edit-sec-title{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ink)}
+.edit-sec-body{padding:14px 16px}
+.edit-row{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line);cursor:pointer;transition:background .15s}
+.edit-row:last-child{border-bottom:none}
+.edit-row:active{background:var(--mint)}
+.er-label{font-size:14px;font-weight:600;color:var(--ink)}
+.er-value{font-size:13px;color:var(--ink3);max-width:55%;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.er-arrow{font-size:14px;color:var(--ink4);margin-left:8px;flex-shrink:0}
+.status-toggle-row{padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.photo-thumb-row{display:flex;gap:8px;overflow-x:auto;padding:14px 16px}
+.photo-thumb-row::-webkit-scrollbar{display:none}
+.pt{width:72px;height:72px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:28px;position:relative;overflow:hidden;cursor:pointer}
+.pt-add{background:var(--paper);border:2px dashed var(--line);flex-direction:column;gap:4px}
+.pt-add-ic{font-size:20px;opacity:.4}
+.pt-add-lb{font-size:9px;color:var(--ink3);font-weight:600}
+.pt-rm{position:absolute;top:3px;right:3px;width:18px;height:18px;border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:700}
+
+/* ═══════ ADD LISTING ═══════ */
+#s-add{background:var(--paper)}
+.step-hd{background:var(--w);border-bottom:1px solid var(--line);padding:12px 20px 14px;flex-shrink:0}
+.step-prog{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.sdot{width:28px;height:4px;border-radius:var(--rp);background:var(--line);transition:background .3s}
+.sdot.done{background:var(--g)}
+.sdot.act{background:var(--f)}
+.step-lbl{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:1px}
+.step-ttl{font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:var(--ink);margin-top:2px}
+.step-body{flex:1;overflow-y:auto;padding:20px}
+.step-body::-webkit-scrollbar{display:none}
+.step-ft{background:var(--w);border-top:1px solid var(--line);padding:12px 20px;padding-bottom:calc(var(--sb) + 12px);display:flex;gap:10px;flex-shrink:0}
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:4px}
+.catopt{background:var(--w);border:2px solid var(--line);border-radius:var(--rl);padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;transition:all .15s}
+.catopt.sel{border-color:var(--g);background:var(--mint)}
+.catopt:active{transform:scale(.95)}
+.catic{font-size:28px}
+.catlb{font-size:12px;font-weight:700;color:var(--ink3)}
+.catopt.sel .catlb{color:var(--g)}
+.diffrow{display:flex;gap:8px;margin-bottom:4px}
+.diffopt{flex:1;background:var(--w);border:2px solid var(--line);border-radius:var(--rl);padding:12px 8px;text-align:center;cursor:pointer;transition:all .15s}
+.diffopt.sel{border-color:var(--f);background:var(--f)}
+.difflb{font-size:13px;font-weight:700;color:var(--ink3)}
+.diffopt.sel .difflb{color:#fff}
+.diffic{font-size:18px;margin-bottom:4px}
+.photo-up{background:var(--w);border:2px dashed var(--line);border-radius:var(--rl);padding:28px 20px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;margin-bottom:12px;transition:border-color .2s}
+.photo-up:active{border-color:var(--g)}
+.pup-ic{font-size:36px;opacity:.4}
+.incl-add{display:flex;gap:8px;margin-bottom:8px}
+.incl-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px}
+.icchip{display:flex;align-items:center;gap:5px;background:var(--sage);border-radius:var(--rp);padding:6px 12px;font-size:12px;font-weight:600;color:var(--g)}
+.icchip-x{cursor:pointer;opacity:.6;font-size:14px}
+.pcrow{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line)}
+.pcrow:last-child{border-bottom:none}
+.pcl{font-size:14px;font-weight:600;color:var(--ink)}
+.pcls{font-size:12px;color:var(--ink3);margin-top:1px}
+.pcin{background:var(--paper);border:1.5px solid var(--line);border-radius:var(--rl);padding:8px 14px;font-size:15px;font-family:'DM Sans',sans-serif;font-weight:700;color:var(--ink);outline:none;width:110px;text-align:right;transition:border-color .2s}
+.pcin:focus{border-color:var(--g)}
+
+/* ═══════ SCHEDULE ═══════ */
+#s-sched{background:var(--paper)}
+.cmnav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 10px;background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
+.cmmon{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--ink)}
+.cmarr{width:36px;height:36px;border-radius:50%;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:17px;cursor:pointer;transition:all .15s}
+.cmarr:active{background:var(--sage)}
+.cdnames{display:grid;grid-template-columns:repeat(7,1fr);background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0;padding:0 8px}
+.cdn{text-align:center;font-size:11px;font-weight:700;color:var(--ink3);padding:8px 0}
+.calgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px;background:var(--w);border-bottom:1px solid var(--line);flex-shrink:0}
+.cday{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;cursor:pointer;position:relative;transition:all .15s;padding:2px}
+.cday.emp{cursor:default}
+.cdayn{font-size:13px;font-weight:600;color:var(--ink)}
+.cday.past .cdayn{color:var(--ink4)}
+.cday.tod{background:var(--f)}
+.cday.tod .cdayn{color:#fff;font-weight:800}
+.cday.bkd{background:var(--g)}
+.cday.bkd .cdayn{color:#fff}
+.cday.par{background:var(--sage)}
+.cday.par .cdayn{color:var(--g);font-weight:700}
+.cday.blk{background:var(--rlt)}
+.cday.blk .cdayn{color:var(--red);text-decoration:line-through}
+.cday.selday{outline:2.5px solid var(--f)}
+.cdaydot{width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,.7);margin-top:1px}
+.cday.par .cdaydot{background:var(--g)}
+.calleg{display:flex;gap:14px;padding:10px 16px;flex-wrap:wrap;flex-shrink:0;border-bottom:1px solid var(--line);background:var(--w)}
+.clitem{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--ink3);font-weight:500}
+.clsw{width:12px;height:12px;border-radius:4px}
+.slotpanel{flex:1;overflow-y:auto;padding:16px 20px}
+.slotpanel::-webkit-scrollbar{display:none}
+.slottd{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--ink);margin-bottom:14px}
+.slotcard{background:var(--w);border:1px solid var(--line);border-radius:var(--rl);padding:14px 16px;margin-bottom:10px}
+.slotheader{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.slottm{font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:var(--ink)}
+.slotsp{font-size:13px;color:var(--ink3)}
+.slotbrow{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--line)}
+.slotbrow:last-child{border-bottom:none}
+.sbav{width:30px;height:30px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--g);flex-shrink:0}
+.addslotbtn{background:var(--paper);border:2px dashed var(--line);border-radius:var(--rl);padding:14px;display:flex;align-items:center;justify-content:center;gap:8px;font-size:14px;font-weight:700;color:var(--ink3);cursor:pointer;margin-bottom:10px;transition:all .2s}
+.addslotbtn:active{border-color:var(--g);color:var(--g)}
+
+/* ═══════ EARNINGS ═══════ */
+#s-earn{background:var(--paper)}
+.ehero{background:var(--f);padding:0 20px 20px;flex-shrink:0;position:relative;overflow:hidden}
+.ehbg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 0% 100%,rgba(61,170,106,.2),transparent 60%)}
+.ehcards{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ehcard{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:var(--rl);padding:12px 14px}
+.ehcn{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:#fff}
+.ehcl{font-size:11px;color:rgba(255,255,255,.5);margin-top:2px}
+.efeed{flex:1;overflow-y:auto}
+.efeed::-webkit-scrollbar{display:none}
+.cbars{display:flex;align-items:flex-end;gap:6px;height:80px;margin-bottom:8px}
+.cbw{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.cbar{width:100%;border-radius:4px 4px 0 0;min-height:4px;transition:height .4s ease;cursor:pointer}
+.cbar.act{background:var(--g)}
+.cbar.ina{background:var(--line)}
+.porow{background:var(--w);border:1px solid var(--line);border-radius:var(--rl);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.txrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.txrow:last-child{border-bottom:none}
+.txic{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.txic.cr{background:var(--sage)}
+.txic.db{background:var(--rlt)}
+
+/* ═══════ PROFILE ═══════ */
+#s-prof{background:var(--paper)}
+.ophero{background:var(--f);padding:0 20px 24px;position:relative;overflow:hidden;flex-shrink:0}
+.ophbg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 0%,rgba(61,170,106,.2),transparent 70%)}
+.ophtop{position:relative;z-index:2;padding-top:calc(var(--st) + 16px);display:flex;flex-direction:column;align-items:center;text-align:center}
+.opav{width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.12);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:26px;font-weight:800;color:#fff}
+.opver{position:absolute;bottom:0;right:0;width:24px;height:24px;border-radius:50%;background:var(--gl);border:2px solid var(--f);display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff}
+.opstats{position:relative;z-index:2;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.opstat{text-align:center}
+.opstatn{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:#fff}
+.opstatl{font-size:10px;color:rgba(255,255,255,.45);margin-top:2px}
+.oppfeed{flex:1;overflow-y:auto}
+.oppfeed::-webkit-scrollbar{display:none}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ══ SPLASH ══ -->
+<div class="sc on" id="s-splash">
+  <div class="sp-bg"></div><div class="sp-grain"></div>
+  <div class="sp-c">
+    <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rp);padding:7px 14px;font-size:11px;color:rgba(255,255,255,.75);font-weight:600;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:24px;align-self:flex-start">🔑 Operator Portal</div>
+    <div style="font-family:'Syne',sans-serif;font-size:clamp(40px,12vw,56px);color:#fff;line-height:.95;font-weight:800;letter-spacing:-1.5px;margin-bottom:12px">Grow your<br><span style="color:var(--gl)">outdoor</span><br>business</div>
+    <div style="font-size:15px;color:rgba(255,255,255,.5);font-weight:300;margin-bottom:40px;line-height:1.5;max-width:260px">List experiences. Manage bookings. Get paid reliably.</div>
+    <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:48px">
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">📅</div><div style="font-size:13px;color:rgba(255,255,255,.7)">Smart booking & schedule management</div></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">💰</div><div style="font-size:13px;color:rgba(255,255,255,.7)">Instant UPI payouts after every trip</div></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">⭐</div><div style="font-size:13px;color:rgba(255,255,255,.7)">Build reputation with verified reviews</div></div>
+      <div style="display:flex;align-items:center;gap:12px"><div style="width:32px;height:32px;border-radius:10px;background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0">📊</div><div style="font-size:13px;color:rgba(255,255,255,.7)">Real-time earnings & analytics</div></div>
+    </div>
+  </div>
+  <div class="sp-f">
+    <button class="btn bfull" style="background:#fff;color:var(--f);border-radius:var(--rp);padding:17px;font-size:15px;font-family:'Syne',sans-serif;font-weight:700" onclick="GO('s-dash')">Get started as operator →</button>
+    <div style="display:flex;align-items:center;gap:12px;margin:2px 0"><div style="flex:1;height:1px;background:rgba(255,255,255,.12)"></div><div style="font-size:11px;color:rgba(255,255,255,.3)">existing operator</div><div style="flex:1;height:1px;background:rgba(255,255,255,.12)"></div></div>
+    <button class="btn bfull" style="background:rgba(255,255,255,.1);color:#fff;border-radius:var(--rp);padding:14px;font-size:14px;border:1px solid rgba(255,255,255,.2);font-family:'Syne',sans-serif" onclick="GO('s-dash')">Sign in to your account</button>
+  </div>
+</div>
+
+<!-- ══ DASHBOARD ══ -->
+<div class="sc" id="s-dash">
+  <div class="dh">
+    <div class="dhbg"></div>
+    <div class="dhtop">
+      <div><div style="font-size:12px;color:rgba(255,255,255,.5);margin-bottom:2px">Good morning 🌿</div><div class="dhsn sy" style="font-size:24px;font-weight:700;color:#fff">Arjun Kapoor</div></div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <div style="background:rgba(61,170,106,.2);border:1px solid rgba(61,170,106,.4);border-radius:var(--rp);padding:5px 12px;font-size:11px;font-weight:700;color:var(--gl)">● Live</div>
+        <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15);border:2px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:#fff">AK</div>
+      </div>
+    </div>
+    <div class="dhstats">
+      <div class="dhscard"><div class="dhsn">₹42,300</div><div class="dhsl">This month</div><div class="dhsd dhsu">↑ 34%</div></div>
+      <div class="dhscard"><div class="dhsn">18</div><div class="dhsl">Bookings</div><div class="dhsd dhsu">↑ 6 new</div></div>
+      <div class="dhscard"><div class="dhsn">4.9★</div><div class="dhsl">Rating</div><div class="dhsd dhsu">212 reviews</div></div>
+    </div>
+  </div>
+  <div class="dfeed">
+    <div class="alrt" onclick="openBkModal('b1')"><div style="font-size:22px;flex-shrink:0">🔔</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--ink)">New booking — Arjun M.</div><div style="font-size:12px;color:var(--ink3)">Kedarkantha Trek · Jul 14 · 2 guests · ₹15,000</div></div><div style="font-size:16px;color:var(--ink4)">›</div></div>
+    <div class="alrt ag" style="margin-top:8px" onclick="TOAST('💰 ₹14,200 sent to HDFC ····4521')"><div style="font-size:22px;flex-shrink:0">💰</div><div style="flex:1"><div style="font-size:13px;font-weight:700;color:var(--ink)">Payout processed — ₹14,200</div><div style="font-size:12px;color:var(--ink3)">Settled to HDFC ····4521 · Just now</div></div><div style="font-size:16px;color:var(--ink4)">›</div></div>
+    <div style="padding:16px 20px 8px;display:flex;align-items:center;justify-content:space-between"><div class="sy" style="font-size:17px;font-weight:700;color:var(--ink)">Upcoming bookings</div><div style="font-size:13px;color:var(--g);font-weight:700;cursor:pointer" onclick="GO('s-bk')">View all</div></div>
+    <div style="padding:0 20px" id="dash-bks"></div>
+    <div style="padding:16px 20px 8px;display:flex;align-items:center;justify-content:space-between;margin-top:4px"><div class="sy" style="font-size:17px;font-weight:700;color:var(--ink)">Quick actions</div></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:16px">
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rx);padding:16px;cursor:pointer;transition:transform .15s;display:flex;flex-direction:column;gap:6px" onclick="GO('s-add')" ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'"><div style="font-size:28px">➕</div><div class="sy" style="font-size:14px;font-weight:700;color:var(--ink)">Add listing</div><div style="font-size:12px;color:var(--ink3)">New experience</div></div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rx);padding:16px;cursor:pointer;transition:transform .15s;display:flex;flex-direction:column;gap:6px" onclick="GO('s-sched')" ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'"><div style="font-size:28px">📅</div><div class="sy" style="font-size:14px;font-weight:700;color:var(--ink)">Schedule</div><div style="font-size:12px;color:var(--ink3)">Manage slots</div></div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rx);padding:16px;cursor:pointer;transition:transform .15s;display:flex;flex-direction:column;gap:6px" onclick="GO('s-earn')" ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'"><div style="font-size:28px">💰</div><div class="sy" style="font-size:14px;font-weight:700;color:var(--ink)">Earnings</div><div style="font-size:12px;color:var(--ink3)">Payouts & history</div></div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rx);padding:16px;cursor:pointer;transition:transform .15s;display:flex;flex-direction:column;gap:6px" onclick="GO('s-lst')" ontouchstart="this.style.transform='scale(.97)'" ontouchend="this.style.transform='scale(1)'"><div style="font-size:28px">📋</div><div class="sy" style="font-size:14px;font-weight:700;color:var(--ink)">Listings</div><div style="font-size:12px;color:var(--ink3)">Manage experiences</div></div>
+    </div>
+    <div style="padding:0 20px 8px"><div class="sy" style="font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px">Recent reviews</div><div id="dash-rvs"></div></div>
+    <div class="slg"></div>
+  </div>
+  <div class="bnav">
+    <button class="nv on" onclick="GO('s-dash')"><div class="nvi">🏠</div><div class="nvd"></div><div class="nvl">Home</div></button>
+    <button class="nv" onclick="GO('s-bk')"><div class="nvi">📅</div><div class="nvl">Bookings</div></button>
+    <button class="nv" onclick="GO('s-lst')"><div class="nvi">📋</div><div class="nvl">Listings</div></button>
+    <button class="nv" onclick="GO('s-earn')"><div class="nvi">💰</div><div class="nvl">Earnings</div></button>
+    <button class="nv" onclick="GO('s-prof')"><div class="nvi">👤</div><div class="nvl">Profile</div></button>
+  </div>
+</div>
+
+<!-- ══ BOOKINGS ══ -->
+<div class="sc" id="s-bk">
+  <div class="sb0 sb-lt"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+  <div style="background:var(--w);border-bottom:1px solid var(--line);padding:4px 20px 0;flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">
+      <div class="sy" style="font-size:22px;font-weight:800;color:var(--ink);padding:6px 0 10px">Bookings</div>
+    </div>
+    <div class="btabs" style="padding:0;border-bottom:none">
+      <div class="btab on" onclick="switchBkTab(this,'pending')" id="tab-p">Pending <span id="pc" style="background:var(--red);color:#fff;border-radius:var(--rp);padding:1px 7px;font-size:10px;margin-left:4px"></span></div>
+      <div class="btab" onclick="switchBkTab(this,'confirmed')" id="tab-c">Confirmed</div>
+      <div class="btab" onclick="switchBkTab(this,'completed')" id="tab-d">Completed</div>
+    </div>
+    <div style="height:1px;background:var(--line)"></div>
+  </div>
+  <div class="bklist" id="bklist"></div>
+  <div class="bnav">
+    <button class="nv" onclick="GO('s-dash')"><div class="nvi">🏠</div><div class="nvl">Home</div></button>
+    <button class="nv on" onclick="GO('s-bk')"><div class="nvi">📅</div><div class="nvd"></div><div class="nvl">Bookings</div></button>
+    <button class="nv" onclick="GO('s-lst')"><div class="nvi">📋</div><div class="nvl">Listings</div></button>
+    <button class="nv" onclick="GO('s-earn')"><div class="nvi">💰</div><div class="nvl">Earnings</div></button>
+    <button class="nv" onclick="GO('s-prof')"><div class="nvi">👤</div><div class="nvl">Profile</div></button>
+  </div>
+</div>
+
+<!-- ══ LISTINGS ══ -->
+<div class="sc" id="s-lst">
+  <div class="sb0 sb-lt"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+  <div style="background:var(--w);border-bottom:1px solid var(--line);padding:4px 20px 14px;flex-shrink:0">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="sy" style="font-size:22px;font-weight:800;color:var(--ink);padding-top:6px">My Listings</div>
+      <button class="btn bf bic" onclick="GO('s-add')" style="font-size:20px">+</button>
+    </div>
+  </div>
+  <div style="flex:1;overflow-y:auto" id="lst-feed"><div class="smd"></div></div>
+  <div class="bnav">
+    <button class="nv" onclick="GO('s-dash')"><div class="nvi">🏠</div><div class="nvl">Home</div></button>
+    <button class="nv" onclick="GO('s-bk')"><div class="nvi">📅</div><div class="nvl">Bookings</div></button>
+    <button class="nv on" onclick="GO('s-lst')"><div class="nvi">📋</div><div class="nvd"></div><div class="nvl">Listings</div></button>
+    <button class="nv" onclick="GO('s-earn')"><div class="nvi">💰</div><div class="nvl">Earnings</div></button>
+    <button class="nv" onclick="GO('s-prof')"><div class="nvi">👤</div><div class="nvl">Profile</div></button>
+  </div>
+</div>
+
+<!-- ══ EDIT LISTING ══ -->
+<div class="sc" id="s-edit">
+  <div class="sb0 sb-lt"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+  <div class="ph">
+    <div class="phrow">
+      <div class="pbk" onclick="BACK()">←</div>
+      <div class="ptitle sy" id="edit-title-hd">Edit listing</div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button class="btn" style="background:var(--rlt);color:var(--red);border-radius:var(--rl);padding:8px 14px;font-size:12px;font-weight:700" onclick="deleteListing()">Delete</button>
+        <button class="btn bf" style="padding:8px 16px;font-size:13px" onclick="saveListing()">Save</button>
+      </div>
+    </div>
+  </div>
+  <div class="edit-body" id="edit-body"></div>
+</div>
+
+<!-- ══ ADD LISTING ══ -->
+<div class="sc" id="s-add">
+  <div class="sb0 sb-lt"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+  <div class="step-hd">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <div class="pbk" onclick="BACK()">←</div>
+      <div style="flex:1"><div class="step-prog" id="step-prog"></div></div>
+    </div>
+    <div class="step-lbl sy" id="step-lbl">Step 1 of 6</div>
+    <div class="step-ttl sy" id="step-ttl">What type of experience?</div>
+  </div>
+  <div class="step-body" id="step-body"></div>
+  <div class="step-ft" id="step-ft"></div>
+</div>
+
+<!-- ══ SCHEDULE ══ -->
+<div class="sc" id="s-sched">
+  <div class="sb0 sb-lt"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+  <div style="background:var(--w);border-bottom:1px solid var(--line);padding:4px 20px 10px;flex-shrink:0;display:flex;align-items:center;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+      <div class="pbk" onclick="BACK()">←</div>
+      <div class="sy" style="font-size:22px;font-weight:800;color:var(--ink)">Schedule</div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn bpp bics" onclick="TOAST('📊 Full occupancy view')">📊</button>
+      <button class="btn bf bics" style="font-size:16px" onclick="openSlotModal()">+</button>
+    </div>
+  </div>
+  <div class="cmnav">
+    <div class="cmarr" onclick="shiftCal(-1)">‹</div>
+    <div class="cmmon sy" id="cal-mon-title">July 2025</div>
+    <div class="cmarr" onclick="shiftCal(1)">›</div>
+  </div>
+  <div class="cdnames"><div class="cdn">Mo</div><div class="cdn">Tu</div><div class="cdn">We</div><div class="cdn">Th</div><div class="cdn">Fr</div><div class="cdn">Sa</div><div class="cdn">Su</div></div>
+  <div class="calgrid" id="cal-grid"></div>
+  <div class="calleg">
+    <div class="clitem"><div class="clsw" style="background:var(--g)"></div>Fully booked</div>
+    <div class="clitem"><div class="clsw" style="background:var(--sage);border:1px solid var(--g)"></div>Partial</div>
+    <div class="clitem"><div class="clsw" style="background:var(--rlt)"></div>Blocked</div>
+    <div class="clitem"><div class="clsw" style="background:var(--f)"></div>Today</div>
+  </div>
+  <div class="slotpanel" id="slot-panel"><div style="text-align:center;padding:32px 0;color:var(--ink3)"><div style="font-size:32px;margin-bottom:8px">📅</div><div style="font-size:14px;font-weight:600">Tap a date to see slots</div></div></div>
+</div>
+
+<!-- ══ EARNINGS ══ -->
+<div class="sc" id="s-earn">
+  <div class="ehero">
+    <div class="ehbg"></div>
+    <div style="position:relative;z-index:2">
+      <div class="sb0 sb-dk" style="background:transparent;position:relative;padding-top:0;min-height:0;height:var(--st)"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+        <div class="pbk" onclick="BACK()" style="background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:#fff">←</div>
+        <div class="sy" style="font-size:22px;font-weight:800;color:#fff">Earnings</div>
+      </div>
+    </div>
+    <div style="position:relative;z-index:2;margin-bottom:16px">
+      <div style="font-size:13px;color:rgba(255,255,255,.5);margin-bottom:4px">Total earned this month</div>
+      <div class="sy" style="font-size:44px;color:#fff;font-weight:800;line-height:1;letter-spacing:-1px">₹42,300</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.5);margin-top:4px">After 15% WILDCAST fee · ₹49,800 gross</div>
+      <div style="display:inline-flex;align-items:center;gap:5px;background:rgba(61,170,106,.2);border-radius:var(--rp);padding:4px 10px;font-size:12px;font-weight:700;color:var(--gl);margin-top:8px">↑ 34% from last month</div>
+    </div>
+    <div class="ehcards">
+      <div class="ehcard"><div class="ehcn sy">₹14,200</div><div class="ehcl">Pending payout</div></div>
+      <div class="ehcard"><div class="ehcn sy">18</div><div class="ehcl">Trips completed</div></div>
+    </div>
+  </div>
+  <div class="efeed">
+    <div class="sec">
+      <div class="sec-h sy">Monthly revenue</div>
+      <div class="cbars" id="earn-chart"></div>
+      <div style="display:flex;justify-content:space-between;padding:0 2px"><span style="font-size:10px;color:var(--ink3)">Feb</span><span style="font-size:10px;color:var(--ink3)">Mar</span><span style="font-size:10px;color:var(--ink3)">Apr</span><span style="font-size:10px;color:var(--ink3)">May</span><span style="font-size:10px;color:var(--ink3)">Jun</span><span style="font-size:10px;color:var(--g);font-weight:700">Jul</span></div>
+    </div>
+    <div class="sec">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <div class="sec-h sy" style="margin-bottom:0">Payout history</div>
+        <button class="btn bf" style="padding:8px 16px;font-size:12px" onclick="TOAST('💳 Requesting payout...')">Request payout →</button>
+      </div>
+      <div id="payout-list"></div>
+    </div>
+    <div class="sec"><div class="sec-h sy">Recent transactions</div><div id="txn-list"></div></div>
+    <div class="sec">
+      <div class="sec-h sy">Fee breakdown</div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden">
+        <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:14px;color:var(--ink2)">Gross bookings</span><span style="font-size:14px;font-weight:700;color:var(--ink)">₹49,800</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:14px;color:var(--ink2)">WILDCAST fee (15%)</span><span style="font-size:14px;font-weight:700;color:var(--red)">−₹7,470</span></div>
+        <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:14px;color:var(--ink2)">Payment gateway (2%)</span><span style="font-size:14px;font-weight:700;color:var(--red)">−₹996</span></div>
+        <div style="display:flex;justify-content:space-between;padding:14px 16px;background:var(--mint)"><span style="font-size:15px;font-weight:700;color:var(--ink)">Net earnings</span><span class="sy" style="font-size:20px;font-weight:700;color:var(--g)">₹41,334</span></div>
+      </div>
+    </div>
+    <div class="slg"></div>
+  </div>
+</div>
+
+<!-- ══ PROFILE ══ -->
+<div class="sc" id="s-prof">
+  <div class="ophero">
+    <div class="ophbg"></div>
+    <div class="ophtop">
+      <div class="sb0 sb-dk" style="background:transparent;position:relative;width:100%;margin-bottom:8px;min-height:0;height:var(--st)"><span>9:41</span><div class="sbi"><span>●●● 🔋</span></div></div>
+      <div style="position:relative;margin-bottom:12px">
+        <div class="opav">AK</div>
+        <div class="opver">✓</div>
+      </div>
+      <div class="sy" style="font-size:22px;color:#fff;font-weight:700;margin-bottom:3px">Arjun Kapoor</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.55)">Lead Trek Guide · Uttarakhand</div>
+      <div style="display:flex;gap:6px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rp);padding:5px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.8)">✅ ATOAI</div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rp);padding:5px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.8)">🏥 First Aid</div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:var(--rp);padding:5px 12px;font-size:11px;font-weight:600;color:rgba(255,255,255,.8)">🏔️ 9 Years</div>
+      </div>
+      <div class="opstats">
+        <div class="opstat"><div class="opstatn sy">284</div><div class="opstatl">Trips led</div></div>
+        <div class="opstat"><div class="opstatn sy">4.9</div><div class="opstatl">Rating</div></div>
+        <div class="opstat"><div class="opstatn sy">212</div><div class="opstatl">Reviews</div></div>
+        <div class="opstat"><div class="opstatn sy">97%</div><div class="opstatl">Response</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="oppfeed">
+    <div class="sec">
+      <div class="sec-h sy">Account</div>
+      <div class="srow" onclick="openEditProfileModal()"><div class="srl"><div class="sric">👤</div><div><div class="srt">Personal details</div><div class="srs">Name, photo, bio, languages</div></div></div><div class="sra">›</div></div>
+      <div class="srow" onclick="openCertsModal()"><div class="srl"><div class="sric">📜</div><div><div class="srt">Certifications</div><div class="srs">ATOAI, First Aid, Aadhaar — Verified ✓</div></div></div><div class="sra">›</div></div>
+      <div class="srow" onclick="openPaymentModal()"><div class="srl"><div class="sric">💳</div><div><div class="srt">Bank & UPI details</div><div class="srs">HDFC ····4521 · UPI: arjun@upi</div></div></div><div class="sra">›</div></div>
+      <div class="srow" onclick="openGSTModal()"><div class="srl"><div class="sric">🏢</div><div><div class="srt">GST & business</div><div class="srs">09AAACK1234M1Z5 · Verified</div></div></div><div class="sra">›</div></div>
+    </div>
+    <div class="sec">
+      <div class="sec-h sy">Preferences</div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden">
+        <div class="swrow" style="padding:14px 16px">
+          <div><div class="swtitle">Accept new bookings</div><div class="swsub">Pause to stop receiving requests</div></div>
+          <div class="tog on" onclick="togglePref(this,'bookings')"></div>
+        </div>
+        <div class="swrow" style="padding:14px 16px;border-top:1px solid var(--line)">
+          <div><div class="swtitle">WhatsApp notifications</div><div class="swsub">Booking alerts on WhatsApp</div></div>
+          <div class="tog on" onclick="togglePref(this,'whatsapp')"></div>
+        </div>
+        <div class="swrow" style="padding:14px 16px;border-top:1px solid var(--line)">
+          <div><div class="swtitle">Instant booking</div><div class="swsub">Auto-confirm without your approval</div></div>
+          <div class="tog" onclick="togglePref(this,'instant')"></div>
+        </div>
+      </div>
+    </div>
+    <div class="sec">
+      <div class="sec-h sy">Support</div>
+      <div class="srow" onclick="TOAST('📞 Calling WILDCAST support...')"><div class="srl"><div class="sric">📞</div><div><div class="srt">Talk to operator team</div><div class="srs">Available 9am–7pm daily</div></div></div><div class="sra">›</div></div>
+      <div class="srow" onclick="TOAST('📘 Opening operator handbook...')"><div class="srl"><div class="sric">📘</div><div><div class="srt">Operator handbook</div><div class="srs">Best practices & tips</div></div></div><div class="sra">›</div></div>
+    </div>
+    <div class="slg"></div>
+  </div>
+  <div class="bnav">
+    <button class="nv" onclick="GO('s-dash')"><div class="nvi">🏠</div><div class="nvl">Home</div></button>
+    <button class="nv" onclick="GO('s-bk')"><div class="nvi">📅</div><div class="nvl">Bookings</div></button>
+    <button class="nv" onclick="GO('s-lst')"><div class="nvi">📋</div><div class="nvl">Listings</div></button>
+    <button class="nv" onclick="GO('s-earn')"><div class="nvi">💰</div><div class="nvl">Earnings</div></button>
+    <button class="nv on" onclick="GO('s-prof')"><div class="nvi">👤</div><div class="nvd"></div><div class="nvl">Profile</div></button>
+  </div>
+</div>
+
+<!-- ══ MODALS ══ -->
+<div class="modal" id="modal-bk"><div class="msheet"><div class="mhandle"></div><div id="modal-bk-c"></div></div></div>
+<div class="modal" id="modal-slot"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle sy">Add availability slot</div>
+  <div class="fld"><div class="flbl">Date</div><input class="fin" id="slot-date-in" value="22 July 2025"></div>
+  <div class="fld"><div class="flbl">Start time</div><select class="fin"><option>5:30 AM</option><option>6:00 AM</option><option selected>7:00 AM</option><option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option></select></div>
+  <div class="fld"><div class="flbl">Duration</div><select class="fin"><option>Half day (4 hrs)</option><option selected>Full day (8 hrs)</option><option>2 days</option><option>5–6 days</option></select></div>
+  <div class="fld"><div class="flbl">Max guests</div><select class="fin"><option>2</option><option>4</option><option>6</option><option>8</option><option>10</option><option selected>12</option><option>16</option></select></div>
+  <div class="fld"><div class="flbl">Listing</div><select class="fin" id="slot-listing"><option>Kedarkantha Winter Trek</option><option>Hampta Pass Trek</option><option>Valley of Flowers Trek</option><option>Chopta Tungnath Day Trek</option></select></div>
+  <div class="fld"><div class="flbl">Notes for guests (optional)</div><textarea class="fin" placeholder="e.g. Assemble at Dehradun bus stand by 5:45 AM"></textarea></div>
+  <div style="display:flex;gap:10px;margin-bottom:20px">
+    <button class="btn bw bfull" onclick="closeModal('modal-slot')" style="padding:14px">Cancel</button>
+    <button class="btn bf bfull" onclick="addSlot()" style="padding:14px">Add slot →</button>
+  </div>
+</div></div>
+<div class="modal" id="modal-ep"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle sy">Edit profile</div>
+  <div class="fld"><div class="flbl">Full name</div><input class="fin ok" value="Arjun Kapoor"></div>
+  <div class="fld"><div class="flbl">Phone</div><input class="fin ok" value="+91 98765 43210"></div>
+  <div class="fld"><div class="flbl">Location</div><input class="fin ok" value="Uttarkashi, Uttarakhand"></div>
+  <div class="fld"><div class="flbl">Bio</div><textarea class="fin ok" rows="4">Lead trek guide with 9 years experience in Uttarakhand Himalaya. ATOAI certified. 284 treks completed safely.</textarea></div>
+  <div class="fld"><div class="flbl">Languages</div><input class="fin ok" value="Hindi, English, Garhwali"></div>
+  <div style="display:flex;gap:10px;margin-bottom:20px">
+    <button class="btn bw bfull" onclick="closeModal('modal-ep')" style="padding:14px">Cancel</button>
+    <button class="btn bf bfull" onclick="closeModal('modal-ep');TOAST('✅ Profile updated!')" style="padding:14px">Save changes</button>
+  </div>
+</div></div>
+<div class="modal" id="modal-cert"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle sy">Certifications</div>
+  <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line)"><span style="font-size:14px;font-weight:600;color:var(--ink)">ATOAI Certificate</span><span class="bdg bg-g">✓ Verified</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line)"><span style="font-size:14px;font-weight:600;color:var(--ink)">First Aid (WEMT)</span><span class="bdg bg-g">✓ Verified</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-bottom:1px solid var(--line)"><span style="font-size:14px;font-weight:600;color:var(--ink)">Aadhaar KYC</span><span class="bdg bg-g">✓ Verified</span></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px"><span style="font-size:14px;font-weight:600;color:var(--ink)">High Altitude Rescue</span><span class="bdg bg-am">Pending</span></div>
+  </div>
+  <button class="btn bf bfull" onclick="TOAST('📎 Upload new certificate');closeModal('modal-cert')" style="padding:14px;margin-bottom:20px">+ Upload new certificate</button>
+</div></div>
+<div class="modal" id="modal-pay"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle sy">Bank & UPI details</div>
+  <div class="fld"><div class="flbl">UPI ID</div><input class="fin ok" value="arjun.kapoor@upi"></div>
+  <div class="fld"><div class="flbl">Bank account</div><input class="fin ok" value="HDFC ····4521"></div>
+  <div class="fld"><div class="flbl">IFSC</div><input class="fin ok" value="HDFC0001234"></div>
+  <div class="fld"><div class="flbl">Account holder name</div><input class="fin ok" value="Arjun Kapoor"></div>
+  <div style="display:flex;gap:10px;margin-bottom:20px">
+    <button class="btn bw bfull" onclick="closeModal('modal-pay')" style="padding:14px">Cancel</button>
+    <button class="btn bf bfull" onclick="closeModal('modal-pay');TOAST('✅ Payment details saved!')" style="padding:14px">Save</button>
+  </div>
+</div></div>
+<div class="modal" id="modal-gst"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle sy">GST & Business</div>
+  <div class="fld"><div class="flbl">GST number</div><input class="fin ok" value="09AAACK1234M1Z5"></div>
+  <div class="fld"><div class="flbl">Business name</div><input class="fin ok" value="Kapoor Adventure Treks"></div>
+  <div class="fld"><div class="flbl">Business address</div><textarea class="fin ok">Uttarkashi, Uttarakhand — 249193</textarea></div>
+  <div style="background:var(--sage);border-radius:var(--rl);padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--g)">✅ GST verified by WILDCAST. Auto-invoicing is active for all bookings.</div>
+  <div style="display:flex;gap:10px;margin-bottom:20px">
+    <button class="btn bw bfull" onclick="closeModal('modal-gst')" style="padding:14px">Cancel</button>
+    <button class="btn bf bfull" onclick="closeModal('modal-gst');TOAST('✅ GST details saved!')" style="padding:14px">Save</button>
+  </div>
+</div></div>
+<div class="modal" id="modal-field"><div class="msheet">
+  <div class="mhandle"></div>
+  <div class="mtitle sy" id="mf-title">Edit</div>
+  <div id="mf-body"></div>
+  <div style="display:flex;gap:10px;margin-bottom:20px">
+    <button class="btn bw bfull" onclick="closeModal('modal-field')" style="padding:14px">Cancel</button>
+    <button class="btn bf bfull" id="mf-save" style="padding:14px">Save</button>
+  </div>
+</div></div>
+
+</div><!-- /app -->
+<div id="toast"></div>
+
+<script>
+/* ══ DATA ══ */
+const BOOKINGS=[
+  {id:'b1',g:'Arjun Mehta',in:'AM',trip:'Kedarkantha Winter Trek',em:'🏔️',date:'Jul 14, 2026',guests:2,amount:15000,status:'pending',ref:'WC-847291',ph:'+91 98765 43210',msg:'Can we arrange pickup from Delhi?'},
+  {id:'b2',g:'Priya Sharma',in:'PS',trip:'Kedarkantha Winter Trek',em:'🏔️',date:'Jul 16, 2026',guests:4,amount:30000,status:'confirmed',ref:'WC-821043',ph:'+91 87654 32109',msg:'All confirmed, very excited!'},
+  {id:'b3',g:'TechLeap Corp',in:'TL',trip:'Hampta Pass Trek',em:'🏔️',date:'Jul 22, 2026',guests:12,amount:90000,status:'pending',ref:'WC-798021',ph:'+91 76543 21098',msg:'Corporate offsite for 12. Can you customise?'},
+  {id:'b4',g:'Vikram Rao',in:'VR',trip:'Valley of Flowers',em:'🌺',date:'Aug 3, 2026',guests:1,amount:8500,status:'confirmed',ref:'WC-765432',ph:'+91 65432 10987',msg:'Solo traveller, very experienced.'},
+  {id:'b5',g:'Rahul Verma',in:'RV',trip:'Kedarkantha Winter Trek',em:'🏔️',date:'Dec 14, 2025',guests:2,amount:15000,status:'completed',ref:'WC-623104',ph:'',msg:''},
+  {id:'b6',g:'Neha Singh',in:'NS',trip:'Hampta Pass Trek',em:'🏔️',date:'Oct 5, 2025',guests:3,amount:22500,status:'completed',ref:'WC-601234',ph:'',msg:''},
+];
+const LISTINGS=[
+  {id:'l1',title:'Kedarkantha Winter Trek',cat:'trek',em:'🏔️',grad:'linear-gradient(135deg,#0d3320,#1a6b3c)',price:7500,status:'active',bookings:18,rating:4.9,reviews:212,views:1240,diff:'Moderate',loc:'Uttarkashi, Uttarakhand',dur:'6 days',maxG:12,desc:'A stunning winter trek to the Kedarkantha summit at 3,800m. One of India\'s most beautiful snow treks.',includes:['Return transport from Dehradun','All accommodation','All meals','Trekking poles & crampons','Forest permits','Medical kit'],photos:[{bg:'linear-gradient(135deg,#0d3320,#1a6b3c)',em:'🏔️'},{bg:'linear-gradient(135deg,#1a2a0d,#3a5c1a)',em:'🌿'},{bg:'linear-gradient(135deg,#1a1a3a,#3a3a6b)',em:'❄️'}]},
+  {id:'l2',title:'Hampta Pass Trek',cat:'trek',em:'🏔️',grad:'linear-gradient(135deg,#1a2a0d,#3a5c1a)',price:6200,status:'active',bookings:11,rating:4.8,reviews:87,views:890,diff:'Moderate',loc:'Kullu, Himachal Pradesh',dur:'5 days',maxG:14,desc:'Cross the dramatic Hampta Pass at 4,270m connecting the lush Kullu valley to the stark Spiti desert landscape.',includes:['Volvo bus from Manali','Camping tents','All meals','Complete trekking gear','Mules for luggage'],photos:[{bg:'linear-gradient(135deg,#1a2a0d,#3a5c1a)',em:'🏔️'},{bg:'linear-gradient(135deg,#0d1a3a,#1a3d6b)',em:'🌄'}]},
+  {id:'l3',title:'Valley of Flowers Trek',cat:'trek',em:'🌺',grad:'linear-gradient(135deg,#3a0d2a,#6b1a5c)',price:8500,status:'active',bookings:6,rating:4.9,reviews:44,views:620,diff:'Easy-Moderate',loc:'Chamoli, Uttarakhand',dur:'7 days',maxG:10,desc:'A UNESCO World Heritage Site blooming with alpine flowers from July to September. Absolutely magical.',includes:['All transport','Accommodation','All meals','Forest entry permit','Certified naturalist guide'],photos:[{bg:'linear-gradient(135deg,#3a0d2a,#6b1a5c)',em:'🌺'},{bg:'linear-gradient(135deg,#0d3a0d,#1a6b1a)',em:'🌿'}]},
+  {id:'l4',title:'Chopta Tungnath Day Trek',cat:'trek',em:'⛩️',grad:'linear-gradient(135deg,#0d1a3a,#1a3d6b)',price:3200,status:'paused',bookings:3,rating:4.7,reviews:28,views:340,diff:'Easy',loc:'Rudraprayag, Uttarakhand',dur:'Full day',maxG:15,desc:'Visit the highest Shiva temple in the world at Tungnath (3,680m) with panoramic Himalayan views.',includes:['Pickup from Chopta','Temple permits','Packed lunch','First aid'],photos:[{bg:'linear-gradient(135deg,#0d1a3a,#1a3d6b)',em:'⛩️'}]},
+];
+const REVIEWS=[
+  {in:'RV',nm:'Rahul Verma',dt:'Jul 8',st:5,txt:'Arjun knew every inch of that mountain. Absolutely life-changing experience.'},
+  {in:'PM',nm:'Priya Mehta',dt:'Jul 5',st:5,txt:'First time trekker and I made it to 3,800m. The food was incredible!'},
+  {in:'AK',nm:'Aryan K.',dt:'Jul 2',st:4,txt:'Fantastic organisation. Would have loved slightly faster response time.'},
+];
+const PAYOUTS=[{dt:'Jul 1, 2026',am:28100,ref:'PO-20260701'},{dt:'Jun 1, 2026',am:19400,ref:'PO-20260601'},{dt:'May 1, 2026',am:22800,ref:'PO-20260501'}];
+const TXNS=[
+  {tp:'cr',ic:'💰',tl:'Booking: Arjun M. × 2',sb:'Jul 14 · Kedarkantha Trek',am:'+₹12,750',dt:'2h ago'},
+  {tp:'cr',ic:'💰',tl:'Booking: Priya S. × 4',sb:'Jul 12 · Kedarkantha Trek',am:'+₹25,500',dt:'Jul 12'},
+  {tp:'db',ic:'📊',tl:'WILDCAST platform fee',sb:'Jul 1–15 period',am:'−₹5,720',dt:'Jul 15'},
+  {tp:'cr',ic:'💰',tl:'Booking: Vikram R. × 1',sb:'Jul 10 · Valley of Flowers',am:'+₹7,225',dt:'Jul 10'},
+  {tp:'db',ic:'💸',tl:'Payout to HDFC ····4521',sb:'₹28,100 settled',am:'−₹28,100',dt:'Jul 1'},
+];
+const CAL_D={3:{bkd:1},4:{bkd:1},5:{par:1},8:{bkd:1},9:{bkd:1},10:{bkd:1},14:{bkd:1},15:{bkd:1},16:{par:1},19:{bkd:1},20:{bkd:1},21:{blk:1},22:{blk:1},23:{par:1},26:{bkd:1},27:{bkd:1},28:{par:1}};
+const SLOT_D={14:[{tm:'6:00 AM',mx:12,bks:[{in:'AM',nm:'Arjun Mehta',g:2},{in:'PS',nm:'Priya Sharma',g:4}]}],15:[{tm:'7:00 AM',mx:8,bks:[{in:'VR',nm:'Vikram Rao',g:1}]}],16:[{tm:'6:30 AM',mx:12,bks:[{in:'TL',nm:'TechLeap Corp',g:12}]}],19:[{tm:'6:00 AM',mx:12,bks:[{in:'NK',nm:'Neha K.',g:3},{in:'RS',nm:'Rajan S.',g:2}]}],23:[{tm:'7:00 AM',mx:10,bks:[{in:'AP',nm:'Aman P.',g:4}]}]};
+const EARN_CHART=[18200,24500,31000,19800,38400,42300];
+const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const MD=[31,28,31,30,31,30,31,31,30,31,30,31];
+
+/* ══ STATE ══ */
+let curSc='s-splash',navStack=[],curBkTab='pending',curCatStep=0,editListingId=null;
+let calM=6,calY=2025,selCalDay=null;
+let stepData={cat:'',title:'',loc:'',dur:'',maxG:'8',diff:'',desc:'',photos:[],incl:[],price:'',grpPrice:'',dep:'20',instant:false};
+
+/* ══ NAVIGATION ══ */
+function GO(id){
+  if(id===curSc)return;
+  navStack.push(curSc);
+  document.getElementById(curSc).classList.remove('on');
+  const n=document.getElementById(id);n.classList.add('on');n.scrollTop=0;curSc=id;
+}
+function BACK(){
+  if(!navStack.length)return;
+  const p=navStack.pop();
+  document.getElementById(curSc).classList.remove('on');
+  document.getElementById(p).classList.add('on');
+  curSc=p;
+}
+let _tt;
+function TOAST(m){const e=document.getElementById('toast');e.textContent=m;e.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>e.classList.remove('show'),2500)}
+function openModal(id){document.getElementById(id).classList.add('show')}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+
+/* ══ DASHBOARD ══ */
+function renderDashBks(){
+  document.getElementById('dash-bks').innerHTML=BOOKINGS.filter(b=>b.status!=='completed').slice(0,4).map(b=>`
+    <div class="bkitem" onclick="openBkModal('${b.id}')">
+      <div class="bkav">${b.in}</div>
+      <div style="flex:1;min-width:0"><div class="bknm">${b.g}</div><div class="bkmt"><span>${b.trip.split(' ').slice(0,2).join(' ')}</span><span>·</span><span>${b.date.split(',')[0]}</span><span>·</span><span>${b.guests}P</span></div></div>
+      <div style="text-align:right"><div class="bkam">₹${b.amount.toLocaleString('en-IN')}</div><div style="margin-top:3px"><span class="bdg ${b.status==='pending'?'bg-am':'bg-g'}">${b.status==='pending'?'Pending':'Confirmed'}</span></div></div>
+    </div>`).join('')}
+function renderDashRvs(){
+  document.getElementById('dash-rvs').innerHTML=REVIEWS.map(r=>`
+    <div class="rvmini">
+      <div class="rvmh"><div class="rvmav">${r.in}</div><div class="rvmn">${r.nm}</div><div class="rvmd">${r.dt}</div></div>
+      <div style="color:var(--amw);font-size:12px;margin-bottom:5px">${'★'.repeat(r.st)}${'☆'.repeat(5-r.st)}</div>
+      <div style="font-size:12px;color:var(--ink2);line-height:1.5">${r.txt}</div>
+    </div>`).join('')}
+
+/* ══ BOOKINGS ══ */
+function switchBkTab(el,tab){
+  document.querySelectorAll('.btab').forEach(t=>t.classList.remove('on'));el.classList.add('on');curBkTab=tab;renderBkList();
+}
+function renderBkList(){
+  const pend=BOOKINGS.filter(b=>b.status==='pending');
+  document.getElementById('pc').textContent=pend.length;
+  const fl=BOOKINGS.filter(b=>b.status===curBkTab);
+  const list=document.getElementById('bklist');
+  if(!fl.length){list.innerHTML=`<div style="text-align:center;padding:48px 24px;color:var(--ink3)"><div style="font-size:36px;margin-bottom:10px">📭</div><div class="sy" style="font-size:18px;color:var(--ink);margin-bottom:4px">No ${curBkTab} bookings</div><div style="font-size:13px">All clear!</div></div>`;return;}
+  list.innerHTML=fl.map(b=>{
+    let acts='';
+    if(b.status==='pending') acts=`<button class="bbtn bacc" onclick="acceptBk('${b.id}');event.stopPropagation()">✓ Accept</button><button class="bbtn bdec" onclick="declineBk('${b.id}');event.stopPropagation()">✕ Decline</button><button class="bbtn bmsg" onclick="TOAST('💬 Opening WhatsApp...');event.stopPropagation()">💬</button>`;
+    else if(b.status==='confirmed') acts=`<button class="bbtn bmsg" onclick="TOAST('💬 Message ${b.g.split(' ')[0]}');event.stopPropagation()">💬 Message</button><button class="bbtn bview" onclick="openBkModal('${b.id}');event.stopPropagation()">View details</button>`;
+    else acts=`<button class="bbtn bmsg" onclick="TOAST('⭐ Review from ${b.g.split(' ')[0]}');event.stopPropagation()">⭐ Review</button><button class="bbtn bview" onclick="TOAST('📊 Trip report');event.stopPropagation()">Trip report</button>`;
+    return `<div class="bkcard" onclick="openBkModal('${b.id}')">
+      <div class="bkch">
+        <div class="bkav">${b.in}</div>
+        <div class="bkci"><div class="bkcg">${b.g}</div><div class="bkct">${b.em} ${b.trip}</div></div>
+        <div><span class="bdg ${b.status==='pending'?'bg-am':b.status==='confirmed'?'bg-g':'bg-k'}">${b.status==='pending'?'⏳ Pending':b.status==='confirmed'?'✅ Confirmed':'✓ Done'}</span></div>
+      </div>
+      <div class="bkcb">
+        <div class="bkgrd">
+          <div class="bkgf"><div class="bkgfl">Date</div><div class="bkgfv">${b.date.split(',')[0]}</div></div>
+          <div class="bkgf"><div class="bkgfl">Guests</div><div class="bkgfv">${b.guests} person${b.guests>1?'s':''}</div></div>
+          <div class="bkgf"><div class="bkgfl">Amount</div><div class="bkgfv">₹${b.amount.toLocaleString('en-IN')}</div></div>
+          <div class="bkgf"><div class="bkgfl">Ref</div><div class="bkgfv" style="font-family:monospace;font-size:11px">${b.ref}</div></div>
+        </div>
+        ${b.msg?`<div style="background:var(--paper);border-radius:var(--r);padding:9px 12px;margin-bottom:10px;font-size:12px;color:var(--ink2);border-left:3px solid var(--g)">"${b.msg}"</div>`:''}
+        <div class="bkacts">${acts}</div>
+      </div>
+    </div>`;}).join('')+`<div class="smd"></div>`;
+}
+function acceptBk(id){const b=BOOKINGS.find(x=>x.id===id);if(!b)return;b.status='confirmed';TOAST('✅ Confirmed — WhatsApp sent to '+b.g);renderBkList();renderDashBks();}
+function declineBk(id){const b=BOOKINGS.find(x=>x.id===id);if(!b)return;b.status='completed';TOAST('Booking declined');renderBkList();renderDashBks();}
+function openBkModal(id){
+  const b=BOOKINGS.find(x=>x.id===id);if(!b)return;
+  const isp=b.status==='pending';
+  document.getElementById('modal-bk-c').innerHTML=`
+    <div class="mtitle sy">${b.g}</div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;background:var(--paper);border-radius:var(--rl);padding:14px">
+      <div style="width:52px;height:52px;border-radius:50%;background:var(--sage);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:17px;font-weight:700;color:var(--g);flex-shrink:0">${b.in}</div>
+      <div><div style="font-size:16px;font-weight:700;color:var(--ink)">${b.g}</div><div style="font-size:13px;color:var(--ink3)">${b.ph||'No phone'}</div><div style="margin-top:4px"><span class="bdg ${b.status==='pending'?'bg-am':b.status==='confirmed'?'bg-g':'bg-k'}">${b.status}</span></div></div>
+    </div>
+    <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink3)">Experience</span><span style="font-size:13px;font-weight:700;color:var(--ink)">${b.em} ${b.trip}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink3)">Date</span><span style="font-size:13px;font-weight:700;color:var(--ink)">${b.date}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink3)">Guests</span><span style="font-size:13px;font-weight:700;color:var(--ink)">${b.guests} person${b.guests>1?'s':''}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--line)"><span style="font-size:13px;color:var(--ink3)">Booking ref</span><span style="font-size:13px;font-weight:700;color:var(--ink);font-family:monospace">${b.ref}</span></div>
+      <div style="display:flex;justify-content:space-between;padding:14px 16px;background:var(--mint)"><span style="font-size:14px;font-weight:700;color:var(--ink)">You earn</span><span class="sy" style="font-size:20px;font-weight:700;color:var(--g)">₹${Math.round(b.amount*.85).toLocaleString('en-IN')}</span></div>
+    </div>
+    ${b.msg?`<div style="background:var(--paper);border-radius:var(--rl);padding:14px;margin-bottom:14px;border-left:3px solid var(--g)"><div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px">Guest message</div><div style="font-size:14px;color:var(--ink2);line-height:1.5">"${b.msg}"</div></div>`:''}
+    <div style="display:flex;flex-direction:column;gap:8px;padding-bottom:8px">
+      ${isp?`<button class="btn bg bfull" onclick="acceptBk('${b.id}');closeModal('modal-bk')" style="padding:15px">✓ Accept booking</button>
+      <button class="btn bw bfull" onclick="declineBk('${b.id}');closeModal('modal-bk')" style="padding:14px">✕ Decline booking</button>`:`<button class="btn bf bfull" onclick="TOAST('💬 Opening WhatsApp...');closeModal('modal-bk')" style="padding:15px">💬 Message ${b.g.split(' ')[0]}</button>`}
+      <button class="btn bw bfull" onclick="closeModal('modal-bk')" style="padding:12px;color:var(--ink3)">Close</button>
+    </div>`;
+  openModal('modal-bk');
+}
+
+/* ══ LISTINGS ══ */
+function renderListings(){
+  document.getElementById('lst-feed').innerHTML=`
+    <div style="padding:12px 16px 4px;display:flex;align-items:center;justify-content:space-between">
+      <div style="font-size:13px;color:var(--ink3)">${LISTINGS.length} listings · ${LISTINGS.filter(l=>l.status==='active').length} active</div>
+      <div style="font-size:13px;color:var(--g);font-weight:700">Avg ₹${Math.round(LISTINGS.reduce((a,l)=>a+l.price,0)/LISTINGS.length).toLocaleString('en-IN')}/person</div>
+    </div>
+    ${LISTINGS.map(l=>`
+      <div class="mlc" onclick="openEditListing('${l.id}')">
+        <div class="mlci" style="background:${l.grad}">
+          <span style="opacity:.25;filter:saturate(0)">${l.em}</span>
+          <div class="mlcst"><span class="bdg ${l.status==='active'?'bg-g':'bg-am'}">${l.status==='active'?'● Live':'⏸ Paused'}</span></div>
+          <div class="mlcvw">👁 ${l.views.toLocaleString()} views</div>
+        </div>
+        <div class="mlcb">
+          <div class="mlctt">${l.title}</div>
+          <div class="mlcmt"><span>${l.em} ${l.cat}</span><span>·</span><span>${l.diff}</span><span>·</span><span>${l.dur}</span></div>
+          <div class="mlcft">
+            <div><div class="mlcpr">₹${l.price.toLocaleString('en-IN')}</div><div style="font-size:11px;color:var(--ink3)">per person</div></div>
+            <div class="mlcst2"><div class="mlcsi">📅 ${l.bookings}</div><div class="mlcsi">★ ${l.rating} (${l.reviews})</div></div>
+          </div>
+        </div>
+      </div>`).join('')}
+    <button class="addlbtn" onclick="GO('s-add')"><span style="font-size:20px">+</span> Add new experience</button>
+    <div class="smd"></div>`;
+}
+
+/* ══ EDIT LISTING ══ */
+function openEditListing(id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  editListingId=id;
+  document.getElementById('edit-title-hd').textContent='Edit: '+l.title.split(' ').slice(0,2).join(' ');
+  document.getElementById('edit-body').innerHTML=`
+    <!-- STATUS -->
+    <div class="edit-section">
+      <div class="edit-sec-hd"><div class="edit-sec-title sy">Listing status</div></div>
+      <div class="status-toggle-row">
+        <div>
+          <div class="swtitle">Listing is live</div>
+          <div class="swsub">Guests can discover & book this experience</div>
+        </div>
+        <div class="tog ${l.status==='active'?'on':''}" id="lst-tog" onclick="toggleListingStatus('${id}',this)"></div>
+      </div>
+    </div>
+
+    <!-- PHOTOS -->
+    <div class="edit-section">
+      <div class="edit-sec-hd"><div class="edit-sec-title sy">Photos <span style="font-size:12px;color:var(--ink3);font-weight:400">${l.photos.length} photos</span></div></div>
+      <div class="photo-thumb-row" id="photo-row">
+        ${l.photos.map((p,i)=>`
+          <div class="pt" style="background:${p.bg}">
+            ${p.em}
+            <div class="pt-rm" onclick="removePhoto('${id}',${i})">×</div>
+          </div>`).join('')}
+        <div class="pt pt-add" onclick="addPhotoToListing('${id}')">
+          <div class="pt-add-ic">📷</div>
+          <div class="pt-add-lb">Add photo</div>
+        </div>
+      </div>
+      <div style="padding:0 16px 14px;font-size:12px;color:var(--ink3)">Tap a photo to set as cover. Tap × to remove.</div>
+    </div>
+
+    <!-- BASIC DETAILS -->
+    <div class="edit-section">
+      <div class="edit-sec-hd"><div class="edit-sec-title sy">Basic details</div></div>
+      <div class="edit-row" onclick="openFieldEdit('title','Experience title','${l.title}','text')">
+        <div style="flex:1"><div class="er-label">Title</div></div>
+        <div class="er-value">${l.title}</div>
+        <div class="er-arrow">›</div>
+      </div>
+      <div class="edit-row" onclick="openFieldEdit('loc','Location','${l.loc}','text')">
+        <div style="flex:1"><div class="er-label">Location</div></div>
+        <div class="er-value">${l.loc}</div>
+        <div class="er-arrow">›</div>
+      </div>
+      <div class="edit-row" onclick="openFieldEdit('desc','Description','${l.desc}','textarea')">
+        <div style="flex:1"><div class="er-label">Description</div></div>
+        <div class="er-value">${l.desc.slice(0,40)}...</div>
+        <div class="er-arrow">›</div>
+      </div>
+      <div class="edit-row" onclick="openSelectEdit('diff','Difficulty',l.diff,['Easy','Easy-Moderate','Moderate','Challenging','Expert'],'${id}')">
+        <div style="flex:1"><div class="er-label">Difficulty</div></div>
+        <div class="er-value">${l.diff}</div>
+        <div class="er-arrow">›</div>
+      </div>
+      <div class="edit-row" onclick="openSelectEdit('dur','Duration',l.dur,['Half day','Full day','2 days','3 days','5–6 days','7+ days'],'${id}')">
+        <div style="flex:1"><div class="er-label">Duration</div></div>
+        <div class="er-value">${l.dur}</div>
+        <div class="er-arrow">›</div>
+      </div>
+      <div class="edit-row" onclick="openGuestsEdit('${id}')">
+        <div style="flex:1"><div class="er-label">Max guests</div></div>
+        <div class="er-value">${l.maxG} persons</div>
+        <div class="er-arrow">›</div>
+      </div>
+    </div>
+
+    <!-- PRICING -->
+    <div class="edit-section">
+      <div class="edit-sec-hd"><div class="edit-sec-title sy">Pricing</div></div>
+      <div class="edit-row" onclick="openPriceEdit('${id}')">
+        <div style="flex:1"><div class="er-label">Price per person</div></div>
+        <div class="er-value" style="color:var(--g);font-weight:700;font-family:'Syne',sans-serif;font-size:16px">₹${l.price.toLocaleString('en-IN')}</div>
+        <div class="er-arrow">›</div>
+      </div>
+      <div style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+        <div style="font-size:13px;color:var(--ink3)">You earn per booking</div>
+        <div style="font-size:14px;font-weight:700;color:var(--g)">₹${Math.round(l.price*.85).toLocaleString('en-IN')} <span style="font-size:11px;font-weight:400;color:var(--ink3)">(after 15% fee)</span></div>
+      </div>
+    </div>
+
+    <!-- INCLUDES -->
+    <div class="edit-section">
+      <div class="edit-sec-hd">
+        <div class="edit-sec-title sy">What's included</div>
+        <button class="btn bg" style="padding:6px 12px;font-size:12px" onclick="openIncludesEdit('${id}')">Edit</button>
+      </div>
+      <div style="padding:8px 16px 14px;display:flex;flex-direction:column;gap:6px">
+        ${l.includes.map(inc=>`<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink2)"><span style="color:var(--g)">✓</span>${inc}</div>`).join('')}
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="edit-section">
+      <div class="edit-sec-hd"><div class="edit-sec-title sy">Performance</div></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:14px 16px">
+        <div style="background:var(--paper);border-radius:var(--rl);padding:12px;text-align:center"><div class="sy" style="font-size:22px;font-weight:700;color:var(--ink)">${l.views.toLocaleString()}</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">Total views</div></div>
+        <div style="background:var(--paper);border-radius:var(--rl);padding:12px;text-align:center"><div class="sy" style="font-size:22px;font-weight:700;color:var(--ink)">${l.bookings}</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">Bookings</div></div>
+        <div style="background:var(--paper);border-radius:var(--rl);padding:12px;text-align:center"><div class="sy" style="font-size:22px;font-weight:700;color:var(--amw)">${l.rating}★</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">Rating</div></div>
+        <div style="background:var(--paper);border-radius:var(--rl);padding:12px;text-align:center"><div class="sy" style="font-size:22px;font-weight:700;color:var(--ink)">${l.reviews}</div><div style="font-size:11px;color:var(--ink3);margin-top:2px">Reviews</div></div>
+      </div>
+    </div>
+
+    <!-- DANGER ZONE -->
+    <div class="edit-section">
+      <div class="edit-sec-hd"><div class="edit-sec-title sy" style="color:var(--red)">Danger zone</div></div>
+      <div style="padding:14px 16px;display:flex;flex-direction:column;gap:10px">
+        <button class="btn bfull" style="background:var(--alt);color:var(--am);border-radius:var(--rl);padding:13px;font-size:14px;font-weight:700;border:1.5px solid rgba(196,122,10,.2)" onclick="pauseListing('${id}')">⏸ ${l.status==='active'?'Pause':'Resume'} listing</button>
+        <button class="btn bfull bred" style="padding:13px;font-size:14px" onclick="deleteListing('${id}')">🗑️ Delete listing permanently</button>
+      </div>
+    </div>
+
+    <div class="slg"></div>`;
+  GO('s-edit');
+}
+
+function toggleListingStatus(id,tog){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  l.status=l.status==='active'?'paused':'active';
+  tog.classList.toggle('on');
+  TOAST(l.status==='active'?'✅ Listing is now live':'⏸ Listing paused');
+  renderListings();
+}
+function pauseListing(id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  const tog=document.getElementById('lst-tog');
+  toggleListingStatus(id,tog);
+  openEditListing(id);
+}
+function saveListing(){TOAST('✅ Changes saved!');BACK();}
+function deleteListing(id){
+  const lid=id||editListingId;
+  if(!confirm('Delete this listing? This cannot be undone.'))return;
+  const idx=LISTINGS.findIndex(x=>x.id===lid);
+  if(idx>-1)LISTINGS.splice(idx,1);
+  TOAST('🗑️ Listing deleted');
+  renderListings();
+  BACK();
+}
+function addPhotoToListing(id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  const bgs=['linear-gradient(135deg,#0d3320,#1a6b3c)','linear-gradient(135deg,#1a2a0d,#3a5c1a)','linear-gradient(135deg,#1a0d3a,#3d2d6b)','linear-gradient(135deg,#3a1a0d,#6b3d1a)'];
+  const ems=['🏔️','🌿','🏕️','🌄','❄️','🌺'];
+  l.photos.push({bg:bgs[l.photos.length%4],em:ems[l.photos.length%6]});
+  TOAST('📷 Photo added');
+  openEditListing(id);
+}
+function removePhoto(id,i){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  l.photos.splice(i,1);
+  TOAST('Photo removed');
+  openEditListing(id);
+}
+function openFieldEdit(field,label,value,type){
+  document.getElementById('mf-title').textContent='Edit '+label;
+  document.getElementById('mf-body').innerHTML=`
+    <div class="fld"><div class="flbl">${label}</div>
+    ${type==='textarea'?`<textarea class="fin ok" id="mf-inp" rows="5">${value}</textarea>`:`<input class="fin ok" id="mf-inp" value="${value}">`}
+    </div>`;
+  document.getElementById('mf-save').onclick=()=>{
+    const l=LISTINGS.find(x=>x.id===editListingId);
+    if(l){l[field]=document.getElementById('mf-inp').value;TOAST('✅ '+label+' updated');closeModal('modal-field');openEditListing(editListingId);}
+  };
+  openModal('modal-field');
+}
+function openSelectEdit(field,label,current,opts,id){
+  document.getElementById('mf-title').textContent='Select '+label;
+  document.getElementById('mf-body').innerHTML=`
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:16px">
+      ${opts.map(o=>`
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:13px 16px;background:${o===current?'var(--mint)':'var(--w)'};border:${o===current?'1.5px solid var(--g)':'1px solid var(--line)'};border-radius:var(--rl);cursor:pointer;transition:all .15s" onclick="applySelectEdit('${field}','${o}','${id}')">
+          <span style="font-size:14px;font-weight:${o===current?'700':'500'};color:var(--ink)">${o}</span>
+          ${o===current?'<span style="color:var(--g);font-size:18px">✓</span>':''}
+        </div>`).join('')}
+    </div>`;
+  document.getElementById('mf-save').style.display='none';
+  openModal('modal-field');
+}
+function applySelectEdit(field,value,id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  l[field]=value;TOAST('✅ Updated');
+  document.getElementById('mf-save').style.display='';
+  closeModal('modal-field');
+  openEditListing(id);
+}
+function openGuestsEdit(id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  document.getElementById('mf-title').textContent='Max guests';
+  document.getElementById('mf-body').innerHTML=`
+    <div class="fld"><div class="flbl">Maximum guests per slot</div>
+    <select class="fin ok" id="mf-inp">
+      ${[2,4,6,8,10,12,14,16,20].map(n=>`<option ${l.maxG==n?'selected':''}>${n}</option>`).join('')}
+    </select></div>`;
+  document.getElementById('mf-save').onclick=()=>{
+    l.maxG=parseInt(document.getElementById('mf-inp').value);
+    TOAST('✅ Max guests updated');closeModal('modal-field');openEditListing(id);
+  };
+  document.getElementById('mf-save').style.display='';
+  openModal('modal-field');
+}
+function openPriceEdit(id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  document.getElementById('mf-title').textContent='Edit pricing';
+  document.getElementById('mf-body').innerHTML=`
+    <div class="fld"><div class="flbl">Price per person (₹) <span style="color:var(--red)">*</span></div>
+    <input class="fin ok" type="number" id="mf-inp" value="${l.price}">
+    </div>
+    <div style="background:var(--sage);border-radius:var(--rl);padding:12px 14px;margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--g);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Earnings preview</div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:13px;color:var(--ink2)">Guest pays</span><span id="pe-g" style="font-size:13px;font-weight:700;color:var(--ink)">₹${l.price.toLocaleString('en-IN')}</span></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:3px"><span style="font-size:13px;color:var(--ink2)">WILDCAST fee (15%)</span><span id="pe-f" style="font-size:13px;font-weight:700;color:var(--red)">−₹${Math.round(l.price*.15).toLocaleString('en-IN')}</span></div>
+      <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(26,107,60,.2)"><span style="font-size:14px;font-weight:700;color:var(--g)">You earn</span><span id="pe-n" class="sy" style="font-size:18px;font-weight:700;color:var(--g)">₹${Math.round(l.price*.85).toLocaleString('en-IN')}</span></div>
+    </div>`;
+  setTimeout(()=>{
+    const inp=document.getElementById('mf-inp');
+    if(inp) inp.oninput=()=>{const p=parseInt(inp.value)||0;const g=document.getElementById('pe-g');const f=document.getElementById('pe-f');const n=document.getElementById('pe-n');if(g)g.textContent='₹'+p.toLocaleString('en-IN');if(f)f.textContent='−₹'+Math.round(p*.15).toLocaleString('en-IN');if(n)n.textContent='₹'+Math.round(p*.85).toLocaleString('en-IN');};
+  },50);
+  document.getElementById('mf-save').onclick=()=>{
+    const nv=parseInt(document.getElementById('mf-inp').value);
+    if(!nv||nv<100){TOAST('⚠️ Enter a valid price');return;}
+    l.price=nv;TOAST('✅ Price updated to ₹'+nv.toLocaleString('en-IN'));closeModal('modal-field');openEditListing(id);
+  };
+  document.getElementById('mf-save').style.display='';
+  openModal('modal-field');
+}
+function openIncludesEdit(id){
+  const l=LISTINGS.find(x=>x.id===id);if(!l)return;
+  document.getElementById('mf-title').textContent='What\'s included';
+  const renderInclChips=()=>`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${l.includes.map((inc,i)=>`<div style="display:flex;align-items:center;gap:5px;background:var(--sage);border-radius:var(--rp);padding:6px 12px;font-size:12px;font-weight:600;color:var(--g)">${inc}<span style="cursor:pointer;opacity:.6;font-size:14px" onclick="removeInclude('${id}',${i})">×</span></div>`).join('')}</div>`;
+  document.getElementById('mf-body').innerHTML=`
+    <div id="incl-chips-wrap">${renderInclChips()}</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input class="fin" id="incl-inp" placeholder="Add item..." style="flex:1" onkeydown="if(event.key==='Enter')addInclItem('${id}')">
+      <button class="btn bf bic" onclick="addInclItem('${id}')">+</button>
+    </div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--ink3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Quick add</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">
+        ${['🚐 Transport','🍽️ All meals','🎒 Gear','🏕️ Accommodation','🎫 Permits','🏥 First aid','📸 Photography','💧 Water'].map(it=>`<div style="background:var(--paper);border:1px solid var(--line);border-radius:var(--rp);padding:6px 12px;font-size:12px;cursor:pointer;color:var(--ink2);transition:all .15s" onclick="quickAddIncl('${id}','${it}')">${it}</div>`).join('')}
+      </div>
+    </div>`;
+  document.getElementById('mf-save').onclick=()=>{TOAST('✅ Includes updated');closeModal('modal-field');openEditListing(id);};
+  document.getElementById('mf-save').style.display='';
+  openModal('modal-field');
+}
+function removeInclude(id,i){const l=LISTINGS.find(x=>x.id===id);if(!l)return;l.includes.splice(i,1);document.getElementById('incl-chips-wrap').innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${l.includes.map((inc,j)=>`<div style="display:flex;align-items:center;gap:5px;background:var(--sage);border-radius:var(--rp);padding:6px 12px;font-size:12px;font-weight:600;color:var(--g)">${inc}<span style="cursor:pointer;opacity:.6;font-size:14px" onclick="removeInclude('${id}',${j})">×</span></div>`).join('')}</div>`;}
+function addInclItem(id){const l=LISTINGS.find(x=>x.id===id);if(!l)return;const inp=document.getElementById('incl-inp');if(!inp||!inp.value.trim())return;l.includes.push(inp.value.trim());inp.value='';document.getElementById('incl-chips-wrap').innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${l.includes.map((inc,j)=>`<div style="display:flex;align-items:center;gap:5px;background:var(--sage);border-radius:var(--rp);padding:6px 12px;font-size:12px;font-weight:600;color:var(--g)">${inc}<span style="cursor:pointer;opacity:.6;font-size:14px" onclick="removeInclude('${id}',${j})">×</span></div>`).join('')}</div>`;}
+function quickAddIncl(id,item){const l=LISTINGS.find(x=>x.id===id);if(!l||l.includes.includes(item))return;l.includes.push(item);document.getElementById('incl-chips-wrap').innerHTML=`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${l.includes.map((inc,j)=>`<div style="display:flex;align-items:center;gap:5px;background:var(--sage);border-radius:var(--rp);padding:6px 12px;font-size:12px;font-weight:600;color:var(--g)">${inc}<span style="cursor:pointer;opacity:.6;font-size:14px" onclick="removeInclude('${id}',${j})">×</span></div>`).join('')}</div>`;}
+
+/* ══ ADD LISTING ══ */
+function renderStep(){
+  const steps=['Type','Details','Photos','Includes','Pricing','Review'];
+  document.getElementById('step-prog').innerHTML=steps.map((_,i)=>`<div class="sdot ${i<curCatStep?'done':i===curCatStep?'act':''}"></div>`).join('');
+  document.getElementById('step-lbl').textContent=`Step ${curCatStep+1} of ${steps.length}`;
+  const titles=['What type of experience?','Basic details','Add photos','What\'s included','Set pricing','Review & publish'];
+  document.getElementById('step-ttl').textContent=titles[curCatStep];
+  const body=document.getElementById('step-body'),ft=document.getElementById('step-ft');
+  const cats=[['🏔️','Trekking','trek'],['🏕️','Camping','camp'],['🦁','Safari','safari'],['🏂','Snow','snow'],['🌊','Watersports','water'],['🦅','Birding','bird'],['🧗','Climbing','climb'],['🚵','Cycling','cycle'],['🌿','Wellness','wellness']];
+  const diffs=[['🟢','Easy'],['🟡','Moderate'],['🔴','Hard'],['⚫','Expert']];
+  if(curCatStep===0){
+    body.innerHTML=`<div style="font-size:14px;color:var(--ink3);margin-bottom:16px">Choose the primary category for your experience</div>
+    <div class="cat-grid">${cats.map(([ic,lb,k])=>`<div class="catopt ${stepData.cat===k?'sel':''}" onclick="stepData.cat='${k}';renderStep()"><div class="catic">${ic}</div><div class="catlb">${lb}</div></div>`).join('')}</div>`;
+    ft.innerHTML=`<button class="btn bw bfull" onclick="BACK()" style="padding:14px">Cancel</button><button class="btn bf bfull" onclick="nextStep()" style="padding:14px">Next →</button>`;
+  } else if(curCatStep===1){
+    body.innerHTML=`
+      <div class="fld"><div class="flbl">Title <span style="color:var(--red)">*</span></div><input class="fin ${stepData.title?'ok':''}" placeholder="e.g. Kedarkantha Winter Trek — 6 Days" value="${stepData.title}" onchange="stepData.title=this.value;this.classList.toggle('ok',!!this.value)"></div>
+      <div class="fld"><div class="flbl">Location <span style="color:var(--red)">*</span></div><input class="fin ${stepData.loc?'ok':''}" placeholder="e.g. Uttarkashi, Uttarakhand" value="${stepData.loc}" onchange="stepData.loc=this.value;this.classList.toggle('ok',!!this.value)"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="fld"><div class="flbl">Duration</div><select class="fin ${stepData.dur?'ok':''}" onchange="stepData.dur=this.value;this.classList.toggle('ok',!!this.value)"><option value="">Select</option>${['Half day','Full day','2 days','3 days','5–6 days','7+ days'].map(o=>`<option ${stepData.dur===o?'selected':''}>${o}</option>`).join('')}</select></div>
+        <div class="fld"><div class="flbl">Max guests</div><select class="fin ok" onchange="stepData.maxG=this.value">${[2,4,6,8,10,12,14,16].map(n=>`<option ${stepData.maxG==n?'selected':''}>${n}</option>`).join('')}</select></div>
+      </div>
+      <div class="fld"><div class="flbl">Difficulty</div><div class="diffrow">${diffs.map(([ic,lb])=>`<div class="diffopt ${stepData.diff===lb?'sel':''}" onclick="stepData.diff='${lb}';renderStep()"><div class="diffic">${ic}</div><div class="difflb">${lb}</div></div>`).join('')}</div></div>
+      <div class="fld"><div class="flbl">Description</div><textarea class="fin" placeholder="Describe the experience..." rows="5" onchange="stepData.desc=this.value">${stepData.desc}</textarea></div>`;
+    ft.innerHTML=`<button class="btn bw bfull" onclick="prevStep()" style="padding:14px">← Back</button><button class="btn bf bfull" onclick="nextStep()" style="padding:14px">Next →</button>`;
+  } else if(curCatStep===2){
+    const pv=stepData.photos.map((p,i)=>`<div class="pt" style="background:${p.bg}">${p.em}<div class="pt-rm" onclick="stepData.photos.splice(${i},1);renderStep()">×</div></div>`).join('');
+    body.innerHTML=`
+      <div style="font-size:14px;color:var(--ink3);margin-bottom:16px">High quality photos get 3× more bookings.</div>
+      ${stepData.photos.length?`<div class="photo-thumb-row">${pv}</div>`:''}
+      <div class="photo-up" onclick="addStepPhoto()"><div class="pup-ic">📷</div><div style="font-size:14px;font-weight:700;color:var(--ink2)">Tap to add photos</div><div style="font-size:12px;color:var(--ink3)">JPG, PNG up to 10MB</div></div>
+      <div style="margin-top:8px">
+        <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px">Photo quality score</div>
+        <div class="pbar"><div class="pbf" style="width:${stepData.photos.length*25}%;background:${stepData.photos.length<2?'var(--amw)':'var(--g)'}"></div></div>
+        <div style="font-size:12px;color:var(--ink3);margin-top:4px">${stepData.photos.length} of 4+ recommended</div>
+      </div>`;
+    ft.innerHTML=`<button class="btn bw bfull" onclick="prevStep()" style="padding:14px">← Back</button><button class="btn bf bfull" onclick="nextStep()" style="padding:14px">Next →</button>`;
+  } else if(curCatStep===3){
+    body.innerHTML=`
+      <div style="font-size:14px;color:var(--ink3);margin-bottom:16px">Tell guests exactly what's included to build trust.</div>
+      <div id="si-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">${stepData.incl.map((it,i)=>`<div style="display:flex;align-items:center;gap:5px;background:var(--sage);border-radius:var(--rp);padding:6px 12px;font-size:12px;font-weight:600;color:var(--g)">${it}<span style="cursor:pointer;opacity:.6;font-size:14px" onclick="stepData.incl.splice(${i},1);renderStep()">×</span></div>`).join('')}</div>
+      <div class="incl-add"><input class="fin" id="si-inp" placeholder="e.g. All meals included" style="flex:1" onkeydown="if(event.key==='Enter'){const v=this.value.trim();if(v){stepData.incl.push(v);this.value='';renderStep();}}"><button class="btn bf bic" onclick="const v=document.getElementById('si-inp').value.trim();if(v){stepData.incl.push(v);document.getElementById('si-inp').value='';renderStep()}">+</button></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${['🚐 Transport','🍽️ All meals','🎒 Gear & equipment','🏕️ Accommodation','🎫 Park permits','🏥 First aid','📸 Photography','💧 Drinking water'].map(it=>`<div style="background:var(--paper);border:1px solid var(--line);border-radius:var(--rp);padding:6px 12px;font-size:12px;cursor:pointer;color:var(--ink2)" onclick="if(!stepData.incl.includes('${it}')){stepData.incl.push('${it}');renderStep()}">${it}</div>`).join('')}</div>`;
+    ft.innerHTML=`<button class="btn bw bfull" onclick="prevStep()" style="padding:14px">← Back</button><button class="btn bf bfull" onclick="nextStep()" style="padding:14px">Next →</button>`;
+  } else if(curCatStep===4){
+    body.innerHTML=`
+      <div style="font-size:14px;color:var(--ink3);margin-bottom:16px">WILDCAST takes 15% per booking. Set competitive pricing.</div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px">
+        <div class="pcrow"><div><div class="pcl">Price per person <span style="color:var(--red)">*</span></div><div class="pcls">Standard adult rate</div></div><div class="finpfx" style="width:120px"><div class="finpfx-t">₹</div><input class="pcin" type="number" id="pc-inp" value="${stepData.price||''}" placeholder="0" oninput="stepData.price=this.value;updatePriceCalc()"></div></div>
+        <div class="pcrow"><div><div class="pcl">Group rate (8+ guests)</div><div class="pcls">Optional discount</div></div><div class="finpfx" style="width:120px"><div class="finpfx-t">₹</div><input class="pcin" type="number" value="${stepData.grpPrice||''}" placeholder="0" oninput="stepData.grpPrice=this.value"></div></div>
+        <div class="pcrow"><div><div class="pcl">Booking deposit</div><div class="pcls">% required upfront</div></div><select class="fin" style="width:110px;text-align:right" onchange="stepData.dep=this.value">${['10%','15%','20%','25%','50%','100%'].map(o=>`<option ${stepData.dep+'%'===o||stepData.dep===o?'selected':''}>${o}</option>`).join('')}</select></div>
+      </div>
+      <div id="pcalc" style="background:var(--sage);border-radius:var(--rl);padding:14px 16px;margin-bottom:14px">
+        <div style="font-size:12px;font-weight:700;color:var(--g);margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px">Earnings estimate</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;color:var(--ink2)">Guest pays</span><span id="pe-g2" style="font-size:13px;font-weight:700;color:var(--ink)">${stepData.price?'₹'+parseInt(stepData.price).toLocaleString('en-IN'):'—'}</span></div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px"><span style="font-size:13px;color:var(--ink2)">WILDCAST fee (15%)</span><span id="pe-f2" style="font-size:13px;font-weight:700;color:var(--red)">${stepData.price?'−₹'+Math.round(parseInt(stepData.price)*.15).toLocaleString('en-IN'):'—'}</span></div>
+        <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(26,107,60,.2)"><span style="font-size:14px;font-weight:700;color:var(--g)">You earn</span><span id="pe-n2" class="sy" style="font-size:18px;font-weight:700;color:var(--g)">${stepData.price?'₹'+Math.round(parseInt(stepData.price)*.85).toLocaleString('en-IN'):'—'}</span></div>
+      </div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);padding:14px 16px">
+        <div class="swrow" style="padding:0;border-bottom:none"><div><div class="swtitle">Instant booking</div><div class="swsub">Auto-confirm without your approval</div></div><div class="tog ${stepData.instant?'on':''}" onclick="stepData.instant=!stepData.instant;this.classList.toggle('on')"></div></div>
+      </div>`;
+    ft.innerHTML=`<button class="btn bw bfull" onclick="prevStep()" style="padding:14px">← Back</button><button class="btn bf bfull" onclick="nextStep()" style="padding:14px">Review →</button>`;
+  } else if(curCatStep===5){
+    const catIc={trek:'🏔️',camp:'🏕️',safari:'🦁',snow:'🏂',water:'🌊',bird:'🦅',climb:'🧗',cycle:'🚵',wellness:'🌿'}[stepData.cat]||'🌍';
+    const missing=!stepData.title||!stepData.price;
+    body.innerHTML=`
+      <div style="font-size:14px;color:var(--ink3);margin-bottom:16px">Review before going live. You can edit anytime.</div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px">
+        <div style="height:140px;background:linear-gradient(135deg,#0d3320,#1a6b3c);display:flex;align-items:center;justify-content:center;font-size:64px;opacity:.8">${catIc}</div>
+        <div style="padding:14px 16px">
+          <div class="sy" style="font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px">${stepData.title||'[No title]'}</div>
+          <div style="font-size:13px;color:var(--ink3);margin-bottom:8px">📍 ${stepData.loc||'[No location]'} · ${stepData.dur||'[No duration]'}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between"><div class="sy" style="font-size:20px;font-weight:700;color:var(--g)">${stepData.price?'₹'+parseInt(stepData.price).toLocaleString('en-IN'):'₹—'}</div><span class="bdg bg-g">● Live after publish</span></div>
+        </div>
+      </div>
+      <div style="background:var(--w);border:1px solid var(--line);border-radius:var(--rl);overflow:hidden;margin-bottom:14px">
+        ${[['Category',catIc+' '+(stepData.cat||'—')],['Difficulty',stepData.diff||'Not set'],['Max guests',stepData.maxG+' guests'],['Photos',stepData.photos.length+' uploaded'],['Includes',stepData.incl.length+' items'],['Deposit',stepData.dep+'% upfront']].map(([l,v],i,arr)=>`<div style="display:flex;justify-content:space-between;padding:11px 16px;${i<arr.length-1?'border-bottom:1px solid var(--line)':''}"><span style="font-size:13px;color:var(--ink3)">${l}</span><span style="font-size:13px;font-weight:700;color:var(--ink)">${v}</span></div>`).join('')}
+      </div>
+      ${missing?`<div style="background:var(--rlt);border:1px solid rgba(192,57,43,.2);border-radius:var(--rl);padding:12px 14px;margin-bottom:14px;display:flex;gap:10px;font-size:12px;color:var(--red)"><span>⚠️</span><span>Missing required fields: ${!stepData.title?'title, ':''}${!stepData.price?'price':''}</span></div>`:''}`;
+    ft.innerHTML=`<button class="btn bw bfull" onclick="prevStep()" style="padding:14px">← Edit</button><button class="btn bg bfull" onclick="publishListing()" style="padding:14px">🚀 Publish listing</button>`;
+  }
+}
+function addStepPhoto(){const bgs=['linear-gradient(135deg,#0d3320,#1a6b3c)','linear-gradient(135deg,#1a2a0d,#3a5c1a)','linear-gradient(135deg,#1a0d3a,#3d2d6b)','linear-gradient(135deg,#3a1a0d,#6b3d1a)'];const ems=['🏔️','🌿','🏕️','🌄','❄️','🌺'];stepData.photos.push({bg:bgs[stepData.photos.length%4],em:ems[stepData.photos.length%6]});TOAST('📷 Photo added');renderStep();}
+function nextStep(){if(curCatStep<5){curCatStep++;renderStep();}}
+function prevStep(){if(curCatStep>0){curCatStep--;renderStep();}else{BACK();}}
+function updatePriceCalc(){const p=parseInt(document.getElementById('pc-inp')?.value)||0;const g=document.getElementById('pe-g2');const f=document.getElementById('pe-f2');const n=document.getElementById('pe-n2');if(g)g.textContent=p?'₹'+p.toLocaleString('en-IN'):'—';if(f)f.textContent=p?'−₹'+Math.round(p*.15).toLocaleString('en-IN'):'—';if(n)n.textContent=p?'₹'+Math.round(p*.85).toLocaleString('en-IN'):'—';}
+function publishListing(){
+  if(!stepData.title||!stepData.price){TOAST('⚠️ Fill required fields first');return;}
+  LISTINGS.unshift({id:'l-new-'+Date.now(),title:stepData.title,cat:stepData.cat||'trek',em:'🌟',grad:'linear-gradient(135deg,#0d3320,#1a6b3c)',price:parseInt(stepData.price),status:'active',bookings:0,rating:0,reviews:0,views:0,diff:stepData.diff||'Moderate',loc:stepData.loc,dur:stepData.dur,maxG:parseInt(stepData.maxG),desc:stepData.desc,includes:stepData.incl,photos:stepData.photos.length?stepData.photos:[{bg:'linear-gradient(135deg,#0d3320,#1a6b3c)',em:'🌟'}]});
+  stepData={cat:'',title:'',loc:'',dur:'',maxG:'8',diff:'',desc:'',photos:[],incl:[],price:'',grpPrice:'',dep:'20',instant:false};
+  curCatStep=0;
+  TOAST('🚀 Listing published!');
+  renderListings();
+  GO('s-lst');
+}
+
+/* ══ SCHEDULE ══ */
+function shiftCal(d){calM+=d;if(calM>11){calM=0;calY++;}if(calM<0){calM=11;calY--;}selCalDay=null;buildCal();document.getElementById('slot-panel').innerHTML='<div style="text-align:center;padding:32px 0;color:var(--ink3)"><div style="font-size:32px;margin-bottom:8px">📅</div><div style="font-size:14px;font-weight:600">Tap a date to see slots</div></div>';}
+function buildCal(){
+  document.getElementById('cal-mon-title').textContent=MN[calM]+' '+calY;
+  const gr=document.getElementById('cal-grid');gr.innerHTML='';
+  const days=MD[calM]+(calM===1&&calY%4===0?1:0);
+  const first=(new Date(calY,calM,1).getDay()+6)%7;
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cday emp';gr.appendChild(e);}
+  for(let d=1;d<=days;d++){
+    const el=document.createElement('div'),cd=CAL_D[d];
+    let cls='cday';
+    if(d<14&&calM===6)cls+=' past';
+    else if(d===14&&calM===6)cls+=' tod';
+    else if(cd?.bkd)cls+=' bkd';
+    else if(cd?.par)cls+=' par';
+    else if(cd?.blk)cls+=' blk';
+    if(d===selCalDay)cls+=' selday';
+    el.className=cls;
+    el.innerHTML=`<div class="cdayn">${d}</div>${(cd?.bkd||cd?.par)?'<div class="cdaydot"></div>':''}`;
+    if(!cls.includes('past'))el.onclick=()=>selectCalDay(d);
+    gr.appendChild(el);
+  }
+}
+function selectCalDay(d){selCalDay=d;buildCal();renderSlotPanel(d);}
+function renderSlotPanel(d){
+  const panel=document.getElementById('slot-panel'),slots=SLOT_D[d]||[],cd=CAL_D[d];
+  const ms=MN[calM].slice(0,3);
+  let html=`<div class="slottd sy">${ms} ${d} — ${cd?.bkd?'Fully booked':cd?.par?'Partially booked':cd?.blk?'Blocked off':'Available'}</div>`;
+  if(cd?.blk){html+=`<div style="background:var(--rlt);border:1px solid rgba(192,57,43,.2);border-radius:var(--rl);padding:14px 16px;margin-bottom:12px;display:flex;align-items:center;gap:10px"><span style="font-size:20px">🚫</span><div style="flex:1"><div style="font-size:14px;font-weight:700;color:var(--red)">Day blocked</div><div style="font-size:12px;color:var(--ink3);margin-top:2px">No bookings</div></div><button class="btn" style="background:var(--red);color:#fff;border-radius:var(--rl);padding:7px 14px;font-size:12px;font-weight:700" onclick="CAL_D[${d}]={};buildCal();renderSlotPanel(${d});TOAST('✅ Day unblocked')">Unblock</button></div>`;}
+  slots.forEach(s=>{const bkd=s.bks.reduce((a,b)=>a+b.g,0);html+=`<div class="slotcard"><div class="slotheader"><div class="slottm">${s.tm}</div><div class="slotsp">${bkd}/${s.mx} guests</div></div><div class="pbar" style="margin-bottom:10px"><div class="pbf" style="width:${bkd/s.mx*100}%"></div></div>${s.bks.map(b=>`<div class="slotbrow"><div class="sbav">${b.in}</div><div style="flex:1;font-size:13px;font-weight:600;color:var(--ink)">${b.nm}</div><div style="font-size:12px;color:var(--ink3)">${b.g} guest${b.g>1?'s':''}</div><div style="font-size:12px;color:var(--g);font-weight:600;cursor:pointer;margin-left:8px" onclick="TOAST('💬 Messaging ${b.nm}')">Chat</div></div>`).join('')}</div>`;});
+  if(!slots.length&&!cd?.blk)html+=`<div style="background:var(--paper);border:2px dashed var(--line);border-radius:var(--rl);padding:20px;text-align:center;margin-bottom:12px"><div style="font-size:24px;margin-bottom:8px">📭</div><div style="font-size:14px;font-weight:600;color:var(--ink3)">No slots for this day</div></div>`;
+  html+=`<div class="addslotbtn" onclick="document.getElementById('slot-date-in').value='${d} ${ms} ${calY}';openSlotModal()"><span style="font-size:18px">+</span> Add slot for ${ms} ${d}</div>`;
+  if(!cd?.blk)html+=`<button class="btn bfull" style="background:var(--rlt);color:var(--red);border:1.5px solid rgba(192,57,43,.2);border-radius:var(--rl);padding:12px;font-size:13px;font-weight:700;margin-bottom:10px" onclick="CAL_D[${d}]={blk:1};buildCal();renderSlotPanel(${d});TOAST('🚫 Day blocked')">Block this day</button>`;
+  html+=`<div class="slg"></div>`;
+  panel.innerHTML=html;
+}
+function openSlotModal(){openModal('modal-slot');}
+function addSlot(){
+  const d=parseInt(document.getElementById('slot-date-in').value);
+  if(!SLOT_D[d])SLOT_D[d]=[];
+  const listing=document.getElementById('slot-listing').value;
+  SLOT_D[d].push({tm:'7:00 AM',mx:12,bks:[]});
+  if(!CAL_D[d])CAL_D[d]={par:1};
+  TOAST('✅ Slot added for '+document.getElementById('slot-date-in').value);
+  closeModal('modal-slot');
+  buildCal();
+  if(selCalDay)renderSlotPanel(selCalDay);
+}
+
+/* ══ EARNINGS ══ */
+function renderEarnChart(){
+  const c=document.getElementById('earn-chart');if(!c)return;
+  const mx=Math.max(...EARN_CHART);
+  c.innerHTML=EARN_CHART.map((v,i)=>`<div class="cbw"><div style="font-size:9px;color:${i===5?'var(--g)':'var(--ink3)'};font-weight:${i===5?'700':'500'};margin-bottom:3px">₹${Math.round(v/1000)}K</div><div style="flex:1;display:flex;align-items:flex-end;width:100%"><div class="cbar ${i===5?'act':'ina'}" style="height:${Math.round(v/mx*70)}px;width:100%"></div></div></div>`).join('');
+}
+function renderPayouts(){
+  const el=document.getElementById('payout-list');if(!el)return;
+  el.innerHTML=PAYOUTS.map(p=>`<div class="porow"><div><div class="sy" style="font-size:18px;font-weight:700;color:var(--ink)">₹${p.am.toLocaleString('en-IN')}</div><div style="font-size:12px;color:var(--ink3);margin-top:2px">${p.dt} · ${p.ref}</div></div><div style="font-size:12px;font-weight:700;color:var(--g)">✓ Paid</div></div>`).join('');
+}
+function renderTxns(){
+  const el=document.getElementById('txn-list');if(!el)return;
+  el.innerHTML=TXNS.map(t=>`<div class="txrow"><div class="txic ${t.tp}">${t.ic}</div><div style="flex:1"><div style="font-size:13px;font-weight:600;color:var(--ink)">${t.tl}</div><div style="font-size:11px;color:var(--ink3);margin-top:1px">${t.sb} · ${t.dt}</div></div><div style="font-family:'Syne',sans-serif;font-size:15px;font-weight:700;color:${t.tp==='cr'?'var(--g)':'var(--red)'}">${t.am}</div></div>`).join('');
+}
+
+/* ══ PROFILE MODALS ══ */
+function openEditProfileModal(){openModal('modal-ep');}
+function openCertsModal(){openModal('modal-cert');}
+function openPaymentModal(){openModal('modal-pay');}
+function openGSTModal(){openModal('modal-gst');}
+function togglePref(tog,pref){tog.classList.toggle('on');TOAST(tog.classList.contains('on')?'✅ '+pref+' enabled':'⏸ '+pref+' disabled');}
+
+/* ══ INIT ══ */
+renderDashBks();renderDashRvs();
+renderBkList();
+renderListings();
+buildCal();
+renderStep();
+setTimeout(()=>{renderEarnChart();renderPayouts();renderTxns();},80);
+document.querySelectorAll('.modal').forEach(m=>{m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('show');});});
+</script>
+</body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manish Mosalpuri — Product Portfolio | Marketplace, AI & Growth</title>
+<meta name="description" content="Product management portfolio — case studies in marketplace strategy, search & discovery, conversion optimisation, and 0→1 product research. Interactive prototypes included.">
+<meta property="og:title" content="Manish Mosalpuri — Product Portfolio">
+<meta property="og:description" content="Case studies in marketplace strategy, search & discovery, conversion optimisation, and 0→1 product research. Interactive prototypes built without a designer.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0f0e0d; --ink-2: #3a3835; --ink-3: #7a7570;
+    --paper: #f8f5f0; --paper-2: #efeae2;
+    --accent: #1a4d8f; --accent-light: #e8eef7;
+    --green: #0f5c3a; --green-light: #e4f2eb;
+    --amber: #8c4a00; --amber-light: #fef3e2;
+    --forest: #0d3320;
+    --rule: #d8d0c4;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); font-size: 16px; line-height: 1.65; }
+
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--paper); border-bottom: 1px solid var(--rule);
+    padding: 0 40px; display: flex; align-items: center; justify-content: space-between; height: 56px;
+  }
+  .nav-name { font-family: 'DM Serif Display', serif; font-size: 17px; color: var(--ink); text-decoration: none; }
+  .nav-links { display: flex; gap: 24px; }
+  .nav-links a { font-size: 13px; color: var(--ink-3); text-decoration: none; letter-spacing: 0.03em; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--ink); }
+
+  .hero { max-width: 780px; margin: 0 auto; padding: 80px 40px 64px; border-bottom: 1px solid var(--rule); }
+  .hero-eyebrow { font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px; }
+  .hero h1 { font-family: 'DM Serif Display', serif; font-size: clamp(36px, 5.5vw, 54px); line-height: 1.08; letter-spacing: -0.02em; margin-bottom: 24px; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  .hero-desc { font-size: 17px; color: var(--ink-2); max-width: 560px; line-height: 1.7; margin-bottom: 36px; }
+  .hero-meta { display: flex; gap: 32px; flex-wrap: wrap; }
+  .meta-item { display: flex; flex-direction: column; gap: 3px; }
+  .meta-label { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+  .meta-value { font-size: 14px; font-weight: 500; color: var(--ink); }
+
+  .cases { max-width: 780px; margin: 0 auto; padding: 0 40px; }
+  .case { padding: 64px 0; border-bottom: 1px solid var(--rule); }
+  .case-number { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+  .case-number::after { content: ''; flex: 1; height: 1px; background: var(--rule); }
+  .case h2 { font-family: 'DM Serif Display', serif; font-size: clamp(24px, 3.8vw, 34px); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .case-subtitle { font-size: 14px; color: var(--ink-3); margin-bottom: 32px; }
+
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 4px 12px; border-radius: 20px; margin-bottom: 28px;
+  }
+  .status-approved { background: var(--amber-light); color: var(--amber); }
+  .status-founder { background: var(--green-light); color: var(--green); }
+  .status-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+  .outcome-bar { display: flex; gap: 1px; margin-bottom: 40px; border-radius: 8px; overflow: hidden; }
+  .outcome-stat { flex: 1; background: var(--paper-2); padding: 18px 20px; transition: background 0.2s; }
+  .outcome-stat:hover { background: var(--accent-light); }
+  .outcome-num { font-family: 'DM Serif Display', serif; font-size: 26px; color: var(--accent); line-height: 1; margin-bottom: 5px; }
+  .outcome-num.green { color: var(--green); }
+  .outcome-num.forest { color: var(--forest); }
+  .outcome-label { font-size: 12px; color: var(--ink-3); line-height: 1.4; }
+
+  .section-block { margin-bottom: 36px; }
+  .section-heading { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .section-body { font-size: 15px; color: var(--ink-2); line-height: 1.75; }
+  .section-body p + p { margin-top: 12px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 36px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 36px; }
+
+  .insight-card { background: var(--paper-2); border-radius: 8px; padding: 18px 20px; }
+  .insight-card .tag { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; padding: 3px 8px; border-radius: 3px; margin-bottom: 10px; }
+  .tag-problem { background: #fde8e8; color: #8b1c1c; }
+  .tag-solution { background: var(--green-light); color: var(--green); }
+  .tag-data { background: var(--accent-light); color: var(--accent); }
+  .tag-shipped { background: var(--amber-light); color: var(--amber); }
+  .tag-founder { background: #e6f2ea; color: #0d3320; }
+  .insight-card p { font-size: 14px; color: var(--ink-2); line-height: 1.65; }
+
+  .spec-block { background: var(--ink); border-radius: 8px; padding: 24px 28px; margin-bottom: 36px; color: #c8c4bc; font-size: 13px; line-height: 1.8; }
+  .spec-block .spec-title { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #6a6660; margin-bottom: 14px; }
+  .spec-block span.key { color: #9ab8e0; }
+  .spec-block span.val { color: #c8c4bc; }
+  .spec-block span.accent-val { color: #7ec8a0; }
+
+  .timeline { display: flex; gap: 0; margin-bottom: 36px; position: relative; }
+  .timeline::before { content: ''; position: absolute; top: 20px; left: 0; right: 0; height: 1px; background: var(--rule); }
+  .tl-item { flex: 1; padding-top: 40px; padding-right: 16px; position: relative; }
+  .tl-dot { position: absolute; top: 14px; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); border: 2px solid var(--accent); }
+  .tl-week { font-size: 11px; font-weight: 500; color: var(--accent); margin-bottom: 4px; }
+  .tl-label { font-size: 13px; color: var(--ink-2); line-height: 1.5; }
+
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+  .pill { font-size: 12px; color: var(--ink-2); border: 1px solid var(--rule); border-radius: 20px; padding: 5px 14px; background: var(--paper); }
+
+  /* PROTOTYPE EMBED */
+  .prototype-wrap {
+    margin-bottom: 36px;
+  }
+  .prototype-label { font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
+  .prototype-tabs { display: flex; gap: 2px; margin-bottom: 16px; }
+  .proto-tab { padding: 7px 16px; font-size: 13px; font-weight: 500; border: 1px solid var(--rule); border-radius: 6px; cursor: pointer; background: var(--paper); color: var(--ink-3); transition: all 0.15s; }
+  .proto-tab.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .device-frame {
+    background: var(--paper-2);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .phone-shell {
+    width: 320px;
+    flex-shrink: 0;
+  }
+  .phone-chrome {
+    background: #1a1a1a;
+    border-radius: 40px;
+    padding: 10px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  }
+  .phone-inner {
+    border-radius: 32px;
+    overflow: hidden;
+    height: 620px;
+    position: relative;
+  }
+  .phone-inner iframe {
+    width: 390px;
+    height: 844px;
+    border: none;
+    transform: scale(0.735);
+    transform-origin: top left;
+    pointer-events: auto;
+  }
+  .desktop-shell {
+    flex: 1;
+    min-width: 320px;
+  }
+  .desktop-chrome {
+    background: #2a2a2a;
+    border-radius: 10px 10px 6px 6px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.2);
+  }
+  .desktop-bar {
+    background: #3a3a3a;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .d-dots { display: flex; gap: 5px; }
+  .d-dot { width: 10px; height: 10px; border-radius: 50%; }
+  .d-url { flex: 1; background: #2a2a2a; border-radius: 4px; padding: 4px 10px; font-size: 11px; color: #888; font-family: monospace; }
+  .desktop-inner { height: 520px; overflow: hidden; }
+  .desktop-inner iframe { width: 1200px; height: 844px; border: none; transform: scale(0.52); transform-origin: top left; pointer-events: auto; }
+
+  .proto-note { font-size: 13px; color: var(--ink-3); font-style: italic; margin-top: 12px; text-align: center; }
+
+  /* WILDCAST special */
+  .wildcast-header {
+    background: var(--forest);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 32px;
+    color: #fff;
+  }
+  .wc-logo { font-family: 'DM Serif Display', serif; font-size: 28px; letter-spacing: 0.05em; color: #fff; margin-bottom: 4px; }
+  .wc-tagline { font-size: 13px; color: rgba(255,255,255,0.6); letter-spacing: 0.06em; }
+  .wc-meta { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .wc-m { display: flex; flex-direction: column; gap: 2px; }
+  .wc-ml { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+  .wc-mv { font-size: 13px; color: rgba(255,255,255,0.85); font-weight: 500; }
+
+  footer { max-width: 780px; margin: 0 auto; padding: 48px 40px 64px; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 24px; border-top: 1px solid var(--rule); }
+  footer .f-name { font-family: 'DM Serif Display', serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+  footer p { font-size: 14px; color: var(--ink-3); }
+  .contact-links { display: flex; flex-direction: column; gap: 6px; text-align: right; }
+  .contact-links a { font-size: 14px; color: var(--ink-2); text-decoration: none; }
+  .contact-links a:hover { color: var(--accent); }
+
+  @media (max-width: 640px) {
+    nav { padding: 0 20px; }
+    .nav-links a:nth-child(n+3) { display: none; }
+    .hero, .cases { padding-left: 20px; padding-right: 20px; }
+    .two-col, .three-col { grid-template-columns: 1fr; }
+    .outcome-bar { flex-direction: column; }
+    .timeline { flex-direction: column; }
+    .timeline::before { display: none; }
+    .tl-item { padding-top: 0; padding-left: 20px; border-left: 1px solid var(--rule); }
+    .tl-dot { top: 0; }
+    footer { padding: 40px 20px; }
+    .contact-links { text-align: left; }
+    .phone-shell { width: 280px; }
+    .phone-inner { height: 540px; }
+    .device-frame { padding: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="nav-name">Manish Mosalpuri</a>
+  <div class="nav-links">
+    <a href="#case-1">Search</a>
+    <a href="#case-2">Conversion</a>
+    <a href="#case-3">WildCast</a>
+    <a href="#contact">Contact</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <p class="hero-eyebrow">Product Portfolio · 2024–2026</p>
+  <h1>From <em>problem</em> to wireframe<br>to shipped product</h1>
+  <p class="hero-desc">Three case studies spanning a Series A marketplace and a self-funded founder project — showing the full arc from data-driven discovery to interactive prototypes and shipped features.</p>
+  <div class="hero-meta">
+    <div class="meta-item">
+      <span class="meta-label">Background</span>
+      <span class="meta-value">Engineer → 12 yrs PM</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Domains</span>
+      <span class="meta-value">Marketplace · AI · Growth</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Tools</span>
+      <span class="meta-value">Figma · SQL · Heap · Claude</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Based in</span>
+      <span class="meta-value">New Delhi, India</span>
+    </div>
+  </div>
+</section>
+
+<div class="cases">
+
+  <!-- CASE 1 -->
+  <section class="case" id="case-1">
+    <p class="case-number">Case Study 01</p>
+    <h2>Intent-Aware Search: Making the Location Field Understand Outdoor Activity</h2>
+    <p class="case-subtitle">Guidesly · Series A Adventure Booking Platform · 2025</p>
+    <span class="status-pill status-approved"><span class="status-dot"></span>Approved · In development</span>
+
+    <div class="outcome-bar">
+      <div class="outcome-stat">
+        <div class="outcome-num">0.03%</div>
+        <div class="outcome-label">SRP conversion before</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">1.5%</div>
+        <div class="outcome-label">SRP conversion target</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">50×</div>
+        <div class="outcome-label">Conversion improvement</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">1,385</div>
+        <div class="outcome-label">Monthly lost sessions recovered</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <p class="section-heading">The Problem</p>
+      <div class="section-body">
+        <p>Guidesly's location field used Apple MapKit — fine for city names, useless when users typed "tarpon", "offshore fishing", or "elk hunting." These aren't places; they're activity-based intent signals that our users make constantly.</p>
+        <p>UTM data showed 1,385 monthly sessions from queries like "best charter boats" bouncing immediately — the search field couldn't interpret intent, so users arrived, hit a dead end, and left. A $0 conversion problem that looked like a traffic problem.</p>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="insight-card">
+        <span class="tag tag-data">Data Signal</span>
+        <p>"best charter boats" — 1,385 sessions/month, near-zero conversion. The query type couldn't fill the location field, so users bounced immediately.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-problem">Root Cause</span>
+        <p>No second autocomplete layer for outdoor activity intent. The field understood places only — not species, game animals, trip styles, or activity types.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-solution">Solution</span>
+        <p>A parallel intent layer alongside MapKit in the same dropdown — two sections: "Locations" (Places) and "Guided Trips" (intent suggestions).</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-solution">Architecture Decision</span>
+        <p>Browse state = conditional render within /search, not a new page. Pushed back on a separate route — it would have fragmented URL structure and broken deep-linking.</p>
+      </div>
+    </div>
+
+    <div class="spec-block">
+      <p class="spec-title">Integration Spec — Query Logging Schema (14 fields)</p>
+      <p><span class="key">raw_query</span>: <span class="val">Exact string before selection. Captures typos, slang, training data for Phase 3 AI.</span></p>
+      <p><span class="key">query_type</span>: <span class="accent-val">place_selected | intent_selected | direct_search | abandoned</span></p>
+      <p><span class="key">activity_type</span>: <span class="accent-val">fishing | hunting | scuba | snow | water | adventure | tours</span></p>
+      <p><span class="key">result_count</span>: <span class="val">Zero-result identification — weekly report feeds directly to supply team for guide recruitment.</span></p>
+      <p><span class="key">outcome</span>: <span class="accent-val">guide_card_clicked | booking_initiated | bounced | refined_search</span></p>
+      <p><span class="key">privacy</span>: <span class="val">No PII. Sanitisation strips email, phone, and name+location patterns from raw_query before storage.</span></p>
+    </div>
+
+    <div class="section-block">
+      <p class="section-heading">Rollout timeline</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-week">Week 1</div><div class="tl-label">Alignment & engineering briefing. Mapping table drafted across 6 activity categories.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-week">Week 2</div><div class="tl-label">Intent layer + browse state built. Query logging live from day one.</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-week">Week 3</div><div class="tl-label">Edge cases QA'd. Geo-intent validated across all 3 states (granted / denied / failed).</div></div>
+      <div class="tl-item"><div class="tl-dot"></div><div class="tl-week">Week 4</div><div class="tl-label">First zero-result report to supply team. Unrecognised high-frequency terms flagged.</div></div>
+    </div>
+
+    <div class="pill-row">
+      <span class="pill">Intent mapping</span><span class="pill">URL architecture</span><span class="pill">API contract</span><span class="pill">Data schema design</span><span class="pill">Edge case spec</span><span class="pill">Figma prototyping</span><span class="pill">Heap instrumentation</span>
+    </div>
+  </section>
+
+  <!-- CASE 2 -->
+  <section class="case" id="case-2">
+    <p class="case-number">Case Study 02</p>
+    <h2>Conversion Architecture: Turning 45K Monthly Readers into Bookers</h2>
+    <p class="case-subtitle">Guidesly · Blog & Species Pages CRO · Phase 1 · 2026</p>
+    <span class="status-pill status-approved"><span class="status-dot"></span>Approved · In development</span>
+
+    <div class="outcome-bar">
+      <div class="outcome-stat">
+        <div class="outcome-num">45,100</div>
+        <div class="outcome-label">Monthly organic visitors</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">16,900</div>
+        <div class="outcome-label">With transactional intent</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">0</div>
+        <div class="outcome-label">Booking CTAs on top pages (before)</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">&gt;3%</div>
+        <div class="outcome-label">Target CTA click-through</div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <p class="section-heading">The Problem</p>
+      <div class="section-body">
+        <p>A Semrush audit revealed 8 of our top 10 pages by traffic were species and blog pages — with zero booking CTAs. The top blog post (trout fishing guide) pulled 3.21% of all site traffic across 172 keywords. The page ended. Users hit back. They booked elsewhere.</p>
+        <p>Not a traffic problem. We had 16,900 monthly visitors with explicit transactional intent and no conversion path to meet them. A conversion architecture problem hiding as a growth problem.</p>
+      </div>
+    </div>
+
+    <div class="two-col">
+      <div class="insight-card">
+        <span class="tag tag-data">SEO Audit Finding</span>
+        <p>61.8% of keywords are informational. 10% transactional — but those 10% drive 16,900 monthly visits. None had a booking path.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-problem">Root Cause</span>
+        <p>Template-level gap — blog and species page templates had no CTA wiring. One template change touches every page on the site.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-solution">Key Design Decision</span>
+        <p>Pre-filtered CTAs, not generic /search links. CTA links to /search?species=trout — matching exactly what the user was reading. Generic links don't convert.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-solution">High-Intent Moment</span>
+        <p>The habitat map on species pages = "where can I fish for this?" moment. Destination chips below the map, pulled from live guide inventory for that species.</p>
+      </div>
+    </div>
+
+    <div class="spec-block">
+      <p class="spec-title">Component Spec — Dynamic Guide Card Strip</p>
+      <p><span class="key">placement</span>: <span class="val">After 3rd content section — peak engagement point in reading session.</span></p>
+      <p><span class="key">accepts params</span>: <span class="accent-val">species=trout | location=montana | activity_type=fly_fishing</span></p>
+      <p><span class="key">renders</span>: <span class="val">3 guide cards — name, location, price, next available date, Check Availability CTA.</span></p>
+      <p><span class="key">fallback</span>: <span class="val">If &lt;3 guides for species in region, broaden to state-level. Never render empty strip.</span></p>
+      <p><span class="key">reused on</span>: <span class="val">Blog template + Species template. One component, two page types. Zero duplication.</span></p>
+    </div>
+
+    <div class="pill-row">
+      <span class="pill">SEO audit (Semrush)</span><span class="pill">CRO</span><span class="pill">Template architecture</span><span class="pill">Parameterised components</span><span class="pill">Content freshness strategy</span><span class="pill">Heap instrumentation</span>
+    </div>
+  </section>
+
+  <!-- CASE 3: WILDCAST -->
+  <section class="case" id="case-3">
+    <p class="case-number">Case Study 03</p>
+    <h2>WildCast: India's Outdoor Experience Marketplace</h2>
+    <p class="case-subtitle">Independent Research Project · 2025–2026</p>
+    <span class="status-pill status-founder"><span class="status-dot"></span>Research project · Prototypes built</span>
+
+    <div class="wildcast-header">
+      <div class="wc-logo">WILDCAST</div>
+      <div class="wc-tagline">"Book the Wild" — wildcast.in</div>
+      <div class="wc-meta">
+        <div class="wc-m"><span class="wc-ml">Market</span><span class="wc-mv">India outdoor experiences</span></div>
+        <div class="wc-m"><span class="wc-ml">Model</span><span class="wc-mv">Two-sided marketplace</span></div>
+        <div class="wc-m"><span class="wc-ml">Verticals</span><span class="wc-mv">Fishing · Trekking · Camping · Wildlife · Watersports · Snow</span></div>
+        <div class="wc-m"><span class="wc-ml">Target GMV Y3</span><span class="wc-mv">₹75 Crore</span></div>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <p class="section-heading">The opportunity</p>
+      <div class="section-body">
+        <p>India has 1.4 billion people, extraordinary ecological diversity, and zero dominant platform for booking outdoor recreation experiences. Online penetration of activity booking is below 3% — 97% of bookings still happen over phone calls and WhatsApp forwards.</p>
+        <p>WildCast is an independent research and product exploration — market sizing, competitive analysis, India-specific product strategy, and two fully interactive prototypes, developed to validate whether a multi-vertical outdoor marketplace could work in the Indian context.</p>
+      </div>
+    </div>
+
+    <div class="three-col">
+      <div class="insight-card">
+        <span class="tag tag-founder">India-specific unlock</span>
+        <p><strong>WhatsApp-native booking.</strong> Full booking flow inside WhatsApp — no app download required. No global outdoor platform has done this.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-founder">India-specific unlock</span>
+        <p><strong>Informal guide formalisation.</strong> 500,000+ informal guides — mahouts, river guides, jungle trackers — who have never appeared on any platform.</p>
+      </div>
+      <div class="insight-card">
+        <span class="tag tag-founder">India-specific unlock</span>
+        <p><strong>Hybrid payment model.</strong> 20–30% online to confirm, balance in cash on arrival. Solves operator GST anxiety and consumer trust in one move.</p>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <p class="section-heading">Strategic differentiation</p>
+      <div class="section-body">
+        <p>Multi-vertical from day one — fishing, trekking, camping, wildlife, watersports, and snow sports on a shared infrastructure. Corporate offsites as a dedicated high-ticket vertical. A conservation data layer (catch logs, sighting logs, footfall data) that compounds with every booking — creating a moat no pure-play marketplace can replicate.</p>
+      </div>
+    </div>
+
+    <div class="section-block">
+      <p class="section-heading">Interactive prototypes — built without a designer</p>
+    </div>
+
+    <div class="prototype-wrap">
+      <div class="prototype-tabs">
+        <button class="proto-tab active" onclick="showProto('mobile')">Consumer app (mobile)</button>
+        <button class="proto-tab" onclick="showProto('operator')">Operator dashboard</button>
+      </div>
+
+      <div id="proto-mobile" class="device-frame">
+        <div class="phone-shell">
+          <div class="phone-chrome">
+            <div class="phone-inner">
+              <iframe src="wildcast_full.html" title="WildCast consumer mobile app prototype" style="width:390px;height:844px;border:none;transform:scale(0.735);transform-origin:top left;" allowfullscreen></iframe></iframe></iframe>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1; min-width:200px; padding: 8px 0;">
+          <p style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:12px;">Consumer App</p>
+          <p style="font-size:13px; color:var(--ink-3); line-height:1.7; margin-bottom:16px;">Full mobile experience: discovery, search by species/activity, listing pages, booking flow, and post-trip community features.</p>
+          <p style="font-size:12px; color:var(--ink-3); font-style:italic;">Built in Figma → HTML. Interactive — tap through the screens.</p>
+        </div>
+      </div>
+
+      <div id="proto-operator" class="device-frame" style="display:none;">
+        <div class="desktop-shell">
+          <div class="desktop-chrome">
+            <div class="desktop-bar">
+              <div class="d-dots">
+                <div class="d-dot" style="background:#ff5f57"></div>
+                <div class="d-dot" style="background:#febc2e"></div>
+                <div class="d-dot" style="background:#28c840"></div>
+              </div>
+              <div class="d-url">wildcast.in/guide/dashboard</div>
+            </div>
+            <div class="desktop-inner">
+              <iframe src="wildcast_operator_v2.html" title="WildCast operator dashboard prototype" style="width:1200px;height:844px;border:none;transform:scale(0.52);transform-origin:top left;" allowfullscreen></iframe></iframe>
+            </div>
+          </div>
+        </div>
+        <div style="flex:1; min-width:180px; padding: 8px 0;">
+          <p style="font-size:13px; font-weight:500; color:var(--ink); margin-bottom:12px;">Operator Dashboard</p>
+          <p style="font-size:13px; color:var(--ink-3); line-height:1.7; margin-bottom:16px;">Guide-facing web app: booking management, calendar, payout tracking, analytics, WhatsApp broadcast to past guests.</p>
+          <p style="font-size:12px; color:var(--ink-3); font-style:italic;">Fully interactive prototype — click through the tabs.</p>
+        </div>
+      </div>
+      <p class="proto-note">Both prototypes built independently — no designer, no agency. HTML + CSS + JS from scratch.</p>
+    </div>
+
+    <div class="outcome-bar">
+      <div class="outcome-stat">
+        <div class="outcome-num forest">6</div>
+        <div class="outcome-label">Verticals designed for</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num forest">2</div>
+        <div class="outcome-label">Interactive prototypes built</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num forest">19</div>
+        <div class="outcome-label">Section founder's plan</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num forest">₹75Cr</div>
+        <div class="outcome-label">Target GMV by Year 3</div>
+      </div>
+    </div>
+
+    <div class="pill-row">
+      <span class="pill">0→1 product strategy</span><span class="pill">Two-sided marketplace</span><span class="pill">India-specific UX</span><span class="pill">WhatsApp integration design</span><span class="pill">Multi-vertical architecture</span><span class="pill">Mobile prototype</span><span class="pill">Operator dashboard</span><span class="pill">Unit economics</span>
+    </div>
+  </section>
+
+</div>
+
+<footer id="contact">
+  <div>
+    <p class="f-name">Manish Mosalpuri</p>
+    <p>Lead Product Manager · Marketplaces, AI & Growth</p>
+    <p style="margin-top:6px; color: var(--ink-3);">New Delhi, India · Open to remote roles globally</p>
+  </div>
+  <div class="contact-links">
+    <a href="mailto:manishmosalpuri@gmail.com">manishmosalpuri@gmail.com</a>
+    <a href="https://www.linkedin.com/in/manish-mosalpuri/" target="_blank">linkedin.com/in/manish-mosalpuri</a>
+    <a href="tel:+919049590846">+91 90495 90846</a>
+  </div>
+</footer>
+
+<script>
+function showProto(type) {
+  document.getElementById('proto-mobile').style.display = type === 'mobile' ? 'flex' : 'none';
+  document.getElementById('proto-operator').style.display = type === 'operator' ? 'flex' : 'none';
+  document.querySelectorAll('.proto-tab').forEach((t, i) => {
+    t.classList.toggle('active', (i === 0 && type === 'mobile') || (i === 1 && type === 'operator'));
+  });
+}
+</script>
+
+</body>
+</html>
