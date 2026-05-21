@@ -272,6 +272,13 @@
   </div>
 </section>
 
+  <section style="max-width:780px;margin:0 auto;padding:48px 40px 0;border-bottom:1px solid var(--rule);">
+    <p style="font-size:11px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:20px;">About me</p>
+    <p style="font-size:16px;color:var(--ink-2);line-height:1.8;margin-bottom:16px;">I started as a software engineer at Infosys, building enterprise applications for US clients. Somewhere along the way I got curious about why we were building what we were building — so I started sitting in on client product conversations, trying to understand the business logic behind the code. That curiosity eventually led me to launch Studio Classes, a tutoring marketplace I built from scratch — market research, UX, growth, monetisation, the full loop. That was the moment I knew product management was where I wanted to be.</p>
+    <p style="font-size:16px;color:var(--ink-2);line-height:1.8;margin-bottom:16px;">Twelve years later I still approach every problem the same way — understand the full picture before touching the solution. B.Tech from NIT Bhopal, MBA from UCD Smurfit in Dublin, and most of my career spent building and scaling marketplaces across agri-commodities, healthcare, and adventure travel.</p>
+    <p style="font-size:16px;color:var(--ink-2);line-height:1.8;margin-bottom:24px;">Outside work I travel whenever I can — 10 countries and most corners of India covered. Played football in school, volleyball in college, and still compete in badminton at inter-company events. Moving around keeps me thinking clearly.</p>
+  </section>
+
 <div class="cases">
 
   <!-- CASE 1: PROGRAMMATIC DESTINATION PAGES -->
@@ -352,9 +359,9 @@
     </div>
 
     <div class="section-block">
-      <p class="section-heading">What I'd do differently</p>
+      <p class="section-heading">Instrumentation</p>
       <div class="section-body">
-        <p>I'd instrument the pages for CTA click-through from day one rather than tracking bookings as a lagging indicator. The 60% organic traffic contribution tells us the pages rank and attract users — it doesn't tell us which sections drive conversion or where users drop off. Adding Heap event tracking at the component level from launch would have given us faster iteration signals.</p>
+        <p>Built a Heap conversion funnel from destination pages through to booking — tracking CTA clicks, guide detail page visits, checkout starts, and completed bookings at the component level. This gave us a full drop-off view from the first page visit to completed payment, not just aggregate traffic numbers.</p>
       </div>
     </div>
 
@@ -463,9 +470,9 @@
     </div>
 
     <div class="section-block">
-      <p class="section-heading">What I'd do differently</p>
+      <p class="section-heading">Cancellation transparency</p>
       <div class="section-body">
-        <p>The blanket yes/no insurance toggle felt like the obvious first approach — and A/B testing proved it wrong quickly. In hindsight, mapping the cancellation window status of each trip before designing the insurance UI would have led us to per-trip selection from the start. The data was always there; we just didn't use it to inform the initial design.</p>
+        <p>Each trip in the cart shows the guide's cancellation window when the user expands the "Customize Trip" section — so customers can see exactly how long they have to cancel penalty-free before deciding whether to insure. This made the insurance decision more informed and reduced the friction of buying protection users didn't feel they needed.</p>
       </div>
     </div>
 
@@ -504,6 +511,10 @@
       <div class="outcome-stat">
         <div class="outcome-num">8s→73s</div>
         <div class="outcome-label">Avg session duration on search results page</div>
+      </div>
+      <div class="outcome-stat">
+        <div class="outcome-num">17%→65%</div>
+        <div class="outcome-label">Users scrolling below first fold</div>
       </div>
     </div>
 
@@ -564,9 +575,9 @@
     </div>
 
     <div class="section-block">
-      <p class="section-heading">What I'd do differently</p>
+      <p class="section-heading">Pre-launch research</p>
       <div class="section-body">
-        <p>The 8s → 73s session duration jump was the clearest signal that the UX changes worked — but we measured it post-launch rather than setting it as a primary success metric upfront. I'd define session duration and scroll depth as leading indicators in the spec next time, so engineering and design are aligned on what "working" looks like before we ship.</p>
+        <p>Scroll depth was measured before implementation — only 17% of users scrolled below the first fold, with the majority dropping off without seeing guide cards. Post-launch, scroll depth improved to 65% — a 3.8× improvement. This pre/post measurement was defined upfront as a leading indicator alongside conversion rate, giving the team a clear signal of whether the UX changes were working before bookings data matured.</p>
       </div>
     </div>
 
