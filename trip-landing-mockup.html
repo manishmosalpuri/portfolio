@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bass Fishing Lake Fork — Guidesly</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --ink: #0d0d0d; --ink-2: #2a2a2a; --ink-3: #6b6b6b; --ink-4: #999;
+    --bg: #ffffff; --bg-2: #f7f7f5; --bg-3: #efefed;
+    --accent: #1a56db; --accent-light: #eef3ff;
+    --green: #0a6640; --green-light: #e3f5ec;
+    --amber: #92400e; --amber-light: #fef3c7;
+    --rule: #e8e8e5; --radius: 12px; --radius-sm: 8px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--ink); font-size: 15px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+
+  /* NAV */
+  .nav { background: #fff; border-bottom: 1px solid var(--rule); padding: 0 24px; height: 52px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-family: 'Bricolage Grotesque', sans-serif; font-size: 18px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); }
+  .nav-logo span { color: var(--accent); }
+  .nav-right { display: flex; align-items: center; gap: 12px; }
+  .btn-ghost { font-size: 13px; font-weight: 600; color: var(--ink-2); padding: 6px 14px; border: 1px solid var(--rule); border-radius: 8px; cursor: pointer; background: #fff; }
+  .btn-primary { font-size: 13px; font-weight: 600; color: #fff; padding: 6px 14px; border: none; border-radius: 8px; cursor: pointer; background: var(--accent); }
+
+  /* BREADCRUMB */
+  .breadcrumb { padding: 10px 24px; font-size: 12px; color: var(--ink-4); border-bottom: 1px solid var(--rule); background: var(--bg-2); }
+  .breadcrumb a { color: var(--accent); text-decoration: none; }
+  .breadcrumb span { margin: 0 6px; }
+
+  /* HERO IMAGE */
+  .hero-image { position: relative; height: 300px; overflow: hidden; background: linear-gradient(160deg, #1a3a5c 0%, #0d2137 40%, #1a4a2e 100%); }
+  .hero-image-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 40%, rgba(0,0,0,0.5) 100%); }
+  .hero-image-content { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 24px; }
+  .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.2); color: #fff; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 10px; width: fit-content; }
+  .hero-title { font-family: 'Bricolage Grotesque', sans-serif; font-size: 26px; font-weight: 800; color: #fff; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .hero-meta { display: flex; gap: 16px; flex-wrap: wrap; }
+  .hero-meta-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: rgba(255,255,255,0.85); font-weight: 500; }
+  .hero-dot { width: 4px; height: 4px; border-radius: 50%; background: rgba(255,255,255,0.4); }
+
+  /* IMAGE THUMBNAILS */
+  .image-thumbs { display: flex; gap: 6px; padding: 10px 24px; background: var(--bg-2); border-bottom: 1px solid var(--rule); overflow-x: auto; }
+  .thumb { width: 72px; height: 52px; border-radius: 6px; background: var(--bg-3); flex-shrink: 0; border: 2px solid transparent; cursor: pointer; overflow: hidden; }
+  .thumb:first-child { border-color: var(--accent); }
+  .thumb-img { width: 100%; height: 100%; object-fit: cover; }
+  .thumb-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+
+  /* MAIN LAYOUT */
+  .main { display: grid; grid-template-columns: 1fr 320px; gap: 24px; max-width: 1000px; margin: 0 auto; padding: 24px 24px 48px; }
+
+  /* LEFT COLUMN */
+  .left { min-width: 0; }
+
+  /* SECTION HEADERS */
+  .sec { margin-bottom: 28px; }
+  .sec-title { font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); padding-bottom: 10px; border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+
+  /* AI SUMMARY CARD */
+  .ai-summary { background: linear-gradient(135deg, #eef3ff 0%, #f0fdf4 100%); border: 1px solid #c7d7ff; border-radius: var(--radius); padding: 16px 18px; margin-bottom: 20px; }
+  .ai-label { display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .ai-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:0.4} }
+  .ai-summary p { font-size: 13.5px; color: var(--ink-2); line-height: 1.65; }
+
+  /* DESCRIPTION */
+  .desc-text { font-size: 14.5px; color: var(--ink-2); line-height: 1.8; margin-bottom: 12px; }
+  .desc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+  .desc-item { background: var(--bg-2); border-radius: var(--radius-sm); padding: 12px 14px; border: 1px solid var(--rule); }
+  .desc-item-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 4px; }
+  .desc-item-val { font-size: 13px; font-weight: 600; color: var(--ink); }
+
+  /* SPECIES */
+  .species-card { display: flex; gap: 12px; align-items: flex-start; background: var(--bg-2); border: 1px solid var(--rule); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 10px; }
+  .species-icon { width: 44px; height: 44px; border-radius: 10px; background: linear-gradient(135deg, #1a3a5c, #0d2137); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .species-name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+  .species-desc { font-size: 12.5px; color: var(--ink-3); line-height: 1.55; }
+  .species-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-top: 5px; }
+
+  /* GUIDE CARD */
+  .guide-card { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--rule); }
+  .guide-avatar { width: 52px; height: 52px; border-radius: 50%; background: linear-gradient(135deg, #1a4a2e, #0d3320); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .guide-name { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
+  .guide-meta { font-size: 12px; color: var(--ink-3); margin-bottom: 6px; }
+  .guide-badges { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { font-size: 10px; font-weight: 600; padding: 3px 9px; border-radius: 4px; }
+  .badge-green { background: var(--green-light); color: var(--green); }
+  .badge-blue { background: var(--accent-light); color: var(--accent); }
+  .guide-bio { font-size: 13px; color: var(--ink-2); line-height: 1.6; margin-top: 10px; }
+
+  /* FAQS */
+  .faq-item { border-bottom: 1px solid var(--rule); padding: 14px 0; }
+  .faq-q { font-size: 13.5px; font-weight: 600; color: var(--ink); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; cursor: pointer; }
+  .faq-icon { color: var(--ink-3); font-size: 16px; flex-shrink: 0; }
+  .faq-a { font-size: 13px; color: var(--ink-2); line-height: 1.65; margin-top: 8px; }
+
+  /* REVIEWS */
+  .review-summary-card { background: var(--bg-2); border: 1px solid var(--rule); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 16px; }
+  .review-score { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .score-num { font-family: 'Bricolage Grotesque', sans-serif; font-size: 40px; font-weight: 800; color: var(--ink); letter-spacing: -0.03em; line-height: 1; }
+  .score-right { display: flex; flex-direction: column; gap: 2px; }
+  .stars { color: #f59e0b; font-size: 15px; letter-spacing: 2px; }
+  .review-count { font-size: 12px; color: var(--ink-3); }
+  .ai-review-summary { font-size: 13px; color: var(--ink-2); line-height: 1.65; border-top: 1px solid var(--rule); padding-top: 10px; margin-top: 10px; }
+  .review-card { padding: 14px 0; border-bottom: 1px solid var(--rule); }
+  .review-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; }
+  .reviewer-name { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .review-date { font-size: 11px; color: var(--ink-4); }
+  .review-stars { color: #f59e0b; font-size: 12px; margin-bottom: 5px; }
+  .review-text { font-size: 13px; color: var(--ink-2); line-height: 1.6; }
+
+  /* BOOKING SIDEBAR */
+  .sidebar { }
+  .booking-card { background: #fff; border: 1px solid var(--rule); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow); position: sticky; top: 72px; }
+  .booking-price { font-family: 'Bricolage Grotesque', sans-serif; font-size: 30px; font-weight: 800; color: var(--ink); letter-spacing: -0.02em; margin-bottom: 2px; }
+  .booking-per { font-size: 12px; color: var(--ink-3); margin-bottom: 16px; }
+  .booking-divider { height: 1px; background: var(--rule); margin: 14px 0; }
+
+  .time-label { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 10px; }
+  .time-slots { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+  .time-slot { padding: 10px 14px; border: 1px solid var(--rule); border-radius: var(--radius-sm); cursor: pointer; transition: all 0.15s; display: flex; justify-content: space-between; align-items: center; }
+  .time-slot:hover { border-color: var(--accent); background: var(--accent-light); }
+  .time-slot.selected { border-color: var(--accent); background: var(--accent-light); }
+  .time-slot-time { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .time-slot-avail { font-size: 11px; color: var(--green); font-weight: 600; }
+  .time-slot-full { font-size: 11px; color: var(--ink-4); }
+
+  .guests-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+  .guests-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+  .guests-controls { display: flex; align-items: center; gap: 10px; }
+  .guest-btn { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--rule); background: #fff; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--ink-2); }
+  .guest-count { font-size: 14px; font-weight: 600; color: var(--ink); min-width: 20px; text-align: center; }
+
+  .btn-book { width: 100%; padding: 13px; background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); font-size: 14px; font-weight: 700; cursor: pointer; letter-spacing: 0.01em; transition: background 0.2s; }
+  .btn-book:hover { background: #1347c0; }
+  .btn-wishlist { width: 100%; padding: 10px; background: #fff; color: var(--ink-2); border: 1px solid var(--rule); border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; cursor: pointer; margin-top: 8px; transition: all 0.15s; }
+  .btn-wishlist:hover { border-color: var(--ink-3); }
+
+  .price-breakdown { margin-top: 12px; }
+  .price-row { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-3); margin-bottom: 5px; }
+  .price-row.total { font-size: 13px; font-weight: 700; color: var(--ink); border-top: 1px solid var(--rule); padding-top: 8px; margin-top: 8px; }
+
+  .trust-row { display: flex; justify-content: center; gap: 16px; margin-top: 12px; flex-wrap: wrap; }
+  .trust-item { font-size: 11px; color: var(--ink-3); display: flex; align-items: center; gap: 4px; font-weight: 500; }
+
+  /* BOAT SECTION */
+  .boat-card { background: var(--bg-2); border: 1px solid var(--rule); border-radius: var(--radius); padding: 16px; display: flex; gap: 14px; align-items: flex-start; }
+  .boat-icon { width: 48px; height: 48px; border-radius: 10px; background: linear-gradient(135deg, #0d2137, #1a3a5c); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+  .boat-name { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .boat-specs { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 6px; }
+  .boat-spec { font-size: 11px; font-weight: 600; color: var(--ink-3); }
+
+  /* WHAT'S INCLUDED */
+  .included-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .included-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-2); }
+  .included-check { color: var(--green); font-size: 14px; }
+  .included-x { color: #999; font-size: 14px; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-logo">guide<span>sly</span></div>
+  <div class="nav-right">
+    <button class="btn-ghost">Log in</button>
+    <button class="btn-primary">Sign up</button>
+  </div>
+</div>
+
+<!-- BREADCRUMB -->
+<div class="breadcrumb">
+  <a href="#">Home</a><span>›</span>
+  <a href="#">Freshwater Fishing</a><span>›</span>
+  <a href="#">Texas</a><span>›</span>
+  <a href="#">Lake Fork</a><span>›</span>
+  <span style="color:var(--ink-2);font-weight:500">6-Hour Bass Fishing Adventure</span>
+</div>
+
+<!-- HERO IMAGE -->
+<div class="hero-image">
+  <div style="position:absolute;inset:0;overflow:hidden">
+    <!-- Illustrated lake scene using CSS -->
+    <div style="position:absolute;bottom:0;left:0;right:0;height:120px;background:linear-gradient(to top,#0d4a2a,transparent)"></div>
+    <div style="position:absolute;bottom:30px;left:0;right:0;height:80px;background:rgba(13,33,55,0.4);clip-path:ellipse(60% 40% at 50% 80%)"></div>
+    <!-- Sun reflection -->
+    <div style="position:absolute;top:40px;right:80px;width:60px;height:60px;border-radius:50%;background:radial-gradient(circle,rgba(255,200,50,0.3),transparent);"></div>
+    <!-- Boat silhouette -->
+    <div style="position:absolute;bottom:60px;left:50%;transform:translateX(-50%);width:120px;height:30px;background:#0d1a2e;border-radius:50% 50% 0 0;"></div>
+    <div style="position:absolute;bottom:55px;left:50%;transform:translateX(-40%);width:2px;height:40px;background:#1a3050;"></div>
+    <!-- Water ripples -->
+    <div style="position:absolute;bottom:45px;left:20%;right:20%;height:2px;background:rgba(100,180,220,0.15);border-radius:50%;"></div>
+    <div style="position:absolute;bottom:38px;left:30%;right:30%;height:2px;background:rgba(100,180,220,0.1);border-radius:50%;"></div>
+  </div>
+  <div class="hero-image-overlay"></div>
+  <div class="hero-image-content">
+    <div class="hero-badge">🎣 Bass Fishing · Lake Fork, TX</div>
+    <div class="hero-title">6-Hour Bass Fishing Adventure on Lake Fork</div>
+    <div class="hero-meta">
+      <div class="hero-meta-item">⏱ 6 hours</div>
+      <div class="hero-dot"></div>
+      <div class="hero-meta-item">👥 Up to 4 guests</div>
+      <div class="hero-dot"></div>
+      <div class="hero-meta-item">⭐ 4.9 · 47 reviews</div>
+      <div class="hero-dot"></div>
+      <div class="hero-meta-item">📍 Alba, Texas</div>
+    </div>
+  </div>
+</div>
+
+<!-- IMAGE THUMBNAILS -->
+<div class="image-thumbs">
+  <div class="thumb"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#1a3a5c,#0d2137)">🐟</div></div>
+  <div class="thumb"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#1a4a2e,#0d3320)">🚤</div></div>
+  <div class="thumb"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#2d1b69,#1a0f40)">🌅</div></div>
+  <div class="thumb"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#0d2137,#1a3a5c)">🎣</div></div>
+  <div class="thumb"><div class="thumb-placeholder" style="background:linear-gradient(135deg,#3d1a0a,#1a0a02)">🏆</div></div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main">
+  <div class="left">
+
+    <!-- AI TRIP SUMMARY -->
+    <div class="sec">
+      <div class="sec-title">AI Trip Summary</div>
+      <div class="ai-summary">
+        <div class="ai-label"><div class="ai-dot"></div> Generated by Jack AI</div>
+        <p>A full-day guided bass fishing experience on Lake Fork — one of Texas's premier largemouth bass lakes. Captain Jake Smith specialises in structure fishing using live shiners and soft plastics, targeting trophy bass in depths of 8–18 feet. Ideal for anglers of all skill levels. All tackle provided; fishing licence required and available on-site. Mornings are peak bite time.</p>
+      </div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="sec">
+      <div class="sec-title">About This Trip</div>
+      <p class="desc-text">Lake Fork is one of the most productive bass fisheries in North America — home to over 50 state records and consistently producing fish over 10 lbs. On this 6-hour guided trip, you'll fish with an experienced local guide who knows the lake intimately, targeting largemouth bass using proven techniques adapted to current conditions.</p>
+      <p class="desc-text">Whether you're a first-time angler or a tournament veteran, Captain Jake tailors the experience to your skill level. He'll teach you to read the water, work structure, and set the hook properly — or if you know what you're doing, he'll put you on fish and get out of the way.</p>
+      <div class="desc-grid">
+        <div class="desc-item">
+          <div class="desc-item-label">Skill Level</div>
+          <div class="desc-item-val">All levels welcome</div>
+        </div>
+        <div class="desc-item">
+          <div class="desc-item-label">Trip Duration</div>
+          <div class="desc-item-val">6 hours</div>
+        </div>
+        <div class="desc-item">
+          <div class="desc-item-label">Group Size</div>
+          <div class="desc-item-val">1–4 guests</div>
+        </div>
+        <div class="desc-item">
+          <div class="desc-item-label">Catch Policy</div>
+          <div class="desc-item-val">Catch & release + keep option</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- WHAT'S INCLUDED -->
+    <div class="sec">
+      <div class="sec-title">What's Included</div>
+      <div class="included-grid">
+        <div class="included-item"><span class="included-check">✓</span> All fishing tackle & bait</div>
+        <div class="included-item"><span class="included-check">✓</span> Life jackets & safety gear</div>
+        <div class="included-item"><span class="included-check">✓</span> Expert guide & instruction</div>
+        <div class="included-item"><span class="included-check">✓</span> Fish cleaning & bagging</div>
+        <div class="included-item"><span class="included-check">✓</span> Ice chest & water</div>
+        <div class="included-item"><span class="included-x">✕</span> Fishing licence (required)</div>
+        <div class="included-item"><span class="included-x">✕</span> Food & snacks</div>
+        <div class="included-item"><span class="included-x">✕</span> Gratuity (suggested 15–20%)</div>
+      </div>
+    </div>
+
+    <!-- TARGET SPECIES -->
+    <div class="sec">
+      <div class="sec-title">Target Species</div>
+      <div class="species-card">
+        <div class="species-icon">🐟</div>
+        <div>
+          <div class="species-name">Largemouth Bass (Micropterus salmoides)</div>
+          <div class="species-desc">Lake Fork's signature species. Known for explosive topwater strikes and aggressive fights. State record holder multiple times. Peak feeding periods: early morning (6–9am) and late afternoon (4–7pm). Best months: March–May (spawn) and October–November.</div>
+          <div class="species-tag">Lake Fork State Record Holder</div>
+        </div>
+      </div>
+      <div class="species-card">
+        <div class="species-icon">🐠</div>
+        <div>
+          <div class="species-name">Striped Bass (Morone saxatilis)</div>
+          <div class="species-desc">Schooling fish that chase shad on the main lake. Best targeted with live bait or swimbaits during summer months when water temperatures drive them deep. Secondary target species on this trip.</div>
+          <div class="species-tag">Secondary Target</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE BOAT -->
+    <div class="sec">
+      <div class="sec-title">The Boat</div>
+      <div class="boat-card">
+        <div class="boat-icon">⚓</div>
+        <div style="flex:1">
+          <div class="boat-name">2022 Ranger Z521L Tournament Bass Boat</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:3px">Fully equipped tournament rig with all safety certifications</div>
+          <div class="boat-specs">
+            <div class="boat-spec">📏 21 ft</div>
+            <div class="boat-spec">⚡ 250HP Mercury</div>
+            <div class="boat-spec">👥 Capacity: 4</div>
+            <div class="boat-spec">🌡️ Live well</div>
+            <div class="boat-spec">📡 Garmin GPS</div>
+            <div class="boat-spec">🔭 Humminbird sonar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- YOUR GUIDE -->
+    <div class="sec">
+      <div class="sec-title">Your Guide</div>
+      <div class="guide-card">
+        <div class="guide-avatar">👨‍🎣</div>
+        <div style="flex:1">
+          <div class="guide-name">Captain Jake Smith</div>
+          <div class="guide-meta">Lake Fork, Texas · Member since 2019</div>
+          <div class="guide-badges">
+            <div class="badge badge-green">✓ USCG Licensed</div>
+            <div class="badge badge-green">✓ CPR/First Aid</div>
+            <div class="badge badge-blue">⭐ Top Guide 2024</div>
+            <div class="badge badge-blue">🏆 47 Reviews</div>
+          </div>
+          <div class="guide-bio">Born and raised on Lake Fork, I've been fishing this water for 25 years and guiding professionally since 2014. I know every cove, creek channel, and submerged structure on this lake. My goal is simple: put you on fish and make sure you have a day worth remembering, whether you're 8 or 80 years old.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQS -->
+    <div class="sec">
+      <div class="sec-title">Frequently Asked Questions</div>
+      <div class="faq-item">
+        <div class="faq-q">Do I need a fishing licence? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Yes — Texas requires a valid fishing licence for all anglers age 17 and older. You can purchase one online at tpwd.texas.gov or at any local bait shop. A one-day licence costs approximately $11. Captain Jake can point you to the nearest retailer if needed.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if the weather is bad? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Light rain doesn't stop fishing — bass often bite better when it's overcast. If severe weather (lightning, high winds) makes the trip unsafe, Captain Jake will contact you to reschedule at no charge. Texas weather is predictable 48 hours out and we'll reach out if there's a concern.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What's the cancellation policy? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Free cancellation up to 48 hours before your trip for a full refund. Cancellations within 48 hours receive a 50% refund or the option to reschedule. No-shows are not refundable.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What should I bring? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Sun protection (hat, sunscreen, long sleeves recommended), sunglasses with polarised lenses, snacks and drinks, a valid fishing licence, and a camera. Non-slip shoes are strongly recommended. All fishing gear is provided.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">What if we don't catch fish? <span class="faq-icon">+</span></div>
+        <div class="faq-a">Lake Fork consistently produces fish year-round, but fishing — like all outdoor activities — has unpredictable days. Captain Jake will work every angle to put you on fish. No guide can guarantee catches, but he has a strong track record and 47 reviews speak to the experience.</div>
+      </div>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="sec">
+      <div class="sec-title">Customer Reviews</div>
+      <div class="review-summary-card">
+        <div class="review-score">
+          <div class="score-num">4.9</div>
+          <div class="score-right">
+            <div class="stars">★★★★★</div>
+            <div class="review-count">Based on 47 verified reviews</div>
+          </div>
+        </div>
+        <div class="ai-review-summary">
+          <div class="ai-label" style="margin-bottom:6px"><div class="ai-dot"></div> AI Review Summary · Jack AI</div>
+          Guests consistently praise Captain Jake's deep knowledge of Lake Fork and his patience with beginners. Early morning departures are highlighted as the best bite window. Several reviewers mention trophy-sized catches over 7 lbs. A few early reviews noted tackle could be more varied, though recent reviews suggest this has been addressed. Strongly recommended for families and first-time anglers.
+        </div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-name">Mike T. · Dallas, TX</div>
+          <div class="review-date">March 2025</div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">Best fishing trip I've ever been on. Jake put us on a 9.2 lb largemouth within the first hour. He knows this lake like the back of his hand. Already booked again for October.</div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-name">Sarah & Kids · Austin, TX</div>
+          <div class="review-date">February 2025</div>
+        </div>
+        <div class="review-stars">★★★★★</div>
+        <div class="review-text">Took my 8 and 11 year olds. Jake was incredible with them — patient, encouraging, and genuinely excited every time they caught something. My son is now obsessed with bass fishing. Worth every penny.</div>
+      </div>
+
+      <div class="review-card">
+        <div class="review-header">
+          <div class="reviewer-name">Carlos R. · Houston, TX</div>
+          <div class="review-date">January 2025</div>
+        </div>
+        <div class="review-stars">★★★★☆</div>
+        <div class="review-text">Great trip overall. Caught 14 bass, mostly 2–4 lbs with one monster at 7.5. Only reason for 4 stars is we didn't get started quite at sunrise like expected. Jake himself was excellent.</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOOKING SIDEBAR -->
+  <div class="sidebar">
+    <div class="booking-card">
+      <div class="booking-price">$425</div>
+      <div class="booking-per">per group · up to 4 guests</div>
+
+      <div class="time-label">Select a Start Time</div>
+      <div class="time-slots">
+        <div class="time-slot selected">
+          <div>
+            <div class="time-slot-time">🌅 5:30 AM — Early Morning</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Best bite window · Most popular</div>
+          </div>
+          <div class="time-slot-avail">Available</div>
+        </div>
+        <div class="time-slot">
+          <div>
+            <div class="time-slot-time">🌄 7:00 AM — Morning</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Good conditions · Less crowded</div>
+          </div>
+          <div class="time-slot-avail">Available</div>
+        </div>
+        <div class="time-slot">
+          <div>
+            <div class="time-slot-time">☀️ 1:00 PM — Afternoon</div>
+            <div style="font-size:11px;color:var(--ink-3);margin-top:2px">Slower bite · Budget option</div>
+          </div>
+          <div class="time-slot-full">2 spots left</div>
+        </div>
+      </div>
+
+      <div class="booking-divider"></div>
+
+      <div class="guests-row">
+        <div>
+          <div class="guests-label">Guests</div>
+          <div style="font-size:11px;color:var(--ink-3)">Max 4 per trip</div>
+        </div>
+        <div class="guests-controls">
+          <button class="guest-btn">−</button>
+          <div class="guest-count">2</div>
+          <button class="guest-btn">+</button>
+        </div>
+      </div>
+
+      <div class="price-breakdown">
+        <div class="price-row"><span>$425 × 1 trip</span><span>$425</span></div>
+        <div class="price-row"><span>Guidesly service fee</span><span>$21</span></div>
+        <div class="price-row total"><span>Total</span><span>$446</span></div>
+      </div>
+
+      <div class="booking-divider"></div>
+
+      <button class="btn-book">Book This Trip</button>
+      <button class="btn-wishlist">♡ Save to Wishlist</button>
+
+      <div class="trust-row">
+        <div class="trust-item">🔒 Secure checkout</div>
+        <div class="trust-item">✓ Free cancellation</div>
+        <div class="trust-item">⭐ 4.9 rating</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
