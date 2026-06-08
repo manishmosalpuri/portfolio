@@ -6,87 +6,106 @@
 <title>Jack AI — Guidesly Listing Agent</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --ink:#0d0d0d;--ink-2:#2a2a2a;--ink-3:#6b6b6b;--ink-4:#a0a0a0;
-  --bg:#f5f4f0;--card:#fff;--rule:#e8e7e3;
-  --accent:#1a56db;--accent-light:#eef3ff;
-  --green:#0a6640;--green-light:#e3f5ec;
-  --amber:#b45309;--amber-light:#fef3c7;
-  --tool-bg:#f0fdf4;--tool-border:#a3d9b8;
-  --radius:14px;--radius-sm:8px;
-}
-html,body{height:100%;overflow:hidden}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;display:flex;flex-direction:column}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --ink:#0d0d0d;--ink-2:#2a2a2a;--ink-3:#6b6b6b;--ink-4:#a0a0a0;
+    --bg:#f5f4f0;--card:#ffffff;--rule:#e8e7e3;
+    --accent:#1a56db;--accent-light:#eef3ff;
+    --green:#0a6640;--green-light:#e3f5ec;
+    --agent-bg:#f0f4ff;--agent-border:#d0deff;
+    --user-bg:#1a56db;
+    --radius:14px;--radius-sm:8px;
+  }
+  html,body{margin:0;padding:0;height:100%;}
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;}
 
-.header{background:var(--card);border-bottom:1px solid var(--rule);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
-.logo{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;letter-spacing:-0.02em}
-.logo span{color:var(--accent)}
-.agent-name{font-size:13px;font-weight:600;color:var(--ink-2)}
-.agent-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-.header-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.agentic-badge{display:inline-flex;align-items:center;gap:5px;background:var(--green-light);border:1px solid var(--tool-border);color:var(--green);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 9px;border-radius:20px}
-.step-progress{font-size:11px;color:var(--ink-4);font-weight:500}
+  /* HEADER */
+  .header{background:var(--card);border-bottom:1px solid var(--rule);padding:12px 20px;display:flex;align-items:center;gap:12px;flex-shrink:0}
+  .logo{font-family:'Bricolage Grotesque',sans-serif;font-size:17px;font-weight:800;letter-spacing:-0.02em;color:var(--ink)}
+  .logo span{color:var(--accent)}
+  .agent-name{font-size:13px;font-weight:600;color:var(--ink-2)}
+  .agent-status{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--green);font-weight:600}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .step-progress{font-size:11px;color:var(--ink-4);font-weight:500}
 
-.progress-track{height:3px;background:var(--rule);flex-shrink:0}
-.progress-fill{height:100%;background:var(--accent);transition:width 0.6s ease;width:0%}
+  /* PROGRESS BAR */
+  .progress-track{height:3px;background:var(--rule);flex-shrink:0}
+  .progress-fill{height:100%;background:var(--accent);transition:width 0.6s ease;width:0%}
 
-.chat{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
-.chat::-webkit-scrollbar{width:4px}
-.chat::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px}
+  /* CHAT AREA */
+  .chat{flex:1;overflow-y:auto;padding:20px 16px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+  .chat::-webkit-scrollbar{width:4px}
+  .chat::-webkit-scrollbar-thumb{background:var(--rule);border-radius:2px}
 
-.msg{display:flex;gap:10px;align-items:flex-end;max-width:100%}
-.msg.agent{align-self:flex-start;max-width:88%}
-.msg.user{align-self:flex-end;flex-direction:row-reverse;max-width:75%}
-.msg.tool-msg{align-self:flex-start;max-width:92%}
-.msg.full-width{align-self:flex-start;width:100%;max-width:100%}
+  /* MESSAGES */
+  .msg{display:flex;gap:10px;align-items:flex-end;max-width:100%}
+  .msg.agent{align-self:flex-start;max-width:85%}
+  .msg.user{align-self:flex-end;flex-direction:row-reverse;max-width:75%}
 
-.avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-bottom:2px}
-.avatar.user-av{background:var(--ink-2)}
-.avatar.tool-av{background:var(--green);font-size:12px}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-bottom:2px}
+  .avatar.user-av{background:var(--ink-2)}
 
-.bubble{padding:11px 15px;border-radius:var(--radius);font-size:13.5px;line-height:1.65;word-wrap:break-word}
-.agent .bubble{background:var(--card);border:1px solid var(--rule);color:var(--ink-2);border-bottom-left-radius:4px}
-.user .bubble{background:var(--accent);color:#fff;border-bottom-right-radius:4px}
+  .bubble{padding:11px 15px;border-radius:var(--radius);font-size:13.5px;line-height:1.65;word-wrap:break-word}
+  .agent .bubble{background:var(--card);border:1px solid var(--rule);color:var(--ink-2);border-bottom-left-radius:4px}
+  .user .bubble{background:var(--user-bg);color:#fff;border-bottom-right-radius:4px}
 
-/* TOOL CARD */
-.tool-card{background:var(--tool-bg);border:1px solid var(--tool-border);border-radius:var(--radius);overflow:hidden;width:100%}
-.tool-card-header{padding:8px 14px;display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--green);border-bottom:1px solid var(--tool-border)}
-.tool-name{flex:1}
-.tool-status{font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px}
-.tool-status.calling{background:var(--amber-light);color:var(--amber)}
-.tool-status.done{background:var(--green-light);color:var(--green)}
-.tool-input{padding:6px 14px;font-size:11px;color:var(--ink-3);border-bottom:1px solid var(--tool-border);font-family:monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tool-output{padding:10px 14px;font-size:12px;color:var(--ink-2);line-height:1.6}
-.tool-output pre{font-family:monospace;font-size:10.5px;color:var(--ink-3);white-space:pre-wrap;background:rgba(0,0,0,0.03);padding:8px;border-radius:6px;max-height:120px;overflow:auto}
+  /* SPECIAL CARDS IN CHAT */
+  .result-card{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden;margin-top:4px;width:100%}
+  .result-card-header{padding:10px 14px;background:var(--agent-bg);border-bottom:1px solid var(--agent-border);display:flex;align-items:center;gap:7px;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--accent)}
+  .result-card-body{padding:13px 15px;font-size:13px;color:var(--ink-2);line-height:1.7}
+  .result-card-body strong{color:var(--ink);font-weight:600}
 
-/* QUICK REPLIES */
-.quick-replies{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 0 40px}
-.qr{font-size:12px;font-weight:600;padding:7px 14px;border:1.5px solid var(--accent);border-radius:20px;cursor:pointer;background:#fff;color:var(--accent);transition:all 0.15s}
-.qr:hover{background:var(--accent);color:#fff}
+  .tag-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--accent-light);color:var(--accent)}
 
-/* INPUT */
-.input-bar{background:var(--card);border-top:1px solid var(--rule);padding:12px 16px;display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
-.input-wrap{flex:1;background:var(--bg);border:1.5px solid var(--rule);border-radius:22px;padding:9px 16px;display:flex;align-items:center;transition:border 0.15s}
-.input-wrap:focus-within{border-color:var(--accent);background:#fff}
-textarea.chat-input{flex:1;border:none;background:transparent;font-size:14px;font-family:'Inter',sans-serif;color:var(--ink);resize:none;outline:none;max-height:100px;min-height:22px;height:22px;line-height:1.5}
-textarea.chat-input::placeholder{color:var(--ink-4)}
-.send-btn{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.15s}
-.send-btn:hover{background:#1347c0}
-.send-btn:disabled{opacity:0.4;cursor:not-allowed}
+  .faq-item{padding:8px 0;border-bottom:1px solid var(--rule)}
+  .faq-item:last-child{border-bottom:none}
+  .faq-q{font-weight:600;color:var(--ink);font-size:13px;margin-bottom:3px}
+  .faq-a{color:var(--ink-3);font-size:12.5px;line-height:1.55}
 
-/* SUCCESS BANNER */
-.success-banner{background:var(--green-light);border:1px solid var(--tool-border);border-radius:var(--radius);padding:16px 20px;margin-top:8px}
-.success-title{font-size:14px;font-weight:700;color:var(--green);margin-bottom:4px}
-.success-url{font-size:12px;color:var(--green);font-family:monospace;margin-bottom:12px}
-.view-listing-btn{display:inline-flex;align-items:center;gap:6px;background:var(--green);color:#fff;font-size:13px;font-weight:700;padding:10px 20px;border-radius:8px;text-decoration:none;transition:background 0.15s}
-.view-listing-btn:hover{background:#085533}
+  .val-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid var(--rule);font-size:12.5px}
+  .val-row:last-child{border-bottom:none}
+
+  /* PREVIEW LISTING */
+  .listing-preview{background:var(--card);border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden}
+  .listing-hero{background:linear-gradient(135deg,#0d2137 0%,#1a4a2e 100%);padding:20px;color:#fff}
+  .listing-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:10px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 9px;border-radius:20px;margin-bottom:8px}
+  .listing-title{font-family:'Bricolage Grotesque',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.01em;margin-bottom:6px}
+  .listing-meta{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;opacity:0.85}
+  .listing-body{padding:14px 16px}
+  .listing-section{margin-bottom:12px}
+  .listing-section-label{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:5px;padding-bottom:5px;border-bottom:1px solid var(--rule)}
+  .listing-price{font-family:'Bricolage Grotesque',sans-serif;font-size:24px;font-weight:800;color:var(--green)}
+  .publish-btn{width:100%;padding:13px;background:var(--green);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.2s;margin-top:12px;display:flex;align-items:center;justify-content:center;gap:7px}
+  .publish-btn:hover{background:#085533;transform:translateY(-1px)}
+
+  /* TYPING INDICATOR */
+  .typing-indicator{display:flex;gap:4px;align-items:center;padding:12px 15px}
+  .typing-dot{width:6px;height:6px;border-radius:50%;background:var(--ink-4);animation:tdot 1.2s infinite}
+  .typing-dot:nth-child(2){animation-delay:0.2s}
+  .typing-dot:nth-child(3){animation-delay:0.4s}
+  @keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:0.4}40%{transform:translateY(-6px);opacity:1}}
+
+  /* QUICK REPLIES */
+  .quick-replies{display:flex;flex-wrap:wrap;gap:7px;padding:4px 0 0 40px}
+  .qr{font-size:12px;font-weight:600;padding:7px 14px;border:1.5px solid var(--accent);border-radius:20px;cursor:pointer;background:#fff;color:var(--accent);transition:all 0.15s}
+  .qr:hover{background:var(--accent);color:#fff}
+
+  /* INPUT BAR */
+  .input-bar{background:var(--card);border-top:1px solid var(--rule);padding:12px 16px;display:flex;gap:10px;align-items:flex-end;flex-shrink:0}
+  .input-wrap{flex:1;background:var(--bg);border:1.5px solid var(--rule);border-radius:22px;padding:9px 16px;display:flex;align-items:center;transition:border 0.15s}
+  .input-wrap:focus-within{border-color:var(--accent);background:#fff}
+  textarea.chat-input{flex:1;border:none;background:transparent;font-size:14px;font-family:'Inter',sans-serif;color:var(--ink);resize:none;outline:none;max-height:100px;min-height:22px;height:22px;line-height:1.5}
+  textarea.chat-input::placeholder{color:var(--ink-4)}
+  .send-btn{width:38px;height:38px;border-radius:50%;background:var(--accent);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;font-size:16px}
+  .send-btn:hover{background:#1347c0;transform:scale(1.05)}
+  .send-btn:disabled{opacity:0.4;cursor:not-allowed;transform:none}
 </style>
 </head>
 <body>
-
+<div id="agentWrap" style="display:flex;flex-direction:column;height:700px;overflow:hidden">
 <div class="header">
   <div class="avatar" style="width:32px;height:32px;font-size:16px">🧭</div>
   <div>
@@ -94,952 +113,713 @@ textarea.chat-input::placeholder{color:var(--ink-4)}
     <div class="agent-status"><div class="status-dot"></div> Online</div>
   </div>
   <div class="header-right">
-    <div class="agentic-badge">⚡ Agentic</div>
     <div class="logo">guide<span>sly</span></div>
     <div class="step-progress" id="stepProgress"></div>
   </div>
 </div>
 <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+
 <div class="chat" id="chat"></div>
+
 <div class="input-bar">
   <div class="input-wrap">
     <textarea class="chat-input" id="userInput" placeholder="Tell Jack AI about your trip or experience..." rows="1"></textarea>
   </div>
   <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
 </div>
+</div><!-- end agentWrap -->
 
 <script>
-// ─── STATE ────────────────────────────────────────────────────
-var state = {
+const chat = document.getElementById('chat');
+const input = document.getElementById('userInput');
+const sendBtn = document.getElementById('sendBtn');
+
+let state = {
   phase: 'collect',
-  history: [],
-  tools: {},      // tool call results keyed by tool name
-  listing: {},    // final generated listing data
-  collected: {}   // which fields have been answered
+  conversationHistory: [],
+  generatedListing: {},
+  collectedFields: {},
+  step: 0
 };
 
-// ─── ACTIVITY HELPERS ─────────────────────────────────────────
+// ── ACTIVITY DETECTION ────────────────────────────────────────
 function detectActivity(text) {
   text = text.toLowerCase();
-  if (/fish|bass|trout|salmon|redfish|tuna|walleye|angl|fly.fish|offshore|inshore/.test(text)) return 'fishing';
   if (/scuba|div(e|ing)|snorkel/.test(text)) return 'scuba';
-  if (/hunt|elk|deer|duck|turkey|quail|boar/.test(text)) return 'hunting';
-  if (/cruise|boat.tour|sunset.sail|sail|yacht|charter/.test(text)) return 'cruise';
+  if (/hunt|elk|deer|duck|turkey|quail|boar|pheasant/.test(text)) return 'hunting';
+  if (/cruise|boat.tour|sunset.sail|sailing|yacht/.test(text)) return 'cruise';
   if (/kayak|paddle|canoe|sup|paddleboard/.test(text)) return 'paddle';
-  if (/ski|snow|board|snowshoe|backcountry/.test(text)) return 'snow';
+  if (/ski|snow|snowboard|backcountry|snowshoe/.test(text)) return 'snow';
   if (/surf|wave/.test(text)) return 'surf';
-  if (/hike|trail|climb|trek|backpack/.test(text)) return 'hike';
-  if (/whale|dolphin|wild|safari|bird/.test(text)) return 'wildlife';
+  if (/hike|trail|climb|trek|backpack/.test(text)) return 'hiking';
+  if (/whale|dolphin|wildlife|safari|bird/.test(text)) return 'wildlife';
+  if (/fish|bass|trout|salmon|redfish|tuna|angl|fly.fish|offshore|inshore|walleye/.test(text)) return 'fishing';
   return 'general';
 }
 
-function activityEmoji(type) {
-  var m = {fishing:'🎣',scuba:'🤿',hunting:'🏹',cruise:'🚢',paddle:'🛶',snow:'🎿',surf:'🏄',hike:'🥾',wildlife:'🦁',general:'🧭'};
-  return m[type] || '🧭';
+// ── SIMULATED JACK AI CONVERSATION ENGINE ─────────────────────
+const QUESTIONS = {
+  fishing: [
+    "Great! What type of fishing do you specialise in, and which waters do you guide on?",
+    "How long is a typical trip — half day, 6 hours, full day? And how many guests can you take at once?",
+    "What start times do you offer? For example, 5:30 AM, 7 AM, 1 PM?",
+    "What's included — rods, reels, bait, tackle? And what should guests bring themselves?",
+    "Tell me about your boat — model, size, motor, any key features?",
+    "What target species are you going after, and what makes your spot or technique special?",
+    "What's your price range per trip?"
+  ],
+  scuba: [
+    "What dive sites do you work with, and what certification level is required?",
+    "How many dives per trip, and what's the typical max depth?",
+    "How long is a full session including briefing and dives? And how many divers per trip?",
+    "What start times do you offer?",
+    "What equipment is included — BCD, regulator, wetsuit, tanks?",
+    "What makes your dive experience stand out?",
+    "What's your pricing — per person or per group?"
+  ],
+  hunting: [
+    "What game species do you guide for, and what terrain do you hunt?",
+    "Is it fully guided, semi-guided, or drop camp? Are licences and tags included?",
+    "How long are your hunts — day hunts or multi-day? What's the season window?",
+    "How many hunters per trip? Any accommodation included?",
+    "What equipment do hunters need to bring?",
+    "What's your success rate, and what makes your operation stand out?",
+    "What's your pricing structure?"
+  ],
+  cruise: [
+    "What type of vessel do you operate, and what's the itinerary or route?",
+    "How long is the cruise, and how many guests can you accommodate?",
+    "What times do you run — sunset, morning, midday?",
+    "What's included — food, drinks, snorkelling gear, music?",
+    "What makes your cruise experience special?",
+    "What's your pricing per person or per charter?"
+  ],
+  general: [
+    "Tell me more — where do you operate, and what's the core experience you offer?",
+    "How long is a typical session, and how many guests do you take?",
+    "What start times do you offer?",
+    "What equipment or gear do you provide?",
+    "What makes your experience stand out from others?",
+    "What's your pricing?"
+  ]
+};
+
+function getQuestions(activity) {
+  return QUESTIONS[activity] || QUESTIONS.general;
 }
 
-function activityLabel(type) {
-  var m = {fishing:'Fishing',scuba:'Scuba & Water Sports',hunting:'Hunting',cruise:'Boat Tours & Cruises',paddle:'Kayaking & Paddling',snow:'Snow Sports',surf:'Surfing',hike:'Hiking & Climbing',wildlife:'Wildlife & Nature',general:'Outdoor Adventure'};
-  return m[type] || 'Outdoor Experience';
-}
+// ── SIMULATED GENERATION ──────────────────────────────────────
+function generateTitle(info) {
+  const a = info.activity || 'general';
+  const loc = info.location || 'the area';
+  const dur = info.duration || '';
 
-function getHeroGradient(type) {
-  var m = {
-    fishing:'linear-gradient(160deg,#1a3a5c 0%,#0d2137 40%,#1a4a2e 100%)',
-    scuba:'linear-gradient(160deg,#0d3366 0%,#082a5c 40%,#0d4a6a 100%)',
-    hunting:'linear-gradient(160deg,#2d3a1a 0%,#1a2a0d 40%,#3a2a0d 100%)',
-    cruise:'linear-gradient(160deg,#1a3a5c 0%,#0d2137 40%,#1a3a5c 100%)',
-    paddle:'linear-gradient(160deg,#0d3a5c 0%,#0d2a3a 40%,#1a4a2e 100%)',
-    snow:'linear-gradient(160deg,#2a3a5c 0%,#1a2a4a 40%,#3a4a6a 100%)',
-    surf:'linear-gradient(160deg,#1a4a6a 0%,#0d3a5c 40%,#1a5a4a 100%)',
-    hike:'linear-gradient(160deg,#2a3a1a 0%,#1a2a0d 40%,#3a2a1a 100%)',
-    wildlife:'linear-gradient(160deg,#3a2a0d 0%,#2a1a0d 40%,#1a3a1a 100%)',
-    general:'linear-gradient(160deg,#1a3a5c 0%,#0d2137 40%,#1a4a2e 100%)'
+  const titles = {
+    fishing: `${dur} ${info.species || 'Trophy Bass'} Fishing on ${loc}`.trim(),
+    scuba: `${dur} Scuba Diving Experience — ${loc}`.trim(),
+    hunting: `Guided ${info.target || 'Elk'} Hunting — ${loc}`.trim(),
+    cruise: `${info.timeOfDay || 'Sunset'} Cruise on ${loc}`.trim(),
+    paddle: `Guided Kayaking Adventure — ${loc}`.trim(),
+    snow: `Guided ${info.snowType || 'Backcountry'} Skiing — ${loc}`.trim(),
+    hiking: `Guided Hiking & Trail Experience — ${loc}`.trim(),
+    general: `Outdoor Adventure Experience — ${loc}`.trim()
   };
-  return m[type] || m.general;
+  return (titles[a] || titles.general).replace(/\s+/g,' ').replace(/^[\s—]+|[\s—]+$/g,'');
 }
 
-// ─── TOOLS DEFINITION ─────────────────────────────────────────
-var TOOLS = [
-  {
-    name: 'search_comparable_trips',
-    description: 'Search Guidesly marketplace for comparable trips by activity, location, and duration. Returns pricing benchmarks and what top listings include.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        activity_type: {type:'string'},
-        location: {type:'string'},
-        duration_hours: {type:'number'}
-      },
-      required: ['activity_type','location']
-    }
-  },
-  {
-    name: 'get_taxonomy_categories',
-    description: 'Get official Guidesly taxonomy categories and SEO tags for the activity type.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        activity_type: {type:'string'},
-        sub_type: {type:'string'}
-      },
-      required: ['activity_type']
-    }
-  },
-  {
-    name: 'get_location_regulations',
-    description: 'Get licence requirements, permits, and regulations for the activity and location. Used to generate accurate FAQs.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        activity_type: {type:'string'},
-        state_or_region: {type:'string'},
-        country: {type:'string'}
-      },
-      required: ['activity_type','state_or_region']
-    }
-  },
-  {
-    name: 'validate_listing_quality',
-    description: 'Run quality checks on the draft listing. Returns a score, pass/fail on required fields, and improvement suggestions.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        title: {type:'string'},
-        description: {type:'string'},
-        price: {type:'number'},
-        faq_count: {type:'number'},
-        has_start_times: {type:'boolean'},
-        has_vessel_info: {type:'boolean'}
-      },
-      required: ['title','description']
-    }
-  },
-  {
-    name: 'publish_listing',
-    description: 'Publish the approved listing to Guidesly marketplace. Creates a live SEO-optimised trip landing page. Requires guide_approved: true.',
-    input_schema: {
-      type: 'object',
-      properties: {
-        title: {type:'string'},
-        description: {type:'string'},
-        activity_type: {type:'string'},
-        location: {type:'string'},
-        duration: {type:'string'},
-        start_times: {type:'array', items:{type:'string'}},
-        group_size: {type:'string'},
-        price: {type:'number'},
-        price_per: {type:'string'},
-        categories: {type:'array', items:{type:'string'}},
-        included: {type:'array', items:{type:'string'}},
-        not_included: {type:'array', items:{type:'string'}},
-        vessel_name: {type:'string'},
-        vessel_specs: {type:'array', items:{type:'string'}},
-        target: {type:'string'},
-        guide_bio: {type:'string'},
-        faqs: {type:'array'},
-        guide_approved: {type:'boolean'}
-      },
-      required: ['title','description','guide_approved']
-    }
-  }
-];
+function generateDescription(info) {
+  const a = info.activity || 'general';
+  const loc = info.location || 'a stunning outdoor location';
+  const dur = info.duration || 'a few hours';
+  const guests = info.groupSize || 'small groups';
+  const special = info.special || 'an unforgettable experience tailored to your skill level';
 
-// ─── TOOL EXECUTION (simulated platform APIs) ─────────────────
-function runTool(name, input) {
-  var act = (input.activity_type || '').toLowerCase();
-  var loc = input.location || input.state_or_region || '';
+  const descs = {
+    fishing: `Located on ${loc}, this guided fishing trip gives you access to some of the best waters in the region. Whether you're a first-time angler or a seasoned tournament fisherman, your guide will put you on fish using proven techniques adapted to current conditions.
 
-  if (name === 'search_comparable_trips') {
-    var base = act.includes('scuba') ? 130 : act.includes('hunt') ? 380 : act.includes('cruise') ? 90 : act.includes('ski') || act.includes('snow') ? 210 : 100;
-    var result = {
-      comparable_trips: 14,
-      price_per_trip: {min: base*3, avg: Math.round(base*4.2), max: base*6},
-      price_per_person: {min: Math.round(base*0.8), avg: Math.round(base*1.1), max: Math.round(base*1.6)},
-      top_listing_features: ['Multiple start times shown','Vessel/equipment details','4+ FAQs including licence info','Included/not-included checklist','AI-generated trip summary'],
-      avg_description_words: 185,
-      market_insight: 'Listings with multiple start times get 35% more bookings. Morning slots convert best.'
-    };
-    state.tools.pricing = result;
-    return result;
-  }
+On this ${dur} trip, you'll target ${info.species || 'trophy fish'} using ${info.technique || 'a range of proven techniques'}. Your guide knows every productive stretch of these waters and will tailor the approach based on season, conditions, and your experience level.
 
-  if (name === 'get_taxonomy_categories') {
-    var primary = act.includes('bass') ? 'Bass Fishing' : act.includes('fly') ? 'Fly Fishing' : act.includes('offshore') ? 'Offshore Fishing' : act.includes('inshore') ? 'Inshore Fishing' : act.includes('scuba') ? 'Scuba Diving' : act.includes('snorkel') ? 'Snorkelling' : act.includes('elk') || act.includes('deer') ? 'Guided Hunting' : act.includes('duck') ? 'Waterfowl Hunting' : act.includes('cruise') || act.includes('sail') ? 'Boat Tours & Cruises' : act.includes('kayak') ? 'Kayaking' : act.includes('ski') || act.includes('snow') ? 'Snow Sports' : act.includes('surf') ? 'Surfing' : act.includes('hike') || act.includes('trek') ? 'Guided Hiking' : 'Outdoor Adventure';
-    var tags = [primary, 'Expert Guide', 'Small Groups', 'All Levels Welcome', 'Equipment Provided', 'Unforgettable Experience', 'Book Online'];
-    var result = {primary_category: primary, tags: tags, seo_slug_prefix: primary.toLowerCase().replace(/\s+/g,'-')};
-    state.tools.taxonomy = result;
-    return result;
-  }
+All fishing equipment is provided. This trip is open to ${guests} and all skill levels are welcome. ${special}.`,
+    scuba: `Explore the underwater world of ${loc} on this guided scuba experience. Suitable for ${info.certLevel || 'certified divers'}, this trip takes you to ${info.diveSites || 'the best local dive sites'} with a maximum depth of ${info.maxDepth || '18 metres'}.
 
-  if (name === 'get_location_regulations') {
-    var licType = act.includes('fish') ? loc + ' Fishing Licence' : act.includes('hunt') ? loc + ' Hunting Licence & Tag' : act.includes('scuba') ? 'Open Water Certification (PADI/NAUI)' : 'No licence required';
-    var result = {
-      licence_required: !act.includes('cruise') && !act.includes('kayak') && !act.includes('ski'),
-      licence_type: licType,
-      licence_cost: act.includes('fish') ? '$11-25/day or $47/year' : act.includes('hunt') ? '$40-180 depending on species' : act.includes('scuba') ? 'Free — bring your certification card' : 'N/A',
-      where_to_get: 'Online at official state website or at local sporting goods stores',
-      min_age: '17+',
-      cancellation_policy: 'Free cancellation up to 48 hours before the trip. 50% refund within 48 hours.',
-      special_note: act.includes('scuba') ? 'Participants must hold a minimum Open Water certification. Discover Scuba available for uncertified guests.' : act.includes('hunt') ? 'Hunter safety course may be required for first-time hunters in some states.' : ''
-    };
-    state.tools.regulations = result;
-    return result;
-  }
+Each ${dur} session includes a full briefing, equipment check, and ${info.numDives || 'two'} dives with a certified instructor who knows these waters intimately.
 
-  if (name === 'validate_listing_quality') {
-    var titleLen = (input.title || '').length;
-    var descWords = (input.description || '').split(' ').length;
-    var score = 0;
-    if (titleLen >= 30 && titleLen <= 70) score += 22; else score += 12;
-    if (descWords >= 150) score += 25; else score += 12;
-    if (input.price > 0) score += 18;
-    if (input.faq_count >= 4) score += 18; else score += 8;
-    if (input.has_start_times) score += 10;
-    if (input.has_vessel_info) score += 7;
-    var result = {
-      score: score,
-      status: score >= 80 ? 'READY TO PUBLISH' : 'REVIEW RECOMMENDED',
-      checks: [
-        {field:'Title', pass: titleLen >= 30 && titleLen <= 70, note: titleLen + ' chars — ' + (titleLen < 30 ? 'add more detail' : titleLen > 70 ? 'slightly long' : 'optimal')},
-        {field:'Description', pass: descWords >= 150, note: descWords + ' words — ' + (descWords < 150 ? 'add more detail' : 'good depth')},
-        {field:'Pricing', pass: input.price > 0, note: input.price > 0 ? 'Price set' : 'No price set'},
-        {field:'FAQs', pass: input.faq_count >= 4, note: (input.faq_count || 0) + ' FAQs'},
-        {field:'Start Times', pass: !!input.has_start_times, note: input.has_start_times ? 'Set — increases bookings 35%' : 'Missing — strongly recommended'},
-        {field:'Photos', pass: false, note: 'Upload after publish — increases conversion 40%'}
-      ]
-    };
-    state.tools.validation = result;
-    return result;
-  }
+All essential dive equipment is ${info.equipIncluded || 'included'}. Groups are kept small to ${guests} to ensure safety and an exceptional experience underwater.`,
+    hunting: `Experience a professionally guided ${info.target || 'game'} hunt in the ${info.terrain || 'rugged backcountry'} of ${loc}. This is a ${info.guideType || 'fully guided'} hunt with an experienced local guide who knows the land, the animals, and the best approach for each season.
 
-  if (name === 'publish_listing') {
-    if (!input.guide_approved) return {success: false, error: 'Guide approval required'};
-    var slug = (input.title || 'trip').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,50);
-    var id = 'LST-' + Math.random().toString(36).substr(2,8).toUpperCase();
-    var result = {
-      success: true, listing_id: id,
-      url: 'https://guidesly.com/trips/' + slug,
-      slug: slug, status: 'LIVE',
-      seo_indexed: true,
-      message: 'Trip listing is live.'
-    };
-    // Store full listing for landing page render
-    state.listing = Object.assign({}, input, result);
-    return result;
-  }
+Hunts run ${dur} with ${guests} per group. ${info.licenceInfo || 'Hunting licences and tags are available locally — confirm requirements before booking.'}
 
-  return {error: 'Unknown tool'};
+Your guide will handle scouting, positioning, and field dressing. ${special}.`,
+    cruise: `Set sail on ${loc} aboard a ${info.vessel || 'premium vessel'} for an unforgettable ${info.timeOfDay || 'scenic'} cruise. This ${dur} experience accommodates up to ${guests} and includes ${info.included || 'everything you need for a perfect time on the water'}.
+
+Sit back, take in the scenery, and let your captain handle the rest. Whether you're celebrating a special occasion or simply enjoying a day on the water, this cruise delivers.
+
+${special}.`,
+    general: `Based in ${loc}, this guided outdoor experience offers ${dur} of expert-led adventure for groups of ${guests}. Your guide brings years of local knowledge and a genuine passion for sharing this environment with guests of all backgrounds.
+
+All necessary equipment is provided, and the experience is fully adapted to your group's skill level and goals.
+
+${special}.`
+  };
+  return descs[a] || descs.general;
 }
 
-// ─── API CALL ──────────────────────────────────────────────────
-async function callJackAI(extraSystemNote) {
-  // Build collected fields summary from conversation
-  var userText = state.history.filter(function(m){return m.role==='user' && typeof m.content==='string';}).map(function(m){return m.content;}).join(' ').toLowerCase();
-  var c = state.collected;
-  if (/\d+.?(hour|hr|day|minute|min|half.day|full.day)/i.test(userText)) c.duration = true;
-  if (/\d{1,2}(:\d{2})?\s?(am|pm)/i.test(userText) || /morning|afternoon|evening|start time/i.test(userText)) c.startTimes = true;
-  if (/\d+.?(guest|people|person|max|capacity)/i.test(userText) || /up to \d|group of \d/i.test(userText)) c.groupSize = true;
-  if (/equipment|gear|tackle|rod|reel|bcd|tank|wetsuit|provide|include/i.test(userText)) c.equipment = true;
-  if (/\$\d+|\d+.?dollar|per (trip|person|day|head)|price|cost|charge|market rate/i.test(userText)) c.price = true;
-  if (/year|specializ|expert|patent|family|beginner|born|raised|guide since|known for/i.test(userText)) c.special = true;
-  if (/boat|vessel|kayak|canoe|raft|ship|yacht|ranger|grady|bass boat|center console|catamaran|zodiac|no boat|bank fish/i.test(userText)) c.vessel = true;
-  if (/includ|provid|gear provid|tackle includ|equipment includ/i.test(userText)) c.included = true;
-
-  var collectedList = Object.keys(c).filter(function(k){return c[k];});
-  var fieldNames = {duration:'trip duration',startTimes:'available start times',groupSize:'group size / max guests',equipment:'equipment provided',price:'pricing',special:'what makes the guide special',vessel:'vessel/boat details',included:'what is included'};
-  var allFields = Object.keys(fieldNames);
-  var missingList = allFields.filter(function(k){return !c[k];});
-
-  var collectedStr = collectedList.length ? collectedList.map(function(k){return fieldNames[k]||k;}).join(', ') : 'Nothing yet';
-  var missingStr = missingList.length ? missingList.map(function(k){return fieldNames[k]||k;}).join(', ') : 'ALL FIELDS COLLECTED';
-
-  var actType = detectActivity(userText);
-  var actLabel = activityLabel(actType);
-
-  var system = 'You are Jack AI, Guidesly\'s agentic listing assistant. Help guides create complete listings for ANY outdoor activity through natural conversation.\n\n' +
-    'DETECTED ACTIVITY: ' + actLabel + '\n\n' +
-    'ALREADY COLLECTED (NEVER ASK AGAIN): ' + collectedStr + '\n' +
-    'STILL NEEDED (ask ONE at a time): ' + missingStr + '\n\n' +
-    'PHASE 1 — COLLECT: Ask naturally, one question at a time, adapted to the activity type. When missingStr says ALL FIELDS COLLECTED, move to Phase 2 immediately.\n\n' +
-    'PHASE 2 — GENERATE (when all collected): Call tools in order:\n' +
-    '1. search_comparable_trips\n2. get_taxonomy_categories\n3. get_location_regulations\n4. validate_listing_quality (with has_start_times and has_vessel_info set)\n5. Present complete listing with TITLE, DESCRIPTION, PRICE, START TIMES, INCLUDED, NOT INCLUDED, VESSEL DETAILS, CATEGORIES, FAQS\n6. Only call publish_listing after guide approves.\n\n' +
-    'RULES:\n- Never ask about a collected field\n- Adapt language to the activity (no "fishing licence" for ski trips)\n- Keep messages short — 1-2 sentences\n- For vessel: collect name and key specs (size, motor, capacity, equipment on board)\n- For start times: collect all available times (e.g. 6am, 11am, 3pm)\n- For included/not included: generate a clear checklist\n' +
-    (extraSystemNote ? '\n' + extraSystemNote : '');
-
-  var response = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 1000,
-      system: system,
-      tools: TOOLS,
-      messages: state.history
-    })
-  });
-  return await response.json();
+function generatePricing(info) {
+  const a = info.activity || 'general';
+  const ranges = {
+    fishing: 'Recommended: $400 per trip | Rationale: Comparable 6-hour guided fishing trips in this region average $350–$500 per group | Per-person option: $125 per person for groups of 3+',
+    scuba: 'Recommended: $150 per person | Rationale: Similar 2-dive guided experiences in this area range from $120–$200 per person | Group rate: $500 for up to 4 divers',
+    hunting: 'Recommended: $600 per day | Rationale: Fully guided hunts of this type typically range from $450–$800 per day depending on species and terrain | Multi-day discount available',
+    cruise: 'Recommended: $85 per person | Rationale: Similar sunset and scenic cruises in this area range from $65–$120 per person | Private charter: $600–$900 for the full vessel',
+    general: 'Recommended: $200 per person | Rationale: Comparable guided outdoor experiences in this region average $150–$300 per person | Group rates available for 4+'
+  };
+  return ranges[a] || ranges.general;
 }
 
-// ─── AGENTIC LOOP ──────────────────────────────────────────────
-async function agenticLoop(userMessage) {
-  if (userMessage !== null) {
-    state.history.push({role:'user', content: userMessage});
-  }
-
-  var data = await callJackAI();
-  var content = data.content || [];
-  var assistantContent = [];
-  var toolUsed = false;
-
-  for (var i = 0; i < content.length; i++) {
-    var block = content[i];
-
-    if (block.type === 'text' && block.text && block.text.trim()) {
-      assistantContent.push(block);
-      addAgentBubble(block.text);
-    }
-
-    if (block.type === 'tool_use') {
-      assistantContent.push(block);
-      toolUsed = true;
-      var toolId = block.id;
-      var toolName = block.name;
-      var toolInput = block.input;
-
-      // Show tool card
-      showToolCard(toolName, toolInput);
-      updateProgress(toolName);
-
-      // Execute
-      await sleep(400);
-      var result = runTool(toolName, toolInput);
-      completeToolCard(result);
-
-      // If publish succeeded — render landing page
-      if (toolName === 'publish_listing' && result.success) {
-        state.history.push({role:'assistant', content: assistantContent});
-        state.history.push({role:'user', content: [{type:'tool_result', tool_use_id: toolId, content: JSON.stringify(result)}]});
-        await sleep(300);
-        renderPublishedLandingPage();
-        setProgress(100, '✓ Published!');
-        document.getElementById('progressFill').style.background = 'var(--green)';
-        await sleep(200);
-        // Continue for final message
-        return agenticLoop(null);
-      }
-
-      // Continue loop with tool result
-      state.history.push({role:'assistant', content: assistantContent});
-      state.history.push({role:'user', content: [{type:'tool_result', tool_use_id: toolId, content: JSON.stringify(result)}]});
-      assistantContent = [];
-      await sleep(500);
-      return agenticLoop(null);
-    }
-  }
-
-  if (!toolUsed && assistantContent.length > 0) {
-    state.history.push({role:'assistant', content: assistantContent});
-  }
-
-  // Generate contextual quick replies
-  var lastText = assistantContent.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join('');
-  if (lastText && lastText.length > 20) {
-    await generateReplies(lastText);
-  }
+function generateCategories(info) {
+  const a = info.activity || 'general';
+  const cats = {
+    fishing: 'Primary: Bass Fishing | Tags: Freshwater Fishing, Guided Fishing, Lake Fishing, Trophy Bass, Family Friendly, Beginner Welcome',
+    scuba: 'Primary: Scuba Diving | Tags: Reef Diving, Certified Divers, Equipment Included, Marine Life, Underwater Photography, Small Groups',
+    hunting: 'Primary: Guided Hunting | Tags: Big Game, Trophy Hunt, Fully Guided, Private Land, Expert Guide, Serious Hunters',
+    cruise: 'Primary: Boat Tours & Cruises | Tags: Sunset Cruise, Private Charter, Scenic Tour, All Ages Welcome, Special Occasions, Drinks Included',
+    paddle: 'Primary: Kayaking | Tags: Guided Paddle, Scenic Route, All Levels, Equipment Provided, Small Groups, Nature Tour',
+    snow: 'Primary: Snow Sports | Tags: Backcountry Skiing, Expert Guide, Off-Piste, Equipment Available, All Levels, Mountain Adventure',
+    hiking: 'Primary: Guided Hiking | Tags: Trail Hiking, Local Expert, Scenic Views, All Levels, Small Groups, Nature Experience',
+    general: 'Primary: Outdoor Adventure | Tags: Expert Guide, Small Groups, All Levels Welcome, Equipment Provided, Memorable Experience, Book Online'
+  };
+  return cats[a] || cats.general;
 }
 
-// ─── OPEN LANDING PAGE IN NEW WINDOW ─────────────────────────
-function openLandingPage() {
-  var d = window._publishedListing;
-  if (!d) return;
-  var L = d.L, tax = d.tax, reg = d.reg, val = d.val, pricing = d.pricing;
-  var price = d.price, pricePer = d.pricePer, slug = d.slug, listingId = d.listingId;
-  var actType = d.actType, actLbl = d.actLbl, emoji = d.emoji, heroGrad = d.heroGrad;
+function generateFAQs(info) {
+  const a = info.activity || 'general';
+  const loc = (info.location || 'the area').split(',')[0];
 
-  // Build time slots
-  var times = L.start_times || [];
-  var tIcons = ['🌅','🌄','☀️','🌇','🌃'];
-  var tLabels = ['Early Morning','Morning','Midday','Afternoon','Evening'];
-  var timeSlotsHtml = times.map(function(t,i){
-    var sel = i===0;
-    return '<div class="time-slot' + (sel?' selected':'') + '">' +
-      '<div><div class="time-slot-time">' + (tIcons[i]||'🕐') + ' ' + esc(t) + ' — ' + (tLabels[i]||'') + '</div>' +
-      (sel ? '<div style="font-size:11px;color:var(--ink-3);margin-top:2px">Most popular</div>' : '') +
-      '</div><div class="time-slot-avail">Available</div></div>';
-  }).join('') || '<div class="time-slot"><div class="time-slot-time">Contact guide for times</div><div class="time-slot-avail">Available</div></div>';
+  const faqSets = {
+    fishing: `Q: Do I need a fishing licence?
+A: Yes — a valid fishing licence is required for all anglers aged 17 and over. You can purchase one online at your state's wildlife agency website or at any local tackle shop. A one-day licence typically costs $11–25.
 
-  // Included
-  var inc = (L.included || ['Expert guide','Safety equipment','All gear']).map(function(i){return '<div class="included-item"><span class="included-check">✓</span> ' + esc(i) + '</div>';}).join('');
-  var notInc = (L.not_included || ['Gratuity','Food & snacks','Licence (if required)']).map(function(i){return '<div class="included-item"><span class="included-x">✕</span> ' + esc(i) + '</div>';}).join('');
+Q: What is the cancellation policy?
+A: Free cancellation up to 48 hours before your trip for a full refund. Cancellations within 48 hours receive a 50% refund or the option to reschedule. No-shows are not refundable.
 
-  // FAQs
-  var faqs = L.faqs && L.faqs.length ? L.faqs : [
-    {q: reg.licence_required ? 'Do I need a licence?' : 'Is certification required?', a: (reg.licence_type||'Check with guide') + '. ' + (reg.special_note||'')},
-    {q: 'What is the cancellation policy?', a: reg.cancellation_policy || 'Free cancellation 48 hours before.'},
-    {q: 'What should I bring?', a: 'Sun protection, appropriate clothing, snacks and water. All activity equipment provided.'},
-    {q: 'Is this suitable for beginners?', a: 'Yes — your guide will adapt to your skill level.'}
+Q: What should I bring?
+A: Sun protection (hat, sunscreen, long sleeves), polarised sunglasses, snacks and drinks, a valid fishing licence, and comfortable non-slip shoes. All fishing equipment is provided.
+
+Q: What if we don't catch fish?
+A: Fishing always has unpredictable days — no guide can guarantee catches. Your guide will adapt to conditions and work every angle to put you on fish. Consistent results across our reviews speak to the experience.`,
+
+    scuba: `Q: What certification do I need?
+A: A minimum Open Water certification (PADI, NAUI, or equivalent) is required. Discover Scuba experiences are available for uncertified guests on some dates — ask your guide when booking.
+
+Q: Is equipment included?
+A: Yes — BCD, regulator, tanks, weights, and a wetsuit are included. You're welcome to bring your own gear. An underwater torch and dive computer are recommended.
+
+Q: What is the cancellation policy?
+A: Free cancellation up to 48 hours before your session for a full refund. Within 48 hours, a 50% refund or reschedule option applies. Weather-related cancellations are fully refunded.
+
+Q: What should I bring?
+A: Your certification card (C-card), swimwear, a towel, sun protection, and water. Underwater camera or GoPro is highly recommended — the visibility on these sites is exceptional.`,
+
+    hunting: `Q: Are licences and tags included?
+A: Licences and tags are the hunter's responsibility and must be purchased before the hunt. Your guide will confirm the exact requirements for ${loc} when you book. Some packages include tag assistance.
+
+Q: What should I bring?
+A: Your hunting licence and tags, appropriate layered clothing for the terrain and season, your chosen firearm or bow, and personal items. A detailed packing list will be provided after booking.
+
+Q: What is the cancellation policy?
+A: A 50% deposit secures your booking. Cancellations 30+ days before the hunt receive a full deposit refund. Within 30 days, deposits are non-refundable but can be applied to a future booking.
+
+Q: What is the expected success rate?
+A: Success rates vary by species, season, and conditions. Your guide will give you an honest assessment during the booking call. We focus on a quality, ethical hunt regardless of outcome.`,
+
+    cruise: `Q: What is included in the price?
+A: Pricing includes the cruise, a knowledgeable captain, and standard on-board amenities. Food, beverages, and snorkelling equipment are included in most packages — confirm at booking.
+
+Q: Is this suitable for children and non-swimmers?
+A: Yes — life jackets are provided and the cruise is designed for all ages and abilities. Non-swimmers are very welcome. Swimming or snorkelling is optional, never required.
+
+Q: What is the cancellation policy?
+A: Free cancellation up to 48 hours before departure for a full refund. Within 48 hours, a 50% refund or reschedule applies. Weather cancellations are fully refunded.
+
+Q: What should I bring?
+A: Sunscreen, sunglasses, a hat, a light layer for the return trip, and a camera. Comfortable non-slip shoes are recommended. Leave valuables at home.`,
+
+    general: `Q: Do I need any experience or special equipment?
+A: No prior experience is required. All essential equipment is provided and your guide will brief you fully before the activity. Just bring appropriate clothing and a sense of adventure.
+
+Q: What is the cancellation policy?
+A: Free cancellation up to 48 hours before your experience for a full refund. Cancellations within 48 hours receive a 50% refund or the option to reschedule. Weather cancellations are fully refunded.
+
+Q: What should I bring?
+A: Comfortable clothing appropriate for the conditions, sun protection, snacks and water, and a camera. A full equipment list will be provided when you book.
+
+Q: Is this suitable for families and beginners?
+A: Absolutely — your guide adapts the experience to your group's skill level and comfort. First-timers and families with children are very welcome.`
+  };
+
+  return faqSets[a] || faqSets.general;
+}
+
+// ── CONVERSATION LOGIC ────────────────────────────────────────
+let questionIndex = 0;
+let currentActivity = 'general';
+let answers = [];
+
+function getNextResponse(userText) {
+  const allText = (answers.join(' ') + ' ' + userText).toLowerCase();
+  currentActivity = detectActivity(allText);
+  answers.push(userText);
+
+  // Extract key fields
+  if (/(\d+)\s*(hour|hr)s?/i.test(userText)) {
+    state.collectedFields.duration = userText.match(/(\d+\s*(?:hour|hr)s?)/i)?.[0];
+  }
+  if (/(up to|max|maximum)\s*(\d+)/i.test(userText) || /(\d+)\s*(guest|people|person|angler|diver|hunter)/i.test(userText)) {
+    state.collectedFields.groupSize = userText;
+  }
+  if (/\$\d+|\d+\s*dollar/i.test(userText)) {
+    state.collectedFields.price = userText;
+  }
+  if (/am|pm|morning|afternoon|evening|sunrise|sunset/i.test(userText)) {
+    state.collectedFields.startTimes = userText;
+  }
+  state.collectedFields.location = state.collectedFields.location || extractLocation(userText);
+
+  const questions = getQuestions(currentActivity);
+
+  // Warm acknowledgement phrases
+  const acks = [
+    "Got it.",
+    "Perfect.",
+    "Great.",
+    "That's helpful.",
+    "Noted.",
+    "Nice.",
+    "Good to know."
   ];
-  var faqsHtml = faqs.map(function(f){
-    var q = f.q||f.question||''; var a = f.a||f.answer||'';
-    return q ? '<div class="faq-item"><div class="faq-q">' + esc(q) + ' <span class="faq-icon">+</span></div><div class="faq-a">' + esc(a) + '</div></div>' : '';
-  }).join('');
+  const ack = acks[questionIndex % acks.length];
 
-  // Tags
-  var tags = (tax.tags || []).slice(0,6).map(function(t){
-    return '<span style="display:inline-block;background:var(--accent-light);color:var(--accent);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin:2px">' + esc(t) + '</span>';
-  }).join('');
-
-  // Vessel section
-  var vesselHtml = L.vessel_name ? '<div class="sec"><div class="sec-title">' + esc(actType==='fishing'||actType==='cruise'?'The Boat':actType==='scuba'?'Dive Vessel':'Vessel & Equipment') + '</div>' +
-    '<div class="boat-card"><div class="boat-icon" style="background:' + heroGrad + '">⚓</div><div style="flex:1">' +
-    '<div class="boat-name">' + esc(L.vessel_name) + '</div>' +
-    '<div class="boat-specs">' + (L.vessel_specs||[]).map(function(s){return '<div class="boat-spec">' + esc(s) + '</div>';}).join('') + '</div>' +
-    '</div></div></div>' : '';
-
-  // Target section
-  var targetHtml = L.target ? '<div class="sec"><div class="sec-title">' + esc(actType==='fishing'?'Target Species':actType==='scuba'?'Dive Targets':actType==='hunting'?'Target Game':'Activity Focus') + '</div>' +
-    '<div class="species-card"><div class="species-icon" style="background:' + heroGrad + '">' + emoji + '</div>' +
-    '<div><div class="species-name">' + esc(L.target) + '</div>' +
-    '<div class="species-desc">Primary target. Your guide will adapt techniques to current conditions.</div>' +
-    '<div class="species-tag">' + esc(tax.primary_category||actLbl) + '</div></div></div></div>' : '';
-
-  // Open new window and write
-  var w = window.open('', '_blank');
-  w.document.write('<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' + esc(L.title||'Trip') + ' — Guidesly</title>');
-  w.document.write('<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">');
-  w.document.write('<style>*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}');
-  w.document.write(':root{--ink:#0d0d0d;--ink-2:#2a2a2a;--ink-3:#6b6b6b;--ink-4:#999;--bg:#fff;--bg-2:#f7f7f5;--accent:#1a56db;--accent-light:#eef3ff;--green:#0a6640;--green-light:#e3f5ec;--rule:#e8e8e5;--radius:12px;--radius-sm:8px;--shadow:0 2px 12px rgba(0,0,0,.06)}');
-  w.document.write('body{font-family:Inter,sans-serif;color:var(--ink);font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}');
-  w.document.write('.nav{background:#fff;border-bottom:1px solid var(--rule);padding:0 24px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}');
-  w.document.write('.nav-logo{font-family:"Bricolage Grotesque",sans-serif;font-size:18px;font-weight:800;letter-spacing:-.02em}.nav-logo span{color:var(--accent)}');
-  w.document.write('.breadcrumb{padding:10px 24px;font-size:12px;color:var(--ink-4);border-bottom:1px solid var(--rule);background:var(--bg-2)}.breadcrumb a{color:var(--accent);text-decoration:none}');
-  w.document.write('.hero{position:relative;height:300px;overflow:hidden;background:' + heroGrad + '}');
-  w.document.write('.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,.5) 100%)}');
-  w.document.write('.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:24px}');
-  w.document.write('.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.2);color:#fff;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:10px;width:fit-content}');
-  w.document.write('.hero-title{font-family:"Bricolage Grotesque",sans-serif;font-size:26px;font-weight:800;color:#fff;line-height:1.15;letter-spacing:-.02em;margin-bottom:8px}');
-  w.document.write('.hero-meta{display:flex;gap:16px;flex-wrap:wrap}.hero-meta span{font-size:12px;color:rgba(255,255,255,.85);font-weight:500}');
-  w.document.write('.thumbs{display:flex;gap:6px;padding:10px 24px;background:var(--bg-2);border-bottom:1px solid var(--rule);overflow-x:auto}');
-  w.document.write('.thumb{width:72px;height:52px;border-radius:6px;background:' + heroGrad + ';flex-shrink:0;border:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}.thumb:first-child{border-color:var(--accent)}');
-  w.document.write('.main{display:grid;grid-template-columns:1fr 320px;gap:24px;max-width:1000px;margin:0 auto;padding:24px 24px 48px}');
-  w.document.write('.left{min-width:0}');
-  w.document.write('.sec{margin-bottom:28px}.sec-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);padding-bottom:10px;border-bottom:1px solid var(--rule);margin-bottom:14px}');
-  w.document.write('.ai-summary{background:linear-gradient(135deg,#eef3ff,#f0fdf4);border:1px solid #c7d7ff;border-radius:var(--radius);padding:16px 18px;margin-bottom:20px}');
-  w.document.write('.ai-label{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}');
-  w.document.write('.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}');
-  w.document.write('.desc-text{font-size:14.5px;color:var(--ink-2);line-height:1.8;margin-bottom:12px}');
-  w.document.write('.desc-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}');
-  w.document.write('.desc-item{background:var(--bg-2);border-radius:var(--radius-sm);padding:12px 14px;border:1px solid var(--rule)}');
-  w.document.write('.desc-item-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-4);margin-bottom:4px}');
-  w.document.write('.desc-item-val{font-size:13px;font-weight:600;color:var(--ink)}');
-  w.document.write('.species-card{display:flex;gap:12px;align-items:flex-start;background:var(--bg-2);border:1px solid var(--rule);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}');
-  w.document.write('.species-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}');
-  w.document.write('.species-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:2px}.species-desc{font-size:12.5px;color:var(--ink-3);line-height:1.55}');
-  w.document.write('.species-tag{display:inline-block;background:var(--accent-light);color:var(--accent);font-size:10px;font-weight:600;padding:2px 8px;border-radius:4px;margin-top:5px}');
-  w.document.write('.boat-card{background:var(--bg-2);border:1px solid var(--rule);border-radius:var(--radius);padding:16px;display:flex;gap:14px;align-items:flex-start}');
-  w.document.write('.boat-icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}');
-  w.document.write('.boat-name{font-size:14px;font-weight:700;color:var(--ink);margin-bottom:4px}');
-  w.document.write('.boat-specs{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.boat-spec{font-size:11px;font-weight:600;color:var(--ink-3);background:#fff;border:1px solid var(--rule);padding:3px 8px;border-radius:6px}');
-  w.document.write('.faq-item{border-bottom:1px solid var(--rule);padding:14px 0}.faq-q{font-size:13.5px;font-weight:600;color:var(--ink);display:flex;justify-content:space-between;cursor:pointer}.faq-icon{color:var(--ink-3);font-size:16px}.faq-a{font-size:13px;color:var(--ink-2);line-height:1.65;margin-top:8px}');
-  w.document.write('.included-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.included-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--ink-2)}.included-check{color:var(--green);font-size:14px}.included-x{color:#aaa;font-size:14px}');
-  w.document.write('.booking-card{background:#fff;border:1px solid var(--rule);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);position:sticky;top:72px}');
-  w.document.write('.booking-price{font-family:"Bricolage Grotesque",sans-serif;font-size:30px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:2px}');
-  w.document.write('.booking-per{font-size:12px;color:var(--ink-3);margin-bottom:16px}.booking-divider{height:1px;background:var(--rule);margin:14px 0}');
-  w.document.write('.time-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:10px}');
-  w.document.write('.time-slots{display:flex;flex-direction:column;gap:8px;margin-bottom:14px}');
-  w.document.write('.time-slot{padding:10px 14px;border:1px solid var(--rule);border-radius:var(--radius-sm);cursor:pointer;display:flex;justify-content:space-between;align-items:center}');
-  w.document.write('.time-slot.selected{border-color:var(--accent);background:var(--accent-light)}.time-slot:hover{border-color:var(--accent);background:var(--accent-light)}');
-  w.document.write('.time-slot-time{font-size:13px;font-weight:600;color:var(--ink)}.time-slot-avail{font-size:11px;color:var(--green);font-weight:600}');
-  w.document.write('.guests-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}');
-  w.document.write('.price-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--ink-3);margin-bottom:5px}.price-row.total{font-size:13px;font-weight:700;color:var(--ink);border-top:1px solid var(--rule);padding-top:8px;margin-top:8px}');
-  w.document.write('.btn-book{width:100%;padding:13px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px}');
-  w.document.write('.btn-wishlist{width:100%;padding:10px;background:#fff;color:var(--ink-2);border:1px solid var(--rule);border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer}');
-  w.document.write('.trust-row{display:flex;justify-content:center;gap:16px;margin-top:12px;flex-wrap:wrap}.trust-item{font-size:11px;color:var(--ink-3);font-weight:500}');
-  w.document.write('@media(max-width:640px){.main{grid-template-columns:1fr}.booking-card{position:static}}');
-  w.document.write('</style></head><body>');
-
-  // NAV
-  w.document.write('<nav class="nav"><div class="nav-logo">guide<span>sly</span></div><div style="display:flex;gap:12px"><button style="font-size:13px;font-weight:600;color:var(--ink-2);padding:6px 14px;border:1px solid var(--rule);border-radius:8px;background:#fff">Log in</button><button style="font-size:13px;font-weight:600;color:#fff;padding:6px 14px;border:none;border-radius:8px;background:var(--accent)">Sign up</button></div></nav>');
-
-  // BREADCRUMB
-  w.document.write('<div class="breadcrumb"><a href="#">Home</a><span style="margin:0 6px">›</span><a href="#">' + esc(actLbl) + '</a><span style="margin:0 6px">›</span><span style="color:var(--ink-2);font-weight:500">' + esc(L.title||'') + '</span></div>');
-
-  // HERO
-  w.document.write('<div class="hero"><div class="hero-overlay"></div><div class="hero-content">');
-  w.document.write('<div class="hero-badge">' + emoji + ' ' + esc(actLbl) + ' · ' + esc((L.location||'').split(',')[0]) + '</div>');
-  w.document.write('<div class="hero-title">' + esc(L.title||'') + '</div>');
-  w.document.write('<div class="hero-meta">');
-  if (L.duration) w.document.write('<span>⏱ ' + esc(L.duration) + '</span>');
-  if (L.group_size) w.document.write('<span>👥 ' + esc(L.group_size) + '</span>');
-  w.document.write('<span>⭐ New listing</span>');
-  if (L.location) w.document.write('<span>📍 ' + esc(L.location) + '</span>');
-  w.document.write('</div></div></div>');
-
-  // THUMBNAILS
-  w.document.write('<div class="thumbs">' + [emoji,'🌅','📸','🏆','⭐'].map(function(e){return '<div class="thumb">' + e + '</div>';}).join('') + '</div>');
-
-  // MAIN GRID
-  w.document.write('<div class="main"><div class="left">');
-
-  // AI Summary
-  w.document.write('<div class="sec"><div class="sec-title">AI Trip Summary</div><div class="ai-summary"><div class="ai-label"><div class="ai-dot"></div> Generated by Jack AI</div><p>' + esc((L.description||'').split(' ').slice(0,45).join(' ')) + '...</p></div></div>');
-
-  // About
-  w.document.write('<div class="sec"><div class="sec-title">About This Trip</div><p class="desc-text">' + esc(L.description||'') + '</p>');
-  w.document.write('<div class="desc-grid">');
-  if (L.duration) w.document.write('<div class="desc-item"><div class="desc-item-label">Duration</div><div class="desc-item-val">' + esc(L.duration) + '</div></div>');
-  if (L.group_size) w.document.write('<div class="desc-item"><div class="desc-item-label">Group Size</div><div class="desc-item-val">' + esc(L.group_size) + '</div></div>');
-  w.document.write('<div class="desc-item"><div class="desc-item-label">Skill Level</div><div class="desc-item-val">All levels welcome</div></div>');
-  w.document.write('<div class="desc-item"><div class="desc-item-label">Category</div><div class="desc-item-val">' + esc(tax.primary_category||actLbl) + '</div></div>');
-  w.document.write('</div></div>');
-
-  // Included
-  w.document.write('<div class="sec"><div class="sec-title">What\'s Included</div><div class="included-grid">' + inc + notInc + '</div></div>');
-
-  // Target + Vessel
-  w.document.write(targetHtml + vesselHtml);
-
-  // Tags
-  w.document.write('<div class="sec"><div class="sec-title">Categories & Tags</div><div>' + tags + '</div></div>');
-
-  // FAQs
-  w.document.write('<div class="sec"><div class="sec-title">Frequently Asked Questions</div>' + faqsHtml + '</div>');
-
-  w.document.write('</div>'); // end left
-
-  // BOOKING SIDEBAR
-  w.document.write('<div><div class="booking-card">');
-  w.document.write('<div class="booking-price">' + (price > 0 ? '$' + price : 'Contact') + '</div>');
-  w.document.write('<div class="booking-per">' + esc(pricePer) + '</div>');
-  w.document.write('<div class="time-label">Select a Start Time</div>');
-  w.document.write('<div class="time-slots">' + timeSlotsHtml + '</div>');
-  w.document.write('<div class="booking-divider"></div>');
-  w.document.write('<div class="guests-row"><div><div style="font-size:13px;font-weight:600">Guests</div><div style="font-size:11px;color:var(--ink-3)">' + esc(L.group_size||'Up to 4') + '</div></div>');
-  w.document.write('<div style="display:flex;align-items:center;gap:10px"><button style="width:28px;height:28px;border-radius:50%;border:1px solid var(--rule);background:#fff;cursor:pointer;font-size:16px">−</button><span style="font-size:14px;font-weight:600;min-width:20px;text-align:center">2</span><button style="width:28px;height:28px;border-radius:50%;border:1px solid var(--rule);background:#fff;cursor:pointer;font-size:16px">+</button></div></div>');
-  if (price > 0) {
-    w.document.write('<div class="booking-divider"></div>');
-    w.document.write('<div class="price-row"><span>$' + price + ' × 1 trip</span><span>$' + price + '</span></div>');
-    w.document.write('<div class="price-row"><span>Guidesly service fee</span><span>$21</span></div>');
-    w.document.write('<div class="price-row total"><span>Total</span><span>$' + (price+21) + '</span></div>');
+  if (questionIndex < questions.length) {
+    const next = questions[questionIndex];
+    questionIndex++;
+    return `${ack} ${next}`;
+  } else {
+    // All questions answered
+    return "READY_TO_GENERATE I have everything I need to build your listing.";
   }
-  w.document.write('<div class="booking-divider"></div>');
-  w.document.write('<button class="btn-book">Book This Trip</button>');
-  w.document.write('<button class="btn-wishlist">♡ Save to Wishlist</button>');
-  w.document.write('<div class="trust-row"><div class="trust-item">🔒 Secure</div><div class="trust-item">✓ Free cancellation</div><div class="trust-item">⭐ ' + esc(tax.primary_category||actLbl) + '</div></div>');
-  w.document.write('</div></div>');
-  w.document.write('</div>'); // end main
-  w.document.write('</body></html>');
-  w.document.close();
 }
 
-// ─── LANDING PAGE RENDER ───────────────────────────────────────
-function renderPublishedLandingPage() {
-  var L = state.listing;
-  var actType = detectActivity((L.activity_type || '') + ' ' + (L.title || ''));
-  var emoji = activityEmoji(actType);
-  var heroGrad = getHeroGradient(actType);
-  var actLbl = activityLabel(actType);
-  var tax = state.tools.taxonomy || {};
-  var reg = state.tools.regulations || {};
-  var val = state.tools.validation || {};
-  var pricing = state.tools.pricing || {};
-
-  var price = L.price || (pricing.price_per_trip ? pricing.price_per_trip.avg : 0);
-  var pricePer = L.price_per || 'per trip';
-  var slug = L.slug || 'my-trip';
-  var listingId = L.listing_id || '';
-
-  // Tags
-  var tags = (tax.tags || L.categories || []).slice(0,6);
-  var tagHtml = tags.map(function(t){
-    return '<span style="display:inline-block;background:#eef3ff;color:#1a56db;font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;margin:2px">' + esc(t) + '</span>';
-  }).join('');
-
-  // Start times
-  var times = L.start_times || [];
-  var timeIcons = ['🌅','🌄','☀️','🌇','🌃'];
-  var timeLabels = ['Early Morning','Morning','Midday','Afternoon','Evening'];
-  var timeSlotsHtml = times.length > 0 ? times.map(function(t, i) {
-    var isFirst = i === 0;
-    return '<div style="padding:10px 12px;border:' + (isFirst ? '1.5px solid #1a56db;background:#eef3ff' : '1px solid #e8e8e5;background:#fff') + ';border-radius:8px;cursor:pointer;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center">' +
-      '<div><div style="font-size:12.5px;font-weight:600;color:#0d0d0d">' + (timeIcons[i]||'🕐') + ' ' + esc(t) + ' — ' + (timeLabels[i]||'') + '</div></div>' +
-      '<div style="font-size:11px;color:#0a6640;font-weight:600">Available</div>' +
-    '</div>';
-  }).join('') : '<div style="padding:10px 12px;border:1px solid #e8e8e5;border-radius:8px;font-size:12.5px;color:#999">Contact guide for available times</div>';
-
-  // Included checklist
-  var included = L.included || ['Expert guide & instruction','Safety equipment','All activity gear'];
-  var notIncluded = L.not_included || ['Gratuity (suggested 15-20%)','Food & snacks','Licence/permit (if required)'];
-  var includedHtml = included.map(function(it){
-    return '<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#2a2a2a;padding:3px 0"><span style="color:#0a6640;font-size:14px">✓</span>' + esc(it) + '</div>';
-  }).join('') + notIncluded.map(function(it){
-    return '<div style="display:flex;align-items:center;gap:8px;font-size:13px;color:#6b6b6b;padding:3px 0"><span style="color:#aaa;font-size:14px">✕</span>' + esc(it) + '</div>';
-  }).join('');
-
-  // Target/focus card (species for fishing, sites for scuba, etc)
-  var targetLabel = actType === 'fishing' ? 'Target Species' : actType === 'scuba' ? 'Dive Sites & Targets' : actType === 'hunting' ? 'Target Game' : actType === 'wildlife' ? 'Wildlife Focus' : 'Activity Focus';
-  var targetHtml = L.target ? '<div style="margin-bottom:24px"><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e8e8e5">' + esc(targetLabel) + '</div>' +
-    '<div style="display:flex;gap:12px;align-items:flex-start;background:#f7f7f5;border:1px solid #e8e8e5;border-radius:12px;padding:14px 16px">' +
-    '<div style="width:44px;height:44px;border-radius:10px;background:' + heroGrad + ';display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">' + emoji + '</div>' +
-    '<div><div style="font-size:14px;font-weight:700;color:#0d0d0d;margin-bottom:4px">' + esc(L.target) + '</div>' +
-    '<div style="font-size:12.5px;color:#6b6b6b;line-height:1.55">Primary target for this trip. Your guide will adapt techniques and locations to current conditions.</div></div></div></div>' : '';
-
-  // Vessel card
-  var vesselLabel = actType === 'fishing' || actType === 'cruise' ? 'The Boat' : actType === 'scuba' ? 'Dive Vessel' : actType === 'paddle' ? 'Equipment' : actType === 'snow' ? 'Equipment & Facilities' : 'Vessel & Equipment';
-  var vesselHtml = L.vessel_name ? '<div style="margin-bottom:24px"><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e8e8e5">' + esc(vesselLabel) + '</div>' +
-    '<div style="background:#f7f7f5;border:1px solid #e8e8e5;border-radius:12px;padding:16px;display:flex;gap:14px;align-items:flex-start">' +
-    '<div style="width:48px;height:48px;border-radius:10px;background:' + heroGrad + ';display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">⚓</div>' +
-    '<div style="flex:1"><div style="font-size:14px;font-weight:700;color:#0d0d0d;margin-bottom:4px">' + esc(L.vessel_name) + '</div>' +
-    '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">' +
-    (L.vessel_specs || []).map(function(s){return '<span style="font-size:11px;font-weight:600;color:#6b6b6b;background:#fff;border:1px solid #e8e8e5;padding:3px 8px;border-radius:6px">' + esc(s) + '</span>';}).join('') +
-    '</div></div></div></div>' : '';
-
-  // FAQs
-  var faqs = L.faqs || [];
-  if (!faqs.length && reg.licence_type) {
-    faqs = [
-      {q: reg.licence_required ? 'Do I need a licence or permit?' : 'Do I need any certification?', a: (reg.licence_required ? reg.licence_type + ' required. Cost: ' + reg.licence_cost + '. ' : 'No licence required. ') + (reg.special_note || '')},
-      {q: 'What is the cancellation policy?', a: reg.cancellation_policy || 'Free cancellation 48 hours before. 50% refund within 48 hours.'},
-      {q: 'What should I bring?', a: 'Sun protection, appropriate clothing for conditions, snacks and drinks. All activity equipment is provided. Check the included list above.'},
-      {q: 'Is this suitable for beginners?', a: 'Yes — your guide will adapt the experience to your skill level. Beginners are welcome.'}
-    ];
+function extractLocation(text) {
+  // Simple location extraction - look for place names
+  const patterns = [
+    /(?:in|on|at|near)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/,
+    /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*),\s*[A-Z]{2}/,
+    /([A-Z][a-z]+\s+(?:Lake|River|Bay|Gulf|Ocean|Keys|Fork|Creek|Mountain|Island))/i
+  ];
+  for (const p of patterns) {
+    const m = text.match(p);
+    if (m) return m[1] || m[0];
   }
-  var faqsHtml = faqs.map(function(f){
-    var q = typeof f === 'object' ? (f.q || f.question || '') : '';
-    var a = typeof f === 'object' ? (f.a || f.answer || '') : '';
-    return q ? '<div style="border-bottom:1px solid #e8e8e5;padding:14px 0"><div style="font-size:13.5px;font-weight:600;color:#0d0d0d;margin-bottom:6px">❓ ' + esc(q) + '</div><div style="font-size:13px;color:#2a2a2a;line-height:1.65">' + esc(a) + '</div></div>' : '';
-  }).join('');
+  return null;
+}
 
-  // Validation checks
-  var checksHtml = (val.checks || []).map(function(c){
-    return '<div style="display:flex;align-items:center;gap:6px;font-size:12px;padding:3px 0"><span>' + (c.pass ? '✅' : '⚠️') + '</span><strong>' + c.field + ':</strong> ' + c.note + '</div>';
-  }).join('');
-
-  var html = '<div style="font-family:Inter,sans-serif;background:#fff;border:1px solid #e8e8e5;border-radius:14px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)">' +
-
-  // Browser chrome
-  '<div style="background:#f8f8f8;border-bottom:1px solid #e8e8e5;padding:10px 16px;display:flex;align-items:center;gap:8px">' +
-    '<div style="width:10px;height:10px;border-radius:50%;background:#ff5f57"></div>' +
-    '<div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div>' +
-    '<div style="width:10px;height:10px;border-radius:50%;background:#28c840"></div>' +
-    '<div style="flex:1;background:#fff;border-radius:4px;padding:4px 10px;font-size:11px;color:#999;margin-left:8px;font-family:monospace">guidesly.com/trips/' + slug + '</div>' +
-    '<div style="font-size:10px;font-weight:700;padding:2px 8px;background:#e3f5ec;color:#0a6640;border-radius:10px;white-space:nowrap">🟢 LIVE</div>' +
-  '</div>' +
-
-  // Nav
-  '<div style="background:#fff;border-bottom:1px solid #e8e8e5;padding:0 24px;height:48px;display:flex;align-items:center;justify-content:space-between">' +
-    '<div style="font-family:\'Bricolage Grotesque\',sans-serif;font-size:16px;font-weight:800">guide<span style="color:#1a56db">sly</span></div>' +
-    '<div style="display:flex;gap:8px"><button style="font-size:12px;font-weight:600;color:#2a2a2a;padding:5px 12px;border:1px solid #e8e8e5;border-radius:7px;background:#fff">Log in</button><button style="font-size:12px;font-weight:600;color:#fff;padding:5px 12px;border:none;border-radius:7px;background:#1a56db">Sign up</button></div>' +
-  '</div>' +
-
-  // Breadcrumb
-  '<div style="padding:8px 24px;font-size:11px;color:#999;background:#f7f7f5;border-bottom:1px solid #e8e8e5">' +
-    '<a href="#" style="color:#1a56db;text-decoration:none">Home</a> › <a href="#" style="color:#1a56db;text-decoration:none">' + esc(actLbl) + '</a> › <span style="color:#2a2a2a;font-weight:500">' + esc(L.title || '') + '</span>' +
-  '</div>' +
-
-  // Hero
-  '<div style="position:relative;height:240px;background:' + heroGrad + ';overflow:hidden">' +
-    '<div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.55) 100%)"></div>' +
-    '<div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:24px">' +
-      '<div style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.2);color:#fff;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;margin-bottom:10px;width:fit-content">' + emoji + ' ' + esc(actLbl) + ' · ' + esc((L.location || '').split(',')[0]) + '</div>' +
-      '<div style="font-family:\'Bricolage Grotesque\',sans-serif;font-size:22px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-0.02em;margin-bottom:8px">' + esc(L.title || '') + '</div>' +
-      '<div style="display:flex;gap:14px;flex-wrap:wrap">' +
-        (L.duration ? '<span style="font-size:11.5px;color:rgba(255,255,255,0.85);font-weight:500">⏱ ' + esc(L.duration) + '</span>' : '') +
-        (L.group_size ? '<span style="font-size:11.5px;color:rgba(255,255,255,0.85);font-weight:500">👥 ' + esc(L.group_size) + '</span>' : '') +
-        '<span style="font-size:11.5px;color:rgba(255,255,255,0.85);font-weight:500">⭐ New listing</span>' +
-        (L.location ? '<span style="font-size:11.5px;color:rgba(255,255,255,0.85);font-weight:500">📍 ' + esc(L.location) + '</span>' : '') +
-      '</div>' +
-    '</div>' +
-  '</div>' +
-
-  // Image thumbnails
-  '<div style="display:flex;gap:6px;padding:10px 24px;background:#f7f7f5;border-bottom:1px solid #e8e8e5">' +
-    [emoji,'🌅','📸','🏆','⭐'].map(function(e,i){
-      return '<div style="width:72px;height:52px;border-radius:6px;background:' + heroGrad + ';display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;border:' + (i===0?'2px solid #1a56db':'2px solid transparent') + ';cursor:pointer">' + e + '</div>';
-    }).join('') +
-    '<div style="width:72px;height:52px;border-radius:6px;background:#efefed;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;color:#999;flex-shrink:0;cursor:pointer;border:2px dashed #e8e8e5;text-align:center;line-height:1.3">+ Add photos</div>' +
-  '</div>' +
-
-  // Main layout
-  '<div style="display:grid;grid-template-columns:1fr 290px;gap:24px;padding:24px;max-width:960px">' +
-
-    // LEFT COLUMN
-    '<div>' +
-
-      // AI Summary
-      '<div style="background:linear-gradient(135deg,#eef3ff,#f0fdf4);border:1px solid #c7d7ff;border-radius:12px;padding:16px 18px;margin-bottom:20px">' +
-        '<div style="display:flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#1a56db;margin-bottom:8px">' +
-          '<div style="width:6px;height:6px;border-radius:50%;background:#1a56db"></div> AI Trip Summary · Jack AI' +
-        '</div>' +
-        '<p style="font-size:13.5px;color:#2a2a2a;line-height:1.65">' + esc((L.description||'').split(' ').slice(0,45).join(' ')) + '...</p>' +
-      '</div>' +
-
-      // Description
-      '<div style="margin-bottom:24px">' +
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e8e8e5">About This Trip</div>' +
-        '<p style="font-size:14px;color:#2a2a2a;line-height:1.8">' + esc(L.description || '') + '</p>' +
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">' +
-          (L.duration ? '<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;border:1px solid #e8e8e5"><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:4px">Duration</div><div style="font-size:13px;font-weight:600">' + esc(L.duration) + '</div></div>' : '') +
-          (L.group_size ? '<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;border:1px solid #e8e8e5"><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:4px">Group Size</div><div style="font-size:13px;font-weight:600">' + esc(L.group_size) + '</div></div>' : '') +
-          '<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;border:1px solid #e8e8e5"><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:4px">Skill Level</div><div style="font-size:13px;font-weight:600">All levels welcome</div></div>' +
-          '<div style="background:#f7f7f5;border-radius:8px;padding:12px 14px;border:1px solid #e8e8e5"><div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:4px">Category</div><div style="font-size:13px;font-weight:600">' + esc(tax.primary_category || actLbl) + '</div></div>' +
-        '</div>' +
-      '</div>' +
-
-      // What's included
-      '<div style="margin-bottom:24px">' +
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e8e8e5">What\'s Included</div>' +
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">' + includedHtml + '</div>' +
-      '</div>' +
-
-      // Target species / activity focus
-      targetHtml +
-
-      // Vessel
-      vesselHtml +
-
-      // Categories & tags
-      '<div style="margin-bottom:24px">' +
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e8e8e5">Categories & Tags</div>' +
-        '<div>' + tagHtml + '</div>' +
-      '</div>' +
-
-      // FAQs
-      '<div style="margin-bottom:24px">' +
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid #e8e8e5">Frequently Asked Questions</div>' +
-        faqsHtml +
-      '</div>' +
-
-      // Quality score
-      '<div style="background:#f7f7f5;border:1px solid #e8e8e5;border-radius:12px;padding:14px 16px;margin-bottom:24px">' +
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#999;margin-bottom:8px">Platform Quality Score</div>' +
-        '<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">' +
-          '<div style="font-family:\'Bricolage Grotesque\',sans-serif;font-size:36px;font-weight:800;color:#0a6640;letter-spacing:-0.03em">' + (val.score || 82) + '</div>' +
-          '<div><div style="font-size:12px;font-weight:700;color:#0a6640">' + (val.status || 'READY TO PUBLISH') + '</div><div style="font-size:11px;color:#6b6b6b">Listing ID: ' + listingId + '</div></div>' +
-        '</div>' + checksHtml +
-      '</div>' +
-    '</div>' +
-
-    // BOOKING SIDEBAR
-    '<div>' +
-      '<div style="background:#fff;border:1px solid #e8e8e5;border-radius:12px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.06);position:sticky;top:60px">' +
-        '<div style="font-family:\'Bricolage Grotesque\',sans-serif;font-size:26px;font-weight:800;color:#0d0d0d;letter-spacing:-0.02em;margin-bottom:2px">' + (price > 0 ? '$' + price : 'TBD') + '</div>' +
-        '<div style="font-size:12px;color:#6b6b6b;margin-bottom:16px">' + esc(pricePer) + '</div>' +
-        '<div style="height:1px;background:#e8e8e5;margin:12px 0"></div>' +
-
-        // Start times
-        '<div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#6b6b6b;margin-bottom:10px">Select a Start Time</div>' +
-        timeSlotsHtml +
-
-        '<div style="height:1px;background:#e8e8e5;margin:12px 0"></div>' +
-
-        // Guests
-        '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">' +
-          '<div><div style="font-size:13px;font-weight:600">Guests</div><div style="font-size:11px;color:#6b6b6b">' + esc(L.group_size || 'Up to 4') + '</div></div>' +
-          '<div style="display:flex;align-items:center;gap:10px">' +
-            '<button style="width:28px;height:28px;border-radius:50%;border:1px solid #e8e8e5;background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">−</button>' +
-            '<span style="font-size:14px;font-weight:600;min-width:20px;text-align:center">2</span>' +
-            '<button style="width:28px;height:28px;border-radius:50%;border:1px solid #e8e8e5;background:#fff;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center">+</button>' +
-          '</div>' +
-        '</div>' +
-
-        // Price breakdown
-        (price > 0 ? '<div style="font-size:12.5px;color:#6b6b6b;margin-bottom:12px">' +
-          '<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>$' + price + ' × 1 trip</span><span>$' + price + '</span></div>' +
-          '<div style="display:flex;justify-content:space-between;margin-bottom:4px"><span>Guidesly service fee</span><span>$21</span></div>' +
-          '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#0d0d0d;border-top:1px solid #e8e8e5;padding-top:8px;margin-top:8px"><span>Total</span><span>$' + (price+21) + '</span></div>' +
-        '</div>' : '') +
-
-        '<button style="width:100%;padding:12px;background:#1a56db;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px">Book This Trip</button>' +
-        '<button style="width:100%;padding:9px;background:#fff;color:#2a2a2a;border:1px solid #e8e8e5;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer">♡ Save to Wishlist</button>' +
-        '<div style="display:flex;justify-content:center;gap:14px;margin-top:10px;flex-wrap:wrap">' +
-          '<span style="font-size:11px;color:#6b6b6b">🔒 Secure</span>' +
-          '<span style="font-size:11px;color:#6b6b6b">✓ Free cancellation</span>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-  '</div></div>';
-
-  var wrapper = document.createElement('div');
-  wrapper.className = 'msg full-width';
-  wrapper.style.cssText = 'padding:4px 0';
-  wrapper.innerHTML = html;
-  document.getElementById('chat').appendChild(wrapper);
-
-  // Success banner with link
-  // Store listing data globally so the view button can open it
-  window._publishedListing = {
-    L: L, actType: actType, actLbl: actLbl, emoji: emoji, heroGrad: heroGrad,
-    tax: tax, reg: reg, val: val, pricing: pricing,
-    price: price, pricePer: pricePer, slug: slug, listingId: listingId
+function buildGuideInfo() {
+  return {
+    activity: currentActivity,
+    location: state.collectedFields.location || answers[0] || 'the area',
+    duration: state.collectedFields.duration || '6 hours',
+    groupSize: state.collectedFields.groupSize || 'up to 4 guests',
+    price: state.collectedFields.price,
+    startTimes: state.collectedFields.startTimes,
+    species: answers.find(a => /bass|trout|salmon|redfish|tuna|elk|deer|walleye/i.test(a)) || '',
+    vessel: answers.find(a => /boat|ranger|grady|hewes|bass boat|catamaran/i.test(a)) || '',
+    special: answers[answers.length - 2] || '',
+    technique: answers.find(a => /fly|spin|trolling|jigging|topwater|live bait/i.test(a)) || '',
+    diveSites: answers.find(a => /reef|wall|wreck|cave|site/i.test(a)) || '',
+    terrain: answers.find(a => /mountain|forest|prairie|ridge|valley|backcountry/i.test(a)) || '',
+    target: answers.find(a => /elk|deer|duck|turkey|bass|trout|tuna/i.test(a)) || '',
+    certLevel: answers.find(a => /open water|advanced|rescue|divemaster|padi/i.test(a)) || 'certified divers',
+    timeOfDay: answers.find(a => /sunset|sunrise|morning|afternoon|evening/i.test(a)) || 'scenic'
   };
-
-  var banner = document.createElement('div');
-  banner.className = 'msg agent';
-  banner.style.maxWidth = '88%';
-  banner.innerHTML = '<div class="avatar">🤖</div>' +
-    '<div style="flex:1"><div class="success-banner">' +
-      '<div class="success-title">🎉 Your trip listing is live!</div>' +
-      '<div class="success-url">guidesly.com/trips/' + slug + '</div>' +
-      '<button onclick="openLandingPage()" class="view-listing-btn">👁 View full listing page →</button>' +
-    '</div></div>';
-  document.getElementById('chat').appendChild(banner);
-  scrollDown();
 }
 
-// ─── UI HELPERS ────────────────────────────────────────────────
-function scrollDown() { setTimeout(function(){var c=document.getElementById('chat');c.scrollTop=c.scrollHeight;},60); }
+// ── UI HELPERS ────────────────────────────────────────────────
+function scrollDown() {
+  setTimeout(() => chat.scrollTop = chat.scrollHeight, 50);
+}
 
 function setProgress(pct, label) {
   document.getElementById('progressFill').style.width = pct + '%';
   document.getElementById('stepProgress').textContent = label;
 }
 
-function updateProgress(toolName) {
-  var m = {search_comparable_trips:[25,'🔍 Market data...'],get_taxonomy_categories:[45,'🏷️ Categories...'],get_location_regulations:[62,'📋 Regulations...'],validate_listing_quality:[82,'✅ Validating...'],publish_listing:[95,'🚀 Publishing...']};
-  var p = m[toolName] || [50,'Processing...'];
-  setProgress(p[0], p[1]);
-}
-
-var currentToolCard = null;
-function showToolCard(toolName, toolInput) {
-  var icons = {search_comparable_trips:'🔍',get_taxonomy_categories:'🏷️',get_location_regulations:'📋',validate_listing_quality:'✅',publish_listing:'🚀'};
-  var labels = {search_comparable_trips:'Search Comparable Trips',get_taxonomy_categories:'Get Taxonomy Categories',get_location_regulations:'Get Location Regulations',validate_listing_quality:'Validate Listing Quality',publish_listing:'Publish Listing'};
-  var div = document.createElement('div');
-  div.className = 'msg tool-msg';
-  var inputStr = JSON.stringify(toolInput).replace(/"/g,'').slice(0,80) + '...';
-  div.innerHTML = '<div class="avatar tool-av">⚡</div><div style="flex:1;min-width:0">' +
-    '<div class="tool-card">' +
-      '<div class="tool-card-header"><span>' + (icons[toolName]||'🔧') + '</span><span class="tool-name">' + (labels[toolName]||toolName) + '</span><span class="tool-status calling" id="tcStatus">Calling...</span></div>' +
-      '<div class="tool-input">' + esc(inputStr) + '</div>' +
-      '<div class="tool-output" id="tcOutput"><em style="color:#aaa">Waiting...</em></div>' +
-    '</div></div>';
-  document.getElementById('chat').appendChild(div);
-  currentToolCard = div;
-  scrollDown();
-}
-
-function completeToolCard(result) {
-  if (!currentToolCard) return;
-  var s = currentToolCard.querySelector('#tcStatus');
-  var o = currentToolCard.querySelector('#tcOutput');
-  if (s) { s.className = 'tool-status done'; s.textContent = 'Done'; }
-  if (o) {
-    var preview = JSON.stringify(result, null, 2).slice(0, 300);
-    o.innerHTML = '<pre>' + esc(preview) + (JSON.stringify(result).length > 300 ? '\n...' : '') + '</pre>';
-  }
-  scrollDown();
-}
-
-function addAgentBubble(text) {
-  var html = text.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n\n/g,'<br><br>').replace(/\n/g,'<br>');
-  var div = document.createElement('div');
+function addAgentMessage(content, isHtml) {
+  const div = document.createElement('div');
   div.className = 'msg agent';
-  div.innerHTML = '<div class="avatar">🤖</div><div class="bubble">' + html + '</div>';
-  document.getElementById('chat').appendChild(div);
+  div.innerHTML = `<div class="avatar">🤖</div><div class="bubble">${isHtml ? content : escHtml(content)}</div>`;
+  chat.appendChild(div);
   scrollDown();
 }
 
-function addUserBubble(text) {
-  var div = document.createElement('div');
+function addUserMessage(text) {
+  const div = document.createElement('div');
   div.className = 'msg user';
-  div.innerHTML = '<div class="avatar user-av">👤</div><div class="bubble">' + esc(text) + '</div>';
-  document.getElementById('chat').appendChild(div);
+  div.innerHTML = `<div class="avatar user-av">👤</div><div class="bubble">${escHtml(text)}</div>`;
+  chat.appendChild(div);
   scrollDown();
+}
+
+function addTyping() {
+  const div = document.createElement('div');
+  div.className = 'msg agent';
+  div.id = 'typing';
+  div.innerHTML = `<div class="avatar">🤖</div><div class="bubble"><div class="typing-indicator"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div></div>`;
+  chat.appendChild(div);
+  scrollDown();
+}
+
+function removeTyping() {
+  const t = document.getElementById('typing');
+  if (t) t.remove();
 }
 
 function addQuickReplies(options) {
-  document.getElementById('qr')&&document.getElementById('qr').remove();
-  var div = document.createElement('div');
+  document.getElementById('quickReplies')?.remove();
+  const div = document.createElement('div');
   div.className = 'quick-replies';
-  div.id = 'qr';
-  options.forEach(function(opt) {
-    var btn = document.createElement('button');
+  div.id = 'quickReplies';
+  options.forEach(opt => {
+    const btn = document.createElement('button');
     btn.className = 'qr';
     btn.textContent = opt;
-    btn.onclick = function() {
-      document.getElementById('qr')&&document.getElementById('qr').remove();
-      document.getElementById('userInput').value = opt;
+    btn.onclick = () => {
+      document.getElementById('quickReplies')?.remove();
+      input.value = opt;
       sendMessage();
     };
     div.appendChild(btn);
   });
-  document.getElementById('chat').appendChild(div);
+  chat.appendChild(div);
   scrollDown();
 }
 
-function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function sleep(ms) { return new Promise(function(r){setTimeout(r,ms);}); }
-
-// ─── LLM QUICK REPLIES ─────────────────────────────────────────
-async function generateReplies(lastMsg) {
-  if (!lastMsg || lastMsg.length < 20) return;
-  if (/listing_id|is now live|published/i.test(lastMsg)) {
-    addQuickReplies(['Create another listing','Done for now']);
-    return;
-  }
-  if (/title:|description:|ready to publish|looks good|review your listing/i.test(lastMsg)) {
-    addQuickReplies(['🚀 Yes, publish it!','✏️ Edit the description','💰 Adjust the price','Add more details']);
-    return;
-  }
-  try {
-    var recentCtx = state.history.slice(-6).map(function(m) {
-      var t = typeof m.content === 'string' ? m.content : (Array.isArray(m.content) ? m.content.filter(function(b){return b.type==='text';}).map(function(b){return b.text;}).join(' ') : '');
-      return m.role.toUpperCase() + ': ' + t.slice(0,120);
-    }).join('\n');
-
-    var resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:120,
-        system:'Generate 2-4 short quick reply options for a trip listing conversation. Output ONLY a valid JSON array of strings, max 6 words each. Options must directly answer the specific question asked. Consider what activity type was already mentioned — never suggest unrelated activities. Example: ["6 hours","Full day (8 hours)"]',
-        messages:[{role:'user',content:'Recent conversation:\n' + recentCtx + '\n\nAgent just asked: "' + lastMsg.slice(0,200) + '"\n\nGenerate 2-4 reply options as JSON array:'}]
-      })
-    });
-    var d = await resp.json();
-    var raw = (d.content&&d.content[0]&&d.content[0].text)||'';
-    var match = raw.match(/\[[\s\S]*?\]/);
-    if (match) {
-      var opts = JSON.parse(match[0]);
-      if (Array.isArray(opts) && opts.length > 0) addQuickReplies(opts.slice(0,4));
-    }
-  } catch(e) { /* silent fail */ }
+function addResultCard(icon, title, bodyHtml) {
+  const div = document.createElement('div');
+  div.className = 'msg agent';
+  div.style.maxWidth = '95%';
+  div.innerHTML = `<div class="avatar">🤖</div><div style="flex:1;min-width:0">
+    <div class="result-card">
+      <div class="result-card-header">${icon} ${title}</div>
+      <div class="result-card-body">${bodyHtml}</div>
+    </div>
+  </div>`;
+  chat.appendChild(div);
+  scrollDown();
 }
 
-// ─── SEND ──────────────────────────────────────────────────────
+function escHtml(t) {
+  return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function descHtml(t) {
+  // Convert paragraph breaks to <p> tags, line breaks to <br>
+  return escHtml(t).split('&#10;&#10;').join('</p><p>').split('&#10;').join('<br>');
+}
+
+function fmtDesc(t) {
+  // Split on actual newlines for display
+  var parts = t.split('\n\n');
+  return parts.map(function(p){ return escHtml(p); }).join('</p><p>');
+}
+
+// ── SEND MESSAGE ──────────────────────────────────────────────
 async function sendMessage() {
-  var input = document.getElementById('userInput');
-  var sendBtn = document.getElementById('sendBtn');
-  var text = input.value.trim();
+  const text = input.value.trim();
   if (!text || sendBtn.disabled) return;
-  document.getElementById('qr')&&document.getElementById('qr').remove();
-  addUserBubble(text);
+
+  document.getElementById('quickReplies')?.remove();
+  addUserMessage(text);
   input.value = '';
   input.style.height = '22px';
   sendBtn.disabled = true;
-  try { await agenticLoop(text); } catch(e) { console.error(e); addAgentBubble('Something went wrong. Please try again.'); }
+
+  try {
+  addTyping();
+  await delay(700 + Math.random() * 400);
+  removeTyping();
+
+  if (state.phase === 'collect') {
+    const reply = getNextResponse(text);
+
+    if (reply.startsWith('READY_TO_GENERATE')) {
+      const msg = reply.replace('READY_TO_GENERATE', '').trim();
+      if (msg) addAgentMessage(msg);
+      state.phase = 'confirm';
+      setProgress(30, 'Info collected');
+      await delay(400);
+      addAgentMessage("I have everything I need. Ready to generate your complete listing — title, description, pricing, categories, FAQs, and a quality check. Want me to go ahead? 🚀");
+      addQuickReplies(["Yes, generate my listing!", "Let me add more details first"]);
+    } else {
+      addAgentMessage(reply);
+      // Contextual quick replies
+      const qrs = getContextualReplies(questionIndex - 1, currentActivity);
+      if (qrs.length) addQuickReplies(qrs);
+    }
+
+  } else if (state.phase === 'confirm') {
+    if (/yes|go|generate|sure|ok/i.test(text)) {
+      addAgentMessage("Let's go! Running Jack AI across all 8 steps... ⚡");
+      state.phase = 'generate';
+      await delay(400);
+      runGeneration();
+    } else {
+      state.phase = 'collect';
+      addAgentMessage("No problem — what else would you like to add?");
+    }
+
+  } else if (state.phase === 'preview') {
+    if (/publish|yes|live|go/i.test(text)) {
+      publishListing();
+    } else if (/change|edit|update|adjust/i.test(text)) {
+      addAgentMessage("Of course — what would you like to change? Tell me and I'll update it.");
+      state.phase = 'collect';
+    } else {
+      addAgentMessage("Your listing is ready to publish. Would you like to go live?");
+      addQuickReplies(["🚀 Publish now!", "Make a change"]);
+    }
+  }
+
+  } catch(err) {
+    removeTyping();
+    console.error('Agent error:', err);
+    addAgentMessage("Sorry, something went wrong. Please refresh and try again.");
+  }
   sendBtn.disabled = false;
 }
 
-document.getElementById('userInput').addEventListener('input', function() {
+function getContextualReplies(qIdx, activity) {
+  const replyMap = {
+    fishing: [
+      ["🎣 Bass fishing", "🐟 Fly fishing", "🦈 Offshore fishing", "🎯 Inshore redfish"],
+      ["6 hours", "Half day (4 hours)", "Full day (8 hours)", "2 hours"],
+      ["5:30 AM and 1 PM", "6 AM, 10 AM and 2 PM", "7 AM only", "Multiple times daily"],
+      ["All rods, reels and tackle included", "Live bait provided", "Everything included", "Bring your own tackle"],
+      ["21ft Ranger bass boat, 250HP", "Center console 24ft", "Drift boat", "No boat — bank fishing"],
+      ["Largemouth bass", "Striped bass & largemouth", "Redfish & speckled trout", "Multiple species"],
+      ["$350–$400 per trip", "$400–$500 per trip", "$150 per person", "Not sure, use market rate"]
+    ],
+    scuba: [
+      ["Coral reef dives", "Wall dives", "Wreck diving", "Cave diving"],
+      ["2 dives per trip", "3 dives per trip", "1 dive (intro)", "Full day 4 dives"],
+      ["8 AM and 1 PM", "7 AM morning trip only", "Multiple daily", "Sunset dive available"],
+      ["Full equipment included", "BCD and regulator included", "Tanks only, bring your gear", "All gear provided"],
+      ["Open Water minimum", "Advanced divers only", "All certified levels", "Discover Scuba available"],
+      ["20+ years guiding these reefs", "Marine biology background", "Small groups only", "Photography specialist"],
+      ["$150 per person", "$130–$180 per person", "$500 for group of 4", "Not sure, use market rate"]
+    ],
+    hunting: [
+      ["Elk", "Whitetail deer", "Mule deer", "Duck & waterfowl"],
+      ["Fully guided", "Semi-guided", "Drop camp", "Day hunts only"],
+      ["3-day hunt", "5-day hunt", "Single day", "1 week package"],
+      ["2 hunters max", "Up to 4 hunters", "Solo hunter only", "Small groups welcome"],
+      ["Rifles and bows welcome", "Rifles only", "Archery season specialist", "Both seasons available"],
+      ["Private ranch access", "Public land expert", "High success rate", "Trophy quality animals"],
+      ["$600 per day", "$800 per day", "$2,500 for 5 days", "Contact for pricing"]
+    ],
+    general: [
+      ["2 hours", "Half day", "Full day", "Multi-day"],
+      ["Solo or couples", "Up to 4 guests", "Up to 8 guests", "Private groups only"],
+      ["Morning", "Afternoon", "Flexible timing", "Multiple slots daily"],
+      ["All equipment provided", "Some gear required", "Rental available", "Fully equipped"],
+      ["Beginner friendly", "All skill levels", "Intermediate+", "Advanced only"],
+      ["$100–$150 per person", "$200 per group", "$300+ for private", "Flexible pricing"]
+    ]
+  };
+
+  const map = replyMap[activity] || replyMap.general;
+  return map[qIdx] || [];
+}
+
+// ── GENERATION ────────────────────────────────────────────────
+async function runGeneration() {
+  const info = buildGuideInfo();
+
+  setProgress(35, 'Step 2/8 — Title');
+  addAgentMessage("**Step 2 — Generating trip title...**", true);
+  addTyping();
+  await delay(800);
+  removeTyping();
+  const title = generateTitle(info);
+  state.generatedListing.title = title;
+  addResultCard('✍️', 'Trip Title', `<strong>${escHtml(title)}</strong>`);
+  setProgress(45, 'Step 3/8 — Description');
+
+  await delay(500);
+
+  addAgentMessage("**Step 3 — Writing trip description...**", true);
+  addTyping();
+  await delay(1000);
+  removeTyping();
+  const desc = generateDescription(info);
+  state.generatedListing.desc = desc;
+  addResultCard('📝', 'Trip Description', escHtml(desc).split('\n\n').join('</p><p>').split('\n').join('<br>'));
+
+  setProgress(55, 'Step 4/8 — Pricing');
+
+  await delay(500);
+
+  addAgentMessage("**Step 4 — Analysing market pricing...**", true);
+  addTyping();
+  await delay(800);
+  removeTyping();
+  const pricing = generatePricing(info);
+  state.generatedListing.pricing = pricing;
+  addResultCard('💰', 'Pricing Recommendation', escHtml(pricing).replace(/\|/g,'<br>'));
+  setProgress(62, 'Step 5/8 — Categories');
+
+  await delay(500);
+
+  addAgentMessage("**Step 5 — Setting categories and tags...**", true);
+  addTyping();
+  await delay(700);
+  removeTyping();
+  const tags = generateCategories(info);
+  state.generatedListing.tags = tags;
+  const tagParts = tags.split('|').map(s => s.trim());
+  const tagChips = (tagParts[1] || tags).replace('Tags:','').split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('');
+  addResultCard('🏷️', 'Categories & Tags', `<strong>${tagParts[0] || ''}</strong><div class="tag-row">${tagChips}</div>`);
+  setProgress(72, 'Step 6/8 — FAQs');
+
+  await delay(500);
+
+  addAgentMessage("**Step 6 — Generating FAQs...**", true);
+  addTyping();
+  await delay(900);
+  removeTyping();
+  const faqs = generateFAQs(info);
+  state.generatedListing.faqs = faqs;
+  const faqLines = faqs.split('\n');
+  let faqHtml = '';
+  for (let i = 0; i < faqLines.length; i++) {
+    if (faqLines[i].startsWith('Q:')) {
+      const q = faqLines[i].replace('Q:','').trim();
+      const a = (faqLines[i+1]||'').replace('A:','').trim();
+      faqHtml += `<div class="faq-item"><div class="faq-q">${escHtml(q)}</div><div class="faq-a">${escHtml(a)}</div></div>`;
+      i++;
+    }
+  }
+  addResultCard('❓', 'FAQs (4 Generated)', faqHtml);
+  setProgress(82, 'Step 7/8 — Validation');
+
+  await delay(500);
+
+  addAgentMessage("**Step 7 — Running quality checks...**", true);
+  await delay(900);
+  const valHtml = `
+    <div class="val-row"><span>✅</span><span>Title is ${title.length} characters — good length for SEO</span></div>
+    <div class="val-row"><span>✅</span><span>Description is ${desc.split(' ').length} words — above minimum threshold</span></div>
+    <div class="val-row"><span>✅</span><span>4 FAQs generated — licence, cancellation, and trip-specific questions covered</span></div>
+    <div class="val-row"><span>✅</span><span>Categories and tags set — improves search ranking</span></div>
+    <div class="val-row"><span>⚠️</span><span>Photos not yet uploaded — strongly recommended before publish</span></div>
+  `;
+  addResultCard('🔍', 'Quality Validation', valHtml);
+  setProgress(92, 'Step 8/8 — Preview');
+
+  await delay(500);
+
+  addAgentMessage("**Step 8 — Building listing preview...**", true);
+  await delay(700);
+
+  const priceMatch = pricing.match(/\$[\d,]+/);
+  const priceDisplay = priceMatch ? priceMatch[0] : '$—';
+  const tagChipsPreview = (tags.split('|')[1] || '').replace('Tags:','').split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('');
+
+  let faqPreviewHtml = '';
+  const faqLines2 = faqs.split('\n');
+  for (let i = 0; i < faqLines2.length; i++) {
+    if (faqLines2[i].startsWith('Q:')) {
+      const q = faqLines2[i].replace('Q:','').trim();
+      const a = (faqLines2[i+1]||'').replace('A:','').trim();
+      faqPreviewHtml += `<div class="faq-item"><div class="faq-q">${escHtml(q)}</div><div class="faq-a">${escHtml(a)}</div></div>`;
+      i++;
+    }
+  }
+
+  const previewDiv = document.createElement('div');
+  previewDiv.className = 'msg agent';
+  previewDiv.style.maxWidth = '95%';
+  previewDiv.innerHTML = `<div class="avatar">🤖</div><div style="flex:1;min-width:0">
+    <div class="listing-preview">
+      <div class="listing-hero">
+        <div class="listing-badge">✨ Jack AI Generated</div>
+        <div class="listing-title">${escHtml(title)}</div>
+        <div class="listing-meta"><span>⭐ New listing</span><span>📍 Ready to publish</span></div>
+      </div>
+      <div class="listing-body">
+        <div class="listing-section">
+          <div class="listing-section-label">Description</div>
+          <div style="font-size:13px;color:var(--ink-2);line-height:1.7">${escHtml(desc).split('\n\n').join('</div><div style="font-size:13px;color:var(--ink-2);line-height:1.7;margin-top:8px">').split('\n').join('<br>')}</div>
+
+/g,'</div><div style="font-size:13px;color:var(--ink-2);line-height:1.7;margin-top:8px">').replace(/
+/g,'<br>')}</div>
+        </div>
+        <div class="listing-section">
+          <div class="listing-section-label">Pricing</div>
+          <div class="listing-price">${priceDisplay} <span style="font-size:13px;font-weight:400;color:var(--ink-3)">per trip</span></div>
+        </div>
+        <div class="listing-section">
+          <div class="listing-section-label">Categories & Tags</div>
+          <div class="tag-row">${tagChipsPreview}</div>
+        </div>
+        <div class="listing-section">
+          <div class="listing-section-label">FAQs</div>
+          ${faqPreviewHtml}
+        </div>
+        <button class="publish-btn" onclick="publishListing()">🚀 Publish Trip Listing</button>
+      </div>
+    </div>
+  </div>`;
+  chat.appendChild(previewDiv);
+  scrollDown();
+
+  setProgress(100, '✓ Ready to publish');
+  state.phase = 'preview';
+
+  await delay(400);
+  addAgentMessage("Your listing is ready! Review the preview above. Want to go live?");
+  addQuickReplies(["🚀 Publish now!", "Edit the description", "Adjust the price"]);
+}
+
+function publishListing() {
+  document.querySelectorAll('.qr').forEach(b => b.style.display = 'none');
+  addAgentMessage("🎉 <strong>Your trip listing is live!</strong><br><br>Your SEO-optimised trip landing page is now on Guidesly and discoverable in search results. Buyers can find it, read the description, check FAQs, and book directly.", true);
+  setProgress(100, '✓ Published!');
+  document.getElementById('progressFill').style.background = 'var(--green)';
+  state.phase = 'done';
+  setTimeout(() => {
+    addAgentMessage("Want to create another listing?");
+    addQuickReplies(["Yes, create another listing", "That's all for now"]);
+  }, 1000);
+}
+
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+input.addEventListener('input', function() {
   this.style.height = '22px';
   this.style.height = Math.min(this.scrollHeight, 100) + 'px';
 });
-document.getElementById('userInput').addEventListener('keydown', function(e) {
-  if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+
+input.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
 });
 
-// ─── WELCOME ───────────────────────────────────────────────────
-window.onload = function() {
-  setTimeout(function() {
-    addAgentBubble('Hi! I\'m Jack AI, Guidesly\'s listing agent. Tell me about your trip or experience and I\'ll build a complete listing — description, start times, pricing, FAQs, and a live trip page. 🌊');
-    setTimeout(function() {
-      addAgentBubble('What type of experience do you offer, and where do you guide?');
-      addQuickReplies(['🎣 Bass fishing, Lake Fork Texas','🤿 Scuba diving, Florida Keys','🏔️ Elk hunting, Colorado','🚤 Sunset cruise, Miami']);
-    }, 700);
+window.onload = () => {
+  setTimeout(() => {
+    addAgentMessage("Hi! I'm Jack AI, Guidesly's listing agent. Tell me about your trip or experience and I'll create a complete marketplace listing — title, description, pricing, FAQs, and everything in between. 🌊");
+    setTimeout(() => {
+      addAgentMessage("What type of experience do you offer, and where do you guide?");
+      addQuickReplies(["🎣 Bass fishing, Lake Fork Texas", "🤿 Scuba diving, Florida Keys", "🏔️ Guided elk hunting, Colorado", "🚤 Sunset cruise, Miami"]);
+    }, 800);
   }, 300);
 };
 </script>
