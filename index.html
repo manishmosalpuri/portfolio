@@ -404,7 +404,7 @@
         <p>Below is a fully agentic listing builder with real tool use. The agent converses naturally to collect trip details, then autonomously calls five platform tools: searching market pricing, fetching taxonomy categories, checking local licence regulations, validating listing quality, and publishing on approval. The agent decides what to call next based on tool outputs, not a hardcoded script. Tool inputs and outputs are visible in the chat.</p>
       </div>
       <div style="margin-top:16px;border:1px solid var(--rule);border-radius:var(--radius);overflow:hidden">
-        <iframe src="trip-agent.html" style="width:100%;height:700px;border:none;display:block" title="Agentic Listing Builder Demo"></iframe>
+        <iframe src="trip-agent.html" style="width:100%;height:700px;border:none;display:block" title="Agentic Listing Builder Demo" allow="cross-origin-isolated" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-top-navigation-by-user-activation"></iframe>
       </div>
       <p class="live-caption" style="margin-top:10px"><strong>Agentic prototype</strong> demonstrating the workflow I designed for Jack AI, Guidesly's custom LLM built on Amazon Bedrock. The agent calls five tools autonomously: search_comparable_trips, get_taxonomy_categories, get_location_regulations, validate_listing_quality, and publish_listing. Tool inputs and outputs are visible in the chat. Mockup created by me for the design handoff, not the final shipped UI.</p>
     </div>
